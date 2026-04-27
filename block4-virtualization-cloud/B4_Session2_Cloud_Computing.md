@@ -15,6 +15,7 @@ header-includes:
   - \usepackage{tikz}
   - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit, decorations.pathreplacing}
   - \setbeamerfont{footnote}{size=\tiny}
+  - \logo{\includegraphics[height=0.6cm]{img/upf-logo.png}}
   - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
 ---
 
@@ -44,12 +45,12 @@ header-includes:
 \node[box, fill=green!15] (vm) at (0,2) {VMs};
 \node[box, fill=blue!15] (vnic) at (4,2) {vNICs};
 \node[box, fill=orange!15] (vsw) at (8,2) {vSwitches};
-\node[box, fill=purple!15] (overlay) at (4,0.5) {Overlay Networks (VXLAN)};
+\node[box, fill=yellow!15] (isol) at (4,0.5) {VLANs / Isolation};
 
 \draw[->, thick] (vm) -- (vnic);
 \draw[->, thick] (vnic) -- (vsw);
-\draw[->, thick] (vsw) -- (overlay);
-\draw[->, thick, dashed] (overlay) -- ++(0,-1) node[below, font=\small] {\textbf{Cloud Computing}};
+\draw[->, thick] (vsw) -- (isol);
+\draw[->, thick, dashed] (isol) -- ++(0,-1) node[below, font=\small] {\textbf{What's next?}};
 \end{tikzpicture}
 \end{center}
 
@@ -288,6 +289,106 @@ Hardware & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolo
 \vfill
 
 Hints: consider the IT team size, maintenance burden, and how much control they need.
+
+# From VLANs to Overlay Networks
+
+## The VLAN Scalability Problem
+
+- In Session 1 we used **VLANs** to isolate tenants on virtual networks
+- VLANs use a **12-bit ID** $\rightarrow$ maximum **4,096** virtual networks
+- Cloud providers host **millions** of tenants $\rightarrow$ VLANs are not enough
+- Additional limitations:
+  - VLANs are confined to a **single L2 domain**
+  - Moving a VM to another host may require VLAN reconfiguration
+
+\vfill
+\footnotesize
+We need a technology that scales beyond 4K networks and works across L3 boundaries.
+
+## Overlay Networks: Concept
+
+- An **overlay network** is a virtual network built **on top of** the physical one
+- Uses **encapsulation**: wrap virtual frames inside physical packets
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, font=\scriptsize, minimum height=0.6cm},
+    >=Stealth
+]
+\node[box, fill=green!15, minimum width=2cm] (inner) at (0,0) {Original Frame};
+\node[box, fill=blue!15, minimum width=1.5cm] (hdr) at (-2.2,0) {Overlay Hdr};
+\node[box, fill=gray!20, minimum width=1.2cm] (outer) at (-4,0) {Outer IP/UDP};
+
+\node[draw, thick, dashed, rounded corners, fit=(outer)(hdr)(inner), inner sep=4pt, label=above:{\scriptsize Encapsulated Packet}] {};
+\end{tikzpicture}
+\end{center}
+
+- The physical network only sees the **outer headers**
+- The virtual (tenant) traffic is hidden inside $\rightarrow$ **full isolation**
+
+## VXLAN: Overview
+
+- **VXLAN** (Virtual eXtensible LAN): most widely used overlay protocol
+- Encapsulates L2 frames in **UDP packets** over the physical network
+- Uses a **24-bit VNI** (VXLAN Network Identifier)
+  - $2^{24}$ = **16 million** virtual networks (vs 4,096 VLANs)
+- Endpoints: **VTEPs** (VXLAN Tunnel Endpoints)
+  - Encapsulate at source, decapsulate at destination
+
+\footnotesize Source: IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
+
+## VXLAN: How It Works
+
+\begin{center}
+\begin{tikzpicture}[
+    vm/.style={draw, thick, rounded corners, fill=green!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
+    vm2/.style={draw, thick, rounded corners, fill=purple!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
+    vtep/.style={draw, thick, fill=blue!20, minimum width=1.5cm, minimum height=0.6cm, font=\scriptsize},
+    >=Stealth
+]
+\node[vm] (vm1) at (0,1.5) {VM A};
+\node[vtep] (v1) at (0,0) {VTEP 1};
+\node[vtep] (v2) at (8,0) {VTEP 2};
+\node[vm2] (vm2) at (8,1.5) {VM B};
+
+\draw[thick] (vm1) -- (v1);
+\draw[thick] (vm2) -- (v2);
+\draw[thick, dashed, blue] (v1) -- node[above, font=\scriptsize] {UDP tunnel over physical network} (v2);
+
+\node[font=\tiny, text=gray] at (0,-0.8) {Encapsulates frame};
+\node[font=\tiny, text=gray] at (8,-0.8) {Decapsulates frame};
+\node[font=\tiny, text=gray] at (4,-0.5) {VNI identifies the virtual network};
+\end{tikzpicture}
+\end{center}
+
+- VM A sends a frame $\rightarrow$ VTEP 1 wraps it in UDP with a VNI
+- Travels over the physical network as a regular UDP packet
+- VTEP 2 strips outer headers, delivers original frame to VM B
+- VMs on the **same VNI** form an isolated L2 domain
+
+## Overlay Benefits for Scalability
+
+- **16 million virtual networks** (vs 4,096 VLANs)
+- Physical network does not need to know about tenants
+- VMs can **migrate** across hosts without reconfiguring the underlay
+- Decouples **virtual topology** from physical topology
+
+\vfill
+
+\footnotesize
+This is the foundation of cloud networking. Next: how providers build \textbf{VPCs} on top of overlays.
+
+Source: IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
+
+## Discussion: Overlay Networks
+
+\begin{center}
+\Large\textit{Why can the physical network remain simple\\if we use overlay networks?\\What are the trade-offs of encapsulation?}
+\end{center}
+
+\vfill
+
+Hints: think about overhead (extra headers), MTU implications, and troubleshooting complexity.
 
 # Cloud Network Architecture
 
@@ -577,9 +678,10 @@ Source: AWS, "Shared Responsibility Model," aws.amazon.com/compliance/shared-res
 1. Virtualization is the **technology**; cloud is the **business model**
 2. Five NIST characteristics define true cloud computing
 3. **IaaS / PaaS / SaaS** differ in who manages what
-4. A **VPC** is your isolated cloud network (built on overlays from Session 1)
-5. **Security groups** (instance) + **ACLs** (subnet) = defense in depth
-6. **Data sovereignty** and GDPR affect where and how you store data
+4. **VXLAN** overlays scale isolation to 16M networks (vs 4K VLANs)
+5. A **VPC** is your isolated cloud network, built on top of overlays
+6. **Security groups** (instance) + **ACLs** (subnet) = defense in depth
+7. **Data sovereignty** and GDPR affect where and how you store data
 
 ## Discussion
 
@@ -607,3 +709,5 @@ Think about: shared responsibility, data location, and which laws apply.
 8. CSA, "Security Guidance for Critical Areas of Focus in Cloud Computing v5," 2022.
 9. Erl, Puttini & Mahmood, \textit{Cloud Computing: Concepts, Technology \& Architecture}, Prentice Hall, 2013.
 10. Kurose & Ross, \textit{Computer Networking: A Top-Down Approach}, 8th ed., Pearson, 2021.
+11. IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
+12. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.

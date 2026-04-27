@@ -15,6 +15,8 @@ header-includes:
   - \usepackage{tikz}
   - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit}
   - \setbeamerfont{footnote}{size=\tiny}
+  - \logo{\includegraphics[height=0.6cm]{img/upf-logo.png}}
+  - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}}
   - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
 ---
 
@@ -47,12 +49,13 @@ header-includes:
 \hline
 Theme & \textit{The infrastructure} & \textit{The business model} \\
 \hline
-Topics & Data centers & From virtualization to cloud \\
-& VMs \& hypervisors & NIST cloud definition \\
-& VMs vs containers (overview) & IaaS / PaaS / SaaS \\
-& vNICs, vSwitches, vRouters & VPC architecture \\
-& Multi-tenancy \& VLANs & Security groups \& ACLs \\
-& Overlay networks (VXLAN) & Governance \& GDPR \\
+Topics & Data centers & Overlay networks (VXLAN) \\
+& VMs \& hypervisors & From virtualization to cloud \\
+& VMs vs containers (overview) & NIST cloud definition \\
+& vNICs, vSwitches, vRouters & IaaS / PaaS / SaaS \\
+& Multi-tenancy \& VLANs & VPC architecture \\
+& & Security groups \& ACLs \\
+& & Governance \& GDPR \\
 \hline
 \end{tabular}
 \end{center}
@@ -721,80 +724,17 @@ Problem: 4,096 VLANs is **not enough** for a large cloud with thousands of tenan
 \footnotesize
 In Session 2 we will see how cloud providers implement this with \textbf{Security Groups} (per-instance) and \textbf{Network ACLs} (per-subnet).
 
-## Overlay Networks: Concept
-
-- An **overlay network** is a virtual network built **on top of** the physical one
-- Uses **encapsulation**: wrap virtual frames inside physical packets
+## Discussion: Network Isolation
 
 \begin{center}
-\begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, font=\scriptsize, minimum height=0.6cm},
-    >=Stealth
-]
-\node[box, fill=green!15, minimum width=2cm] (inner) at (0,0) {Original Frame};
-\node[box, fill=blue!15, minimum width=1.5cm] (hdr) at (-2.2,0) {Overlay Hdr};
-\node[box, fill=gray!20, minimum width=1.2cm] (outer) at (-4,0) {Outer IP/UDP};
-
-\node[draw, thick, dashed, rounded corners, fit=(outer)(hdr)(inner), inner sep=4pt, label=above:{\scriptsize Encapsulated Packet}] {};
-\end{tikzpicture}
+\Large\textit{You manage a data center with 5,000 tenants.\\Each tenant wants their own isolated network.\\Can you use VLANs alone? Why or why not?}
 \end{center}
-
-- The physical network only sees the **outer headers**
-- The virtual (tenant) traffic is hidden inside $\rightarrow$ **full isolation**
-
-## VXLAN: Overview
-
-- **VXLAN** (Virtual eXtensible LAN): most widely used overlay protocol
-- Encapsulates L2 frames in **UDP packets** over the physical network
-- Uses a **24-bit VNI** (VXLAN Network Identifier)
-  - $2^{24}$ = **16 million** virtual networks (vs 4,096 VLANs!)
-- Endpoints: **VTEPs** (VXLAN Tunnel Endpoints)
-  - Encapsulate at source, decapsulate at destination
-
-\footnotesize Source: IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
-
-## VXLAN: How It Works
-
-\begin{center}
-\begin{tikzpicture}[
-    vm/.style={draw, thick, rounded corners, fill=green!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
-    vm2/.style={draw, thick, rounded corners, fill=purple!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
-    vtep/.style={draw, thick, fill=blue!20, minimum width=1.5cm, minimum height=0.6cm, font=\scriptsize},
-    >=Stealth
-]
-\node[vm] (vm1) at (0,1.5) {VM A};
-\node[vtep] (v1) at (0,0) {VTEP 1};
-\node[vtep] (v2) at (8,0) {VTEP 2};
-\node[vm2] (vm2) at (8,1.5) {VM B};
-
-\draw[thick] (vm1) -- (v1);
-\draw[thick] (vm2) -- (v2);
-\draw[thick, dashed, blue] (v1) -- node[above, font=\scriptsize] {UDP tunnel over physical network} (v2);
-
-\node[font=\tiny, text=gray] at (0,-0.8) {Encapsulates frame};
-\node[font=\tiny, text=gray] at (8,-0.8) {Decapsulates frame};
-\node[font=\tiny, text=gray] at (4,-0.5) {VNI identifies the virtual network};
-\end{tikzpicture}
-\end{center}
-
-- VM A sends a frame $\rightarrow$ VTEP 1 wraps it in UDP with a VNI
-- Travels over the physical network as a regular UDP packet
-- VTEP 2 strips outer headers, delivers original frame to VM B
-- VMs on the **same VNI** form an isolated L2 domain
-
-## Overlay Benefits for Scalability
-
-- **16 million virtual networks** (vs 4,096 VLANs)
-- Physical network does not need to know about tenants
-- VMs can **migrate** across hosts without reconfiguring the underlay
-- Decouples **virtual topology** from physical topology
 
 \vfill
 
-\footnotesize
-This is the foundation of cloud networking. In \textbf{Session 2} we will see how providers build \textbf{VPCs} (Virtual Private Clouds) on top of overlays.
+Hints: think about the VLAN ID limit (4,096), overlapping IP ranges, and what happens when VMs move between hosts.
 
-Source: IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
+<!-- nota: guiar hacia el límite de 4096 VLANs y la necesidad de algo más escalable — se verá en Session 2 con overlays -->
 
 # Session Summary
 
@@ -805,13 +745,13 @@ Source: IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2
 3. **Hypervisors** (Type 1 and 2) enable multiple VMs on one host
 4. **Containers** are lighter than VMs but share the kernel (deep dive in Block 5)
 5. Virtual networks mirror physical ones: **vNICs, vSwitches, vRouters**
-6. **Multi-tenancy** requires isolation $\rightarrow$ VLANs, overlays, micro-segmentation
-7. **VXLAN** extends VLANs from 4K to 16M networks using encapsulation
+6. **Multi-tenancy** requires isolation $\rightarrow$ VLANs and micro-segmentation
 
 ## Next Session: Preview
 
 In **Session 2** we build on today's foundation:
 
+- **Overlay networks** (VXLAN): scaling beyond the 4,096 VLAN limit
 - Virtualization is the technology; cloud is the **business model**
 - NIST definition and **5 essential characteristics**
 - Service models: **IaaS / PaaS / SaaS**
@@ -822,14 +762,12 @@ In **Session 2** we build on today's foundation:
 ## Discussion
 
 \begin{center}
-\Large\textit{You manage a data center with 5,000 tenants.\\Each tenant wants their own isolated network.\\Why can't you use VLANs alone?\\What would you use instead, and why?}
+\Large\textit{A company runs 200 VMs on 10 physical servers.\\Each team wants an isolated network.\\What virtual networking components do you need\\and how would you connect them?}
 \end{center}
 
 \vfill
 
-<!-- nota: guiar hacia: 4096 VLAN limit, overlapping IPs, VXLAN con 16M VNIs, y la necesidad de desacoplar red virtual de física -->
-
-Hints: VLAN ID limit, overlapping IP ranges, VM mobility.
+Hints: think about vNICs, vSwitches, VLANs, and routing between subnets.
 
 ## References
 
@@ -840,11 +778,9 @@ Hints: VLAN ID limit, overlapping IP ranges, VM mobility.
 3. VMware, "Understanding Full Virtualization, Paravirtualization, and Hardware Assist," 2007.
 4. Pfaff et al., "The Design and Implementation of Open vSwitch," *NSDI*, 2015.
 5. IEEE 802.1Q-2022, "Bridges and Bridged Networks."
-6. IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
-7. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
-8. Barroso, Clidaras \& Hölzle, *The Datacenter as a Computer*, 3rd ed., Morgan \& Claypool, 2019.
-9. NIST SP 800-125, "Guide to Security for Full Virtualization Technologies," 2011.
-10. Kurose \& Ross, *Computer Networking: A Top-Down Approach*, 8th ed., Pearson, 2021.
-11. Red Hat, "What is a Virtual Machine?", redhat.com/en/topics/virtualization/what-is-a-virtual-machine.
-12. Red Hat, "Containers vs VMs," redhat.com/en/topics/containers/containers-vs-vms.
-13. Cisco, "What Is a Data Center?", cisco.com/site/us/en/learn/topics/computing/what-is-a-data-center.html.
+6. Barroso, Clidaras \& Hölzle, \textit{The Datacenter as a Computer}, 3rd ed., Morgan \& Claypool, 2019.
+7. NIST SP 800-125, "Guide to Security for Full Virtualization Technologies," 2011.
+8. Kurose \& Ross, \textit{Computer Networking: A Top-Down Approach}, 8th ed., Pearson, 2021.
+9. Red Hat, "What is a Virtual Machine?", redhat.com/en/topics/virtualization/what-is-a-virtual-machine.
+10. Red Hat, "Containers vs VMs," redhat.com/en/topics/containers/containers-vs-vms.
+11. Cisco, "What Is a Data Center?", cisco.com/site/us/en/learn/topics/computing/what-is-a-data-center.html.

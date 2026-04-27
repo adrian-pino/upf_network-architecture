@@ -1,8 +1,8 @@
 ---
-title: "Block 5"
+title: "Block 5 -- Session 1"
 subtitle: "Software-Defined \\& Cloud-Native Networking"
 author: "Arquitectura de Xarxes"
-institute: "Universitat Pompeu Fabra -- 2025/2026"
+institute: "Universitat Pompeu Fabra"
 theme: "Madrid"
 colortheme: "dolphin"
 fonttheme: "structurebold"
@@ -13,8 +13,10 @@ header-includes:
   - \usepackage{booktabs}
   - \usepackage[table]{xcolor}
   - \usepackage{tikz}
-  - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, fit, decorations.markings}
+  - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit, decorations.pathreplacing}
   - \setbeamerfont{footnote}{size=\tiny}
+  - \logo{\includegraphics[height=0.6cm]{img/upf-logo.png}}
+  - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}}
   - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
 ---
 
@@ -59,11 +61,22 @@ Imagine updating 1,000 switches one by one. That's traditional networking.
 - Each router independently computes routes (OSPF, BGP from Block 3)
 - No **centralized view** of the entire network
 - Difficult to implement **network-wide policies**
-- Limited **programmability** -- can't easily add new features
+- Limited **programmability**: cannot easily add new features
 
 \vfill
 
 The control plane is **distributed** by design. What if we **centralized** it?
+
+## Discussion: The Cost of Manual Networks
+
+\begin{center}
+\Large\textit{Why have traditional networks survived so long\\despite their scalability problems?}
+\end{center}
+
+\vfill
+
+- Hint: think about reliability, vendor relationships, and risk aversion
+- What would it take for an organization to change?
 
 # Software-Defined Networking (SDN)
 
@@ -131,15 +144,19 @@ Examples:
 
 \begin{center}
 \small
-\begin{tabular}{lll}
-\toprule
-\textbf{Match} & \textbf{Action} & \textbf{Priority} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{blue!10} \textbf{Match} & \textbf{Action} & \textbf{Priority} \\
+\hline
 dst IP = \texttt{10.0.1.0/24} & Forward to port 3 & 100 \\
+\hline
 dst IP = \texttt{10.0.2.0/24} & Forward to port 5 & 100 \\
+\hline
 src IP = \texttt{192.168.1.100} & Drop & 200 \\
+\hline
 * (any) & Send to controller & 1 \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -172,7 +189,18 @@ Any developer can write applications that control network behavior.
 \vfill
 
 \footnotesize
-SDN is the foundation for modern cloud networking -- AWS, Azure, and GCP all use SDN internally.
+SDN is the foundation for modern cloud networking: AWS, Azure, and GCP all use SDN internally.
+
+## Discussion: SDN Trade-offs
+
+\begin{center}
+\Large\textit{If the SDN controller fails,\\what happens to the network?}
+\end{center}
+
+\vfill
+
+- Hint: single point of failure vs distributed control
+- How do real deployments address this? (clustering, failover)
 
 # Network Function Virtualization (NFV)
 
@@ -195,16 +223,21 @@ SDN is the foundation for modern cloud networking -- AWS, Azure, and GCP all use
 
 \begin{center}
 \small
-\begin{tabular}{ll}
-\toprule
-\textbf{Physical Appliance} & \textbf{VNF Equivalent} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor{blue!10} \textbf{Physical Appliance} & \textbf{VNF Equivalent} \\
+\hline
 Hardware firewall & Virtual firewall (pfSense, iptables) \\
+\hline
 Hardware load balancer & Virtual LB (HAProxy, NGINX) \\
+\hline
 Hardware router & Virtual router (VyOS, FRRouting) \\
+\hline
 WAN optimizer & Virtual WAN optimizer \\
+\hline
 IDS/IPS & Virtual IDS (Snort, Suricata) \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -240,6 +273,17 @@ No hardware procurement, no shipping, no rack-and-stack.
 
 - SDN **steers** traffic to the right VNF (forwarding rules)
 - NFV **processes** the traffic (filter, balance, encrypt, inspect)
+
+## Discussion: When Hardware Still Wins
+
+\begin{center}
+\Large\textit{Can you think of a scenario where a physical\\appliance is better than a VNF?}
+\end{center}
+
+\vfill
+
+- Hint: think about latency, throughput, and specialized workloads
+- What about hardware accelerators (FPGAs, SmartNICs)?
 
 # Container Networking
 
@@ -299,7 +343,7 @@ No hardware procurement, no shipping, no rack-and-stack.
 
 - Containers on the same host connected via a **virtual bridge** (`docker0`)
 - Each container gets a **veth pair** (virtual Ethernet interface)
-- **NAT** for external traffic -- containers share host's IP
+- **NAT** for external traffic; containers share host's IP
 
 **Host network:**
 
@@ -359,7 +403,7 @@ No hardware procurement, no shipping, no rack-and-stack.
 Network implications:
 
 - Hundreds of containers talking to each other
-- Need **service discovery**: ``where is the payment service?''
+- Need **service discovery**: "where is the payment service?"
 - Need **load balancing**: distribute requests across replicas
 - Need **observability**: trace requests across services
 
@@ -389,6 +433,17 @@ Network implications:
 - Every arrow = **network call** $\rightarrow$ latency and failure risk
 - If Inventory is down $\rightarrow$ Payment and Web are affected (**cascading failure**)
 - Solutions: retries, timeouts, circuit breakers, service meshes
+
+## Discussion: Containers vs VMs
+
+\begin{center}
+\Large\textit{If containers are faster and lighter than VMs,\\why do companies still use VMs?}
+\end{center}
+
+\vfill
+
+- Hint: security isolation, legacy applications, compliance requirements
+- In practice, containers often run inside VMs
 
 # Infrastructure as Code \& Network Automation
 
@@ -435,28 +490,16 @@ resource "aws_security_group" "web" {
 
 \footnotesize HashiCorp, "Terraform Documentation," terraform.io/docs.
 
-## Network Automation -- Before vs After
+## Discussion: IaC Risks
 
 \begin{center}
-\small
-\begin{tabular}{lll}
-\toprule
-& \textbf{Manual} & \textbf{Automated (IaC)} \\
-\midrule
-Speed & Days / weeks & Minutes \\
-Consistency & Varies (human error) & Identical every time \\
-Error rate & High & Low \\
-Scalability & Tens of devices & Thousands of devices \\
-Audit trail & Logs (maybe) & Full Git history \\
-Rollback & Painful & One command \\
-\bottomrule
-\end{tabular}
+\Large\textit{If infrastructure is defined as code,\\what happens when someone pushes a bug?}
 \end{center}
 
 \vfill
 
-Traditional: change request $\rightarrow$ approval $\rightarrow$ manual config $\rightarrow$ \textbf{days}.\\
-Automated: code change $\rightarrow$ review $\rightarrow$ deploy $\rightarrow$ \textbf{minutes}.
+- Hint: code review, staging environments, automated testing
+- How is this similar to software development best practices?
 
 # Emerging Trends
 
@@ -465,7 +508,7 @@ Automated: code change $\rightarrow$ review $\rightarrow$ deploy $\rightarrow$ \
 - **Serverless** (Function as a Service):
   - Deploy individual **functions**, not entire servers
   - Triggered by **events** (HTTP request, file upload, timer)
-  - Provider manages **all infrastructure** -- zero server management
+  - Provider manages **all infrastructure**: zero server management
   - Pay only for **execution time** (measured in milliseconds)
 
 - Examples: **AWS Lambda**, **Azure Functions**, **Google Cloud Functions**
@@ -542,7 +585,7 @@ Each layer builds on the previous one. This is the **evolution of networking**.
 
 ## Key Takeaways
 
-1. Traditional networks are **manual, rigid, and don't scale**
+1. Traditional networks are **manual, rigid, and do not scale**
 2. **SDN** separates control from data plane $\rightarrow$ centralized, programmable
 3. **NFV** replaces hardware appliances with software $\rightarrow$ flexible, cheap
 4. SDN + NFV are **complementary**: SDN steers, NFV processes
