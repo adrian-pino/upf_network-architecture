@@ -434,13 +434,13 @@ Key idea: if VMs think they have real hardware, they also need a \textbf{real-lo
 \node[lbl] at (2.5,3.3) {`eth0`: 192.168.1.20};
 \node[box, fill=blue!20, minimum width=6cm] (br) at (0,2.4) {br0 (Linux bridge)};
 \node[box, fill=yellow!20] (rtr) at (0,1.4) {vRouter / NAT};
-\node[box, fill=orange!15] (pnic) at (0,0.4) {Physical NIC};
+\node[box, fill=orange!15] (pnic) at (0,-0.4) {Physical NIC};
 \draw[thick] (-2.5,3.0) -- (-2.5,2.7);
 \draw[thick] (2.5,3.0) -- (2.5,2.7);
 \draw[thick] (0,2.1) -- (0,1.7);
-\draw[thick] (0,1.1) -- (0,0.7);
-\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-0.8) {Internet};
-\draw[thick] (0,0.1) -- (0,-0.3);
+\draw[thick] (0,1.1) -- (0,-0.15);
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.6) {Internet};
+\draw[thick] (0,-0.65) -- (0,-1.1);
 \end{tikzpicture}
 \end{center}
 
@@ -466,13 +466,13 @@ How does VM 1 reach VM 2? And how does it reach the Internet?
 \node[lbl] at (2.5,3.3) {`eth0`: 192.168.1.20};
 \node[box, fill=blue!20, minimum width=6cm] (br) at (0,2.4) {br0 (Linux bridge)};
 \node[box, fill=yellow!20] (rtr) at (0,1.4) {vRouter / NAT};
-\node[box, fill=orange!15] (pnic) at (0,0.4) {Physical NIC};
+\node[box, fill=orange!15] (pnic) at (0,-0.4) {Physical NIC};
 \draw[thick] (-2.5,3.0) -- (-2.5,2.7);
 \draw[thick] (2.5,3.0) -- (2.5,2.7);
 \draw[thick] (0,2.1) -- (0,1.7);
-\draw[thick] (0,1.1) -- (0,0.7);
-\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-0.8) {Internet};
-\draw[thick] (0,0.1) -- (0,-0.3);
+\draw[thick] (0,1.1) -- (0,-0.15);
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.6) {Internet};
+\draw[thick] (0,-0.65) -- (0,-1.1);
 \draw[->, thick, dashed, red!60] (-2.5,3.0) -- (-2.5,2.7) -- (2.5,2.7) -- (2.5,3.0);
 \node[font=\tiny, text=red!60] at (0,2.9) {VM-to-VM (L2)};
 \end{tikzpicture}
@@ -504,14 +504,14 @@ Both VMs share `br0`: the bridge forwards frames by MAC address, just like a phy
 \node[lbl] at (-3,1.3) {`10.0.1.1`};
 \node[lbl] at (3,1.3) {`10.0.2.1`};
 \node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {vRouter};
-\node[box, fill=orange!15] (pnic) at (0,0.0) {Physical NIC};
+\node[box, fill=orange!15] (pnic) at (0,-0.6) {Physical NIC};
 \draw[thick] (-3,2.5) -- (-3,2.1);
 \draw[thick] (3,2.5) -- (3,2.1);
 \draw[thick] (-1.5,1.8) -- (-0.8,1.1);
 \draw[thick] (1.5,1.8) -- (0.8,1.1);
-\draw[thick] (0,0.5) -- (0,0.3);
-\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.1) {Internet};
-\draw[thick] (0,-0.3) -- (0,-0.6);
+\draw[thick] (0,0.5) -- (0,-0.35);
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.8) {Internet};
+\draw[thick] (0,-0.85) -- (0,-1.3);
 \end{tikzpicture}
 \end{center}
 
@@ -540,14 +540,14 @@ How does VM 1 (10.0.1.10) reach VM 2 (10.0.2.20)? What components are involved?
 \node[lbl] at (-3,1.3) {`10.0.1.1`};
 \node[lbl] at (3,1.3) {`10.0.2.1`};
 \node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {vRouter};
-\node[box, fill=orange!15] (pnic) at (0,0.0) {Physical NIC};
+\node[box, fill=orange!15] (pnic) at (0,-0.6) {Physical NIC};
 \draw[thick] (-3,2.5) -- (-3,2.1);
 \draw[thick] (3,2.5) -- (3,2.1);
 \draw[thick] (-1.5,1.8) -- (-0.8,1.1);
 \draw[thick] (1.5,1.8) -- (0.8,1.1);
-\draw[thick] (0,0.5) -- (0,0.3);
-\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.1) {Internet};
-\draw[thick] (0,-0.3) -- (0,-0.6);
+\draw[thick] (0,0.5) -- (0,-0.35);
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.8) {Internet};
+\draw[thick] (0,-0.85) -- (0,-1.3);
 \draw[->, thick, dashed, red!60] (-3,3.0) -- (-3,2.1) -- (-0.8,1.1) -- (0,0.8) -- (0.8,1.1) -- (3,2.1) -- (3,3.0);
 \node[font=\tiny, text=red!60] at (0,0.4) {VM-to-VM (L3)};
 \end{tikzpicture}
