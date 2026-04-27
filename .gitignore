@@ -14,8 +14,3 @@
 *.snm
 *.toc
 *.vrb
-
-# Old version directories (remove these lines after deleting old/ old2/ old3/)
-old/
-old2/
-old3/
