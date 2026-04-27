@@ -377,6 +377,45 @@ Cable & Internal software path \\
 \footnotesize
 Key idea: if VMs think they have real hardware, they also need a \textbf{real-looking network}.
 
+## Physical Network: Two Locations, One Router
+
+- When servers are on **different networks** (e.g. different offices), each has its own switch
+- A **router** connects the two networks and forwards traffic between them
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8, every node/.style={transform shape},
+    box/.style={draw, thick, rounded corners, minimum width=1.6cm, minimum height=0.6cm, font=\scriptsize},
+    lbl/.style={font=\scriptsize\bfseries},
+    >=Stealth
+]
+% Location A
+\node[draw, thick, dashed, rounded corners, inner sep=10pt, fit={(-6.5,0.2)(-2.5,3.8)}, label=above:{\scriptsize Location A}] {};
+\node[box, fill=green!15] (srv1) at (-5.5,3.0) {Server 1};
+\node[box, fill=orange!15] (nic1) at (-5.5,2.0) {NIC};
+\node[box, fill=blue!20, minimum width=3cm] (sw1) at (-4.5,0.8) {Switch A};
+\node[lbl, font=\scriptsize] at (-3.5,2.0) {10.0.1.0/24};
+\draw[thick] (srv1) -- (nic1);
+\draw[thick] (nic1) -- (-5.5,1.1);
+
+% Location B
+\node[draw, thick, dashed, rounded corners, inner sep=10pt, fit={(2.5,0.2)(6.5,3.8)}, label=above:{\scriptsize Location B}] {};
+\node[box, fill=purple!15] (srv2) at (5.5,3.0) {Server 2};
+\node[box, fill=orange!15] (nic2) at (5.5,2.0) {NIC};
+\node[box, fill=blue!20, minimum width=3cm] (sw2) at (4.5,0.8) {Switch B};
+\node[lbl, font=\scriptsize] at (3.5,2.0) {10.0.2.0/24};
+\draw[thick] (srv2) -- (nic2);
+\draw[thick] (nic2) -- (5.5,1.1);
+
+% Router in the middle
+\node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {Router};
+\draw[thick] (sw1) -- (rtr);
+\draw[thick] (rtr) -- (sw2);
+\end{tikzpicture}
+\end{center}
+
+\footnotesize
+Same subnet $\rightarrow$ switch is enough (L2). Different subnets $\rightarrow$ router needed (L3).
+
 ## Physical vs Virtual: Side by Side
 
 \begin{center}
