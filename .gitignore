@@ -1,0 +1,11 @@
+# OS junk
+*:Zone.Identifier
+.DS_Store
+
+# Backup files
+*.bak
+
+# Old version directories (remove these lines after deleting old/ old2/ old3/)
+old/
+old2/
+old3/
