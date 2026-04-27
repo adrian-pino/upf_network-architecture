@@ -516,8 +516,6 @@ To reach the Internet: traffic goes through the vRouter/NAT and the physical NIC
 \end{center}
 
 \vfill
-\footnotesize
-How does VM 1 (10.0.1.10) reach VM 2 (10.0.2.20)? What components are involved?
 
 ## Example: VMs on Different Subnets (Solution)
 
