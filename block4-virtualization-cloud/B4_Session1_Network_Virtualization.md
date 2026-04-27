@@ -285,69 +285,66 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
 ## VMs vs Containers: Visual Comparison
 
 \begin{center}
-\begin{tikzpicture}[scale=0.65, every node/.style={transform shape},
+\begin{tikzpicture}[scale=0.7, every node/.style={transform shape},
     box/.style={draw, thick, rounded corners, minimum height=0.5cm, font=\scriptsize},
     >=Stealth
 ]
 % --- VMs side ---
-\node[font=\small\bfseries] at (-6.5,4.6) {Virtual Machines};
+\node[font=\small\bfseries] at (-5,5.4) {Virtual Machines};
 
-\node[box, fill=gray!20, minimum width=10cm] (hw1) at (-6.5,-0.2) {Hardware};
-\node[box, fill=blue!15, minimum width=10cm] (hyp) at (-6.5,0.5) {Hypervisor};
+\node[box, fill=gray!20, minimum width=9.5cm] (hw1) at (-5,-0.2) {Hardware};
+\node[box, fill=blue!15, minimum width=9.5cm] (hyp) at (-5,0.5) {Hypervisor};
 
 % VM 1 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=3.2cm] at (-9.5,2.35) {};
-\node[font=\scriptsize\bfseries] at (-9.5,3.8) {VM 1};
-\node[box, fill=green!15, minimum width=2.5cm] at (-9.5,1.3) {Guest OS};
-\node[box, fill=green!15, minimum width=2.5cm] at (-9.5,2.0) {Bins / Libs};
-\node[box, fill=red!15, minimum width=1cm] at (-10.2,2.7) {App};
-\node[box, fill=teal!15, minimum width=1cm] at (-8.8,2.7) {App};
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=4.0cm] at (-7.8,2.7) {};
+\node[font=\scriptsize\bfseries] at (-7.8,4.5) {VM 1};
+\node[box, fill=green!15, minimum width=2.5cm, minimum height=1.2cm] at (-7.8,1.5) {Guest OS};
+\node[box, fill=green!15, minimum width=2.5cm] at (-7.8,2.5) {Bins / Libs};
+\node[box, fill=red!15, minimum width=1cm] at (-8.4,3.2) {App};
+\node[box, fill=teal!15, minimum width=1cm] at (-7.2,3.2) {App};
 
 % VM 2 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=3.2cm] at (-6.5,2.35) {};
-\node[font=\scriptsize\bfseries] at (-6.5,3.8) {VM 2};
-\node[box, fill=purple!15, minimum width=2.5cm] at (-6.5,1.3) {Guest OS};
-\node[box, fill=purple!15, minimum width=2.5cm] at (-6.5,2.0) {Bins / Libs};
-\node[box, fill=red!15, minimum width=1cm] at (-7.2,2.7) {App};
-\node[box, fill=teal!15, minimum width=1cm] at (-5.8,2.7) {App};
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=4.0cm] at (-5,2.7) {};
+\node[font=\scriptsize\bfseries] at (-5,4.5) {VM 2};
+\node[box, fill=purple!15, minimum width=2.5cm, minimum height=1.2cm] at (-5,1.5) {Guest OS};
+\node[box, fill=purple!15, minimum width=2.5cm] at (-5,2.5) {Bins / Libs};
+\node[box, fill=red!15, minimum width=1cm] at (-5.6,3.2) {App};
+\node[box, fill=teal!15, minimum width=1cm] at (-4.4,3.2) {App};
 
 % VM 3 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=3.2cm] at (-3.5,2.35) {};
-\node[font=\scriptsize\bfseries] at (-3.5,3.8) {VM 3};
-\node[box, fill=green!15, minimum width=2.5cm] at (-3.5,1.3) {Guest OS};
-\node[box, fill=green!15, minimum width=2.5cm] at (-3.5,2.0) {Bins / Libs};
-\node[box, fill=red!15, minimum width=1cm] at (-4.2,2.7) {App};
-\node[box, fill=teal!15, minimum width=1cm] at (-2.8,2.7) {App};
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=4.0cm] at (-2.2,2.7) {};
+\node[font=\scriptsize\bfseries] at (-2.2,4.5) {VM 3};
+\node[box, fill=green!15, minimum width=2.5cm, minimum height=1.2cm] at (-2.2,1.5) {Guest OS};
+\node[box, fill=green!15, minimum width=2.5cm] at (-2.2,2.5) {Bins / Libs};
+\node[box, fill=red!15, minimum width=1cm] at (-2.8,3.2) {App};
+\node[box, fill=teal!15, minimum width=1cm] at (-1.6,3.2) {App};
 
 % --- Containers side ---
-\node[font=\small\bfseries] at (6.5,4.6) {Containers};
+\node[font=\small\bfseries] at (5,5.4) {Containers};
 
-\node[box, fill=gray!20, minimum width=10cm] (hw2) at (6.5,-0.2) {Hardware};
-\node[box, fill=yellow!15, minimum width=10cm] (hos) at (6.5,0.5) {Host OS};
-\node[box, fill=blue!15, minimum width=10cm] (eng) at (6.5,1.3) {Container Engine};
+\node[box, fill=gray!20, minimum width=9.5cm] (hw2) at (5,-0.2) {Hardware};
+\node[box, fill=yellow!15, minimum width=9.5cm] (hos) at (5,0.5) {Host OS};
+\node[box, fill=blue!15, minimum width=9.5cm] (eng) at (5,1.3) {Container Engine};
 
 % Container 1 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (3.5,2.65) {};
-\node[font=\scriptsize\bfseries] at (3.5,3.8) {C1};
-\node[box, fill=green!15, minimum width=2.5cm] at (3.5,2.2) {Bins / Libs};
-\node[box, fill=red!15, minimum width=2.5cm] at (3.5,2.9) {App};
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (2.2,2.65) {};
+\node[font=\scriptsize\bfseries] at (2.2,3.8) {C1};
+\node[box, fill=green!15, minimum width=2.5cm] at (2.2,2.2) {Bins / Libs};
+\node[box, fill=red!15, minimum width=2.5cm] at (2.2,2.9) {App};
 
 % Container 2 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (6.5,2.65) {};
-\node[font=\scriptsize\bfseries] at (6.5,3.8) {C2};
-\node[box, fill=purple!15, minimum width=2.5cm] at (6.5,2.2) {Bins / Libs};
-\node[box, fill=red!15, minimum width=2.5cm] at (6.5,2.9) {App};
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (5,2.65) {};
+\node[font=\scriptsize\bfseries] at (5,3.8) {C2};
+\node[box, fill=purple!15, minimum width=2.5cm] at (5,2.2) {Bins / Libs};
+\node[box, fill=red!15, minimum width=2.5cm] at (5,2.9) {App};
 
 % Container 3 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (9.5,2.65) {};
-\node[font=\scriptsize\bfseries] at (9.5,3.8) {C3};
-\node[box, fill=green!15, minimum width=2.5cm] at (9.5,2.2) {Bins / Libs};
-\node[box, fill=red!15, minimum width=2.5cm] at (9.5,2.9) {App};
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (7.8,2.65) {};
+\node[font=\scriptsize\bfseries] at (7.8,3.8) {C3};
+\node[box, fill=green!15, minimum width=2.5cm] at (7.8,2.2) {Bins / Libs};
+\node[box, fill=red!15, minimum width=2.5cm] at (7.8,2.9) {App};
 \end{tikzpicture}
 \end{center}
-
-\footnotesize
-VMs: each has its own OS (GBs, minutes to boot). Containers: share the host kernel (MBs, seconds to start).
 
 ## VMs vs Containers: Overview
 
@@ -400,6 +397,76 @@ Source: Red Hat, \textit{Containers vs VMs}, redhat.com.
 \vfill
 \footnotesize
 Microservices and container networking: \textbf{Block 5}.
+
+## Cloud Management Platforms (VMs)
+
+:::::::::::::: {.columns}
+::: {.column width="60%"}
+
+- VMs need a **management layer** to orchestrate resources
+- These platforms handle: provisioning, scheduling, networking, storage
+
+\vspace{0.3cm}
+
+**Key platforms:**
+
+- **OpenStack** (open-source, widely used in private clouds)
+- **VMware vSphere** (enterprise leader, proprietary)
+- **Proxmox VE** (open-source, lightweight alternative)
+- **Microsoft Hyper-V** (integrated with Windows Server)
+
+:::
+::: {.column width="40%"}
+
+\begin{center}
+\includegraphics[width=3.5cm]{img/openstack-logo.png}
+\end{center}
+
+:::
+::::::::::::::
+
+\vfill
+\footnotesize Source: OpenStack Foundation, openstack.org; VMware, vmware.com.
+
+## Container Orchestration Platforms
+
+:::::::::::::: {.columns}
+::: {.column width="55%"}
+
+- Containers need **orchestration** to manage hundreds or thousands of instances
+- Key tasks: scheduling, scaling, networking, self-healing
+
+\vspace{0.3cm}
+
+**Docker**: package and run containers
+
+- Standard container runtime
+- `Dockerfile` $\rightarrow$ image $\rightarrow$ container
+
+\vspace{0.2cm}
+
+**Kubernetes (K8s)**: orchestrate containers at scale
+
+- Automatic scaling and load balancing
+- Self-healing (restarts failed containers)
+- De facto industry standard
+
+:::
+::: {.column width="45%"}
+
+\begin{center}
+\includegraphics[width=2.5cm]{img/docker-logo.png}
+
+\vspace{0.5cm}
+
+\includegraphics[width=2.5cm]{img/kubernetes-logo.png}
+\end{center}
+
+:::
+::::::::::::::
+
+\vfill
+\footnotesize Source: Docker, Inc., docker.com; Kubernetes Project (CNCF), kubernetes.io.
 
 ## Discussion: Virtualization
 
