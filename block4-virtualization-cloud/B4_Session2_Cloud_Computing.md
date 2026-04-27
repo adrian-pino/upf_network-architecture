@@ -2,7 +2,7 @@
 title: "Block 4 -- Session 2"
 subtitle: "Cloud Computing \\& Cloud Networking"
 author: "Arquitectura de Xarxes"
-institute: "Universitat Pompeu Fabra -- 2025/2026"
+institute: "Universitat Pompeu Fabra"
 theme: "Madrid"
 colortheme: "dolphin"
 fonttheme: "structurebold"
@@ -13,7 +13,7 @@ header-includes:
   - \usepackage{booktabs}
   - \usepackage[table]{xcolor}
   - \usepackage{tikz}
-  - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, fit, decorations.pathreplacing}
+  - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit, decorations.pathreplacing}
   - \setbeamerfont{footnote}{size=\tiny}
   - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
 ---
@@ -64,15 +64,19 @@ header-includes:
 
 \begin{center}
 \small
-\begin{tabular}{ll}
-\toprule
-\textbf{Virtualization} & \textbf{Cloud Computing} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor{blue!10} \textbf{Virtualization} & \textbf{Cloud Computing} \\
+\hline
 Run multiple VMs on one host & Offer compute as a \textbf{service} \\
+\hline
 Internal IT optimization & External/internal consumption \\
+\hline
 Manual provisioning possible & \textbf{Automated, self-service} \\
+\hline
 You own the hardware & Provider owns the hardware \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -80,12 +84,22 @@ You own the hardware & Provider owns the hardware \\
 
 Key difference: **automation and self-service** (no phone calls, no tickets, no waiting).
 
+## Discussion: From Virtualization to Cloud
+
+\begin{center}
+\Large\textit{Your company already runs VMs on its own servers.\\Why would you move to the cloud instead of\\keeping everything in-house?}
+\end{center}
+
+\vfill
+
+Hints: think about CapEx vs OpEx, scaling speed, and who manages what.
+
 # Fundamentals of Cloud Computing
 
 ## Cloud Computing -- Definition (NIST)
 
 \begin{quote}
-``A model for enabling ubiquitous, convenient, \textbf{on-demand network access} to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort.''
+\textit{A model for enabling ubiquitous, convenient, \textbf{on-demand network access} to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort.}
 \end{quote}
 
 \vfill
@@ -96,23 +110,28 @@ Source: NIST SP 800-145 (2011). Still the standard definition used industry-wide
 
 \begin{center}
 \small
-\begin{tabular}{ll}
-\toprule
-\textbf{Characteristic} & \textbf{What it means} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor{blue!10} \textbf{Characteristic} & \textbf{What it means} \\
+\hline
 On-demand self-service & Provision resources without human interaction \\
+\hline
 Broad network access & Available over the network from any device \\
+\hline
 Resource pooling & Shared infrastructure, multi-tenant \\
+\hline
 Rapid elasticity & Scale up/down automatically \\
+\hline
 Measured service & Pay only for what you use (metered) \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
 \vfill
 
-- **All five** must be present to qualify as ``cloud computing''
-- If you need to call someone to get a VM $\rightarrow$ it's not cloud
+- **All five** must be present to qualify as "cloud computing"
+- If you need to call someone to get a VM $\rightarrow$ it is not cloud
 
 \vfill
 \footnotesize
@@ -141,7 +160,7 @@ Analogy: vending machine (cloud) vs restaurant with a waiter (traditional IT).
 **Resource pooling:**
 
 - Provider's resources serve **multiple tenants** simultaneously
-- Tenants don't know (or care) where their resources are physically located
+- Tenants do not know (or care) where their resources are physically located
 - Dynamically assigned based on demand
 - Builds on the **multi-tenancy** concepts from Session 1
 
@@ -195,7 +214,7 @@ Examples:
 
 \vfill
 
-Use case: ``I want a Linux server in Frankfurt, 4 CPUs, 16 GB RAM, right now.''
+Use case: "I want a Linux server in Frankfurt, 4 CPUs, 16 GB RAM, right now."
 
 \vfill
 \footnotesize
@@ -215,7 +234,7 @@ Examples:
 
 \vfill
 
-Use case: ``I wrote a Python web app. Just run it, scale it, I don't care about servers.''
+Use case: "I wrote a Python web app. Just run it, scale it, I do not care about servers."
 
 ## SaaS -- Software as a Service
 
@@ -231,28 +250,44 @@ Examples:
 
 \vfill
 
-Use case: ``I need email for 500 employees. I don't want to run a mail server.''
+Use case: "I need email for 500 employees. I do not want to run a mail server."
 
 ## Service Models -- Who Manages What?
 
 \begin{center}
 \footnotesize
-\begin{tabular}{lccc}
-\toprule
-\textbf{Component} & \textbf{IaaS} & \textbf{PaaS} & \textbf{SaaS} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\rowcolor{blue!10} \textbf{Component} & \textbf{IaaS} & \textbf{PaaS} & \textbf{SaaS} \\
+\hline
 Applications & You & You & \cellcolor{blue!15}Provider \\
+\hline
 Data & You & You & You \\
+\hline
 Runtime / Middleware & You & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
+\hline
 Operating System & You & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
+\hline
 Virtualization & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
+\hline
 Hardware & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
 - IaaS $\rightarrow$ SaaS: **less control, less responsibility**
 - Major providers (AWS, Azure, GCP) offer all three models
+
+## Discussion: Cloud Fundamentals
+
+\begin{center}
+\Large\textit{A university wants to offer a web-based tool\\for students to submit assignments.\\Should they choose IaaS, PaaS, or SaaS? Why?}
+\end{center}
+
+\vfill
+
+Hints: consider the IT team size, maintenance burden, and how much control they need.
 
 # Cloud Network Architecture
 
@@ -336,14 +371,17 @@ Source: AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
 
 \begin{center}
 \small
-\begin{tabular}{lll}
-\toprule
-\textbf{Destination} & \textbf{Target} & \textbf{Subnet type} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{blue!10} \textbf{Destination} & \textbf{Target} & \textbf{Subnet type} \\
+\hline
 \texttt{10.0.0.0/16} & local (within VPC) & Both \\
+\hline
 \texttt{0.0.0.0/0} & Internet Gateway & Public \\
+\hline
 \texttt{0.0.0.0/0} & NAT Gateway & Private \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -355,15 +393,19 @@ Source: AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
 
 \begin{center}
 \small
-\begin{tabular}{lll}
-\toprule
-& \textbf{Internet Gateway} & \textbf{NAT Gateway} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{blue!10} & \textbf{Internet Gateway} & \textbf{NAT Gateway} \\
+\hline
 Direction & Bidirectional & Outbound only \\
+\hline
 Use case & Public-facing services & Private instances need updates \\
+\hline
 Assigned to & VPC (one per VPC) & Public subnet \\
+\hline
 Instance needs & Public IP & Only private IP \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -381,15 +423,19 @@ Instance needs & Public IP & Only private IP \\
 
 \begin{center}
 \small
-\begin{tabular}{llll}
-\toprule
-\textbf{Direction} & \textbf{Protocol} & \textbf{Port} & \textbf{Source/Dest} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor{blue!10} \textbf{Direction} & \textbf{Protocol} & \textbf{Port} & \textbf{Source/Dest} \\
+\hline
 Inbound & TCP & 80 & \texttt{0.0.0.0/0} \\
+\hline
 Inbound & TCP & 443 & \texttt{0.0.0.0/0} \\
+\hline
 Inbound & TCP & 22 & \texttt{10.0.0.0/16} \\
+\hline
 Outbound & All & All & \texttt{0.0.0.0/0} \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -407,14 +453,17 @@ Source: AWS, "Security Groups for Your VPC," docs.aws.amazon.com.
 
 \begin{center}
 \small
-\begin{tabular}{lllll}
-\toprule
-\textbf{Rule \#} & \textbf{Direction} & \textbf{Protocol} & \textbf{Port} & \textbf{Action} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\rowcolor{blue!10} \textbf{Rule \#} & \textbf{Direction} & \textbf{Protocol} & \textbf{Port} & \textbf{Action} \\
+\hline
 100 & Inbound & TCP & 80 & ALLOW \\
+\hline
 200 & Inbound & TCP & 443 & ALLOW \\
+\hline
 * & Inbound & All & All & DENY \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -426,16 +475,21 @@ Source: AWS, "Network ACLs," docs.aws.amazon.com.
 
 \begin{center}
 \small
-\begin{tabular}{lll}
-\toprule
-& \textbf{Security Groups} & \textbf{Network ACLs} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{blue!10} & \textbf{Security Groups} & \textbf{Network ACLs} \\
+\hline
 Scope & Instance level & Subnet level \\
+\hline
 State & Stateful & Stateless \\
+\hline
 Rules & Allow only & Allow + Deny \\
+\hline
 Evaluation & All rules evaluated & First match wins \\
+\hline
 Default & Deny all inbound & Allow all \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -445,6 +499,16 @@ Default & Deny all inbound & Allow all \\
 
 - Security Groups $\rightarrow$ fine-grained per-instance control
 - Network ACLs $\rightarrow$ broad subnet-level guardrails
+
+## Discussion: Cloud Networking
+
+\begin{center}
+\Large\textit{You deploy a web application in a VPC.\\The web server needs to be public, but the database\\must not be reachable from the Internet. How?}
+\end{center}
+
+\vfill
+
+Hints: think about public vs private subnets, security groups, and NAT gateways.
 
 # Cloud Governance, Sovereignty \& Compliance
 
@@ -506,21 +570,6 @@ Source: Regulation (EU) 2016/679, General Data Protection Regulation, 2018.
 \footnotesize
 Source: AWS, "Shared Responsibility Model," aws.amazon.com/compliance/shared-responsibility-model.
 
-## References
-
-\footnotesize
-
-1. NIST SP 800-145, Mell & Grance, "The NIST Definition of Cloud Computing," 2011.
-2. NIST SP 800-144, "Guidelines on Security and Privacy in Public Cloud Computing," 2011.
-3. AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
-4. AWS, "Shared Responsibility Model," aws.amazon.com/compliance/shared-responsibility-model.
-5. Microsoft Azure, "Azure Virtual Network Documentation," docs.microsoft.com.
-6. Google Cloud, "VPC Documentation," cloud.google.com/vpc/docs.
-7. Regulation (EU) 2016/679, General Data Protection Regulation (GDPR), 2018.
-8. CSA, "Security Guidance for Critical Areas of Focus in Cloud Computing v5," 2022.
-9. Erl, Puttini & Mahmood, *Cloud Computing: Concepts, Technology & Architecture*, Prentice Hall, 2013.
-10. Kurose & Ross, *Computer Networking: A Top-Down Approach*, 8th ed., Pearson, 2021.
-
 # Session Summary
 
 ## Key Takeaways
@@ -543,3 +592,18 @@ Source: AWS, "Shared Responsibility Model," aws.amazon.com/compliance/shared-res
 <!-- nota: discutir shared responsibility model, data sovereignty, GDPR, y el US CLOUD Act. No hay una respuesta simple — es un dilema real -->
 
 Think about: shared responsibility, data location, and which laws apply.
+
+## References
+
+\footnotesize
+
+1. NIST SP 800-145, Mell & Grance, "The NIST Definition of Cloud Computing," 2011.
+2. NIST SP 800-144, "Guidelines on Security and Privacy in Public Cloud Computing," 2011.
+3. AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
+4. AWS, "Shared Responsibility Model," aws.amazon.com/compliance/shared-responsibility-model.
+5. Microsoft Azure, "Azure Virtual Network Documentation," docs.microsoft.com.
+6. Google Cloud, "VPC Documentation," cloud.google.com/vpc/docs.
+7. Regulation (EU) 2016/679, General Data Protection Regulation (GDPR), 2018.
+8. CSA, "Security Guidance for Critical Areas of Focus in Cloud Computing v5," 2022.
+9. Erl, Puttini & Mahmood, \textit{Cloud Computing: Concepts, Technology \& Architecture}, Prentice Hall, 2013.
+10. Kurose & Ross, \textit{Computer Networking: A Top-Down Approach}, 8th ed., Pearson, 2021.

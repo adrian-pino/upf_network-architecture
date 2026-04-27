@@ -80,7 +80,7 @@ Who operates them?
 ## A Data Center from the Inside
 
 \begin{center}
-\includegraphics[width=0.75\textwidth]{img/datacenter.jpg}
+\includegraphics[width=0.50\textwidth]{img/datacenter.jpg}
 \end{center}
 
 \vfill
@@ -208,14 +208,14 @@ Key properties:
     box/.style={draw, thick, rounded corners, minimum width=3cm, minimum height=0.8cm, font=\small},
     >=Stealth
 ]
-\node[box, fill=gray!20] (hw) at (0,0) {Physical Hardware (Host)};
-\node[box, fill=blue!15] (hyp) at (0,1.2) {Hypervisor / Host OS};
-\node[box, fill=green!15] (g1) at (-2.5,2.4) {Guest OS 1};
-\node[box, fill=green!15] (g2) at (0,2.4) {Guest OS 2};
-\node[box, fill=green!15] (g3) at (2.5,2.4) {Guest OS 3};
-\node[box, fill=orange!15] (a1) at (-2.5,3.6) {App A};
-\node[box, fill=orange!15] (a2) at (0,3.6) {App B};
-\node[box, fill=orange!15] (a3) at (2.5,3.6) {App C};
+\node[box, fill=gray!20, minimum width=7.8cm] (hw) at (0,0) {Physical Hardware (Host)};
+\node[box, fill=blue!15, minimum width=7.8cm] (hyp) at (0,1.2) {Hypervisor / Host OS};
+\node[box, fill=green!15, minimum width=2.5cm] (g1) at (-2.6,2.4) {Guest OS 1};
+\node[box, fill=green!15, minimum width=2.5cm] (g2) at (0,2.4) {Guest OS 2};
+\node[box, fill=green!15, minimum width=2.5cm] (g3) at (2.6,2.4) {Guest OS 3};
+\node[box, fill=red!15, minimum width=2.5cm] (a1) at (-2.6,3.6) {App A};
+\node[box, fill=teal!15, minimum width=2.5cm] (a2) at (0,3.6) {App B};
+\node[box, fill=olive!15, minimum width=2.5cm] (a3) at (2.6,3.6) {App C};
 \end{tikzpicture}
 \end{center}
 
@@ -256,21 +256,23 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
     >=Stealth
 ]
 % Type 1
-\node[font=\small\bfseries] at (-3.5,4) {Type 1 (Bare-metal)};
-\node[box, fill=gray!20] (hw1) at (-3.5,0) {Hardware};
-\node[box, fill=blue!25] (hyp1) at (-3.5,1) {Hypervisor};
+\node[font=\small\bfseries] at (-3.5,4.5) {Type 1 (Bare-metal)};
+\node[box, fill=gray!20, minimum width=5.8cm] (hw1) at (-3.5,0) {Hardware};
+\node[box, fill=blue!25, minimum width=5.8cm] (hyp1) at (-3.5,1) {Hypervisor};
 \node[box, fill=green!15] (vm1a) at (-4.8,2) {VM 1};
 \node[box, fill=purple!15] (vm1b) at (-2.2,2) {VM 2};
-\node[box, fill=orange!15] (a1a) at (-4.8,3) {App};
-\node[box, fill=orange!15] (a1b) at (-2.2,3) {App};
+\node[box, fill=red!15] (a1a) at (-4.8,3) {App};
+\node[box, fill=teal!15] (a1b) at (-2.2,3) {App};
 
 % Type 2
-\node[font=\small\bfseries] at (3.5,4) {Type 2 (Hosted)};
-\node[box, fill=gray!20] (hw2) at (3.5,0) {Hardware};
-\node[box, fill=yellow!15] (os2) at (3.5,1) {Host OS};
-\node[box, fill=blue!25] (hyp2) at (3.5,2) {Hypervisor};
+\node[font=\small\bfseries] at (3.5,4.5) {Type 2 (Hosted)};
+\node[box, fill=gray!20, minimum width=5.8cm] (hw2) at (3.5,0) {Hardware};
+\node[box, fill=yellow!15, minimum width=5.8cm] (os2) at (3.5,1) {Host OS};
+\node[box, fill=blue!25, minimum width=5.8cm] (hyp2) at (3.5,2) {Hypervisor};
 \node[box, fill=green!15] (vm2a) at (2.2,3) {VM 1};
 \node[box, fill=purple!15] (vm2b) at (4.8,3) {VM 2};
+\node[box, fill=red!15] (a2a) at (2.2,4) {App};
+\node[box, fill=teal!15] (a2b) at (4.8,4) {App};
 \end{tikzpicture}
 \end{center}
 
@@ -417,29 +419,65 @@ Key idea: if VMs think they have real hardware, they also need a \textbf{real-lo
 
 \begin{center}
 \begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.6cm, font=\scriptsize},
+    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize},
     lbl/.style={font=\scriptsize},
     >=Stealth
 ]
-\node[draw, thick, rounded corners, fill=gray!5, minimum width=8cm, minimum height=4.5cm] (host) at (0,1.8) {};
-\node[font=\scriptsize\bfseries] at (0,3.9) {Host (Linux)};
-\node[box, fill=green!15] (vm1) at (-2.5,3.0) {VM 1};
-\node[box, fill=purple!15] (vm2) at (2.5,3.0) {VM 2};
-\node[lbl] at (-2.5,2.4) {`eth0`: 192.168.1.10};
-\node[lbl] at (2.5,2.4) {`eth0`: 192.168.1.20};
-\node[box, fill=blue!20, minimum width=6cm] (br) at (0,1.4) {br0 (Linux bridge)};
-\node[box, fill=orange!15] (pnic) at (0,0.2) {pNIC (eth0)};
-\draw[thick] (-2.5,2.1) -- (-2.5,1.7);
-\draw[thick] (2.5,2.1) -- (2.5,1.7);
-\draw[thick] (0,1.1) -- (0,0.5);
-\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.5cm, minimum height=1.2cm, font=\scriptsize] (inet) at (0,-1.2) {Internet};
-\draw[thick] (0,-0.1) -- (0,-0.6);
+\node[draw, thick, rounded corners, fill=gray!5, minimum width=8cm, minimum height=5.2cm] (host) at (0,2.2) {};
+\node[font=\scriptsize\bfseries] at (0,4.7) {Host (Linux)};
+\node[box, fill=green!15] (vm1) at (-2.5,3.8) {VM 1};
+\node[box, fill=purple!15] (vm2) at (2.5,3.8) {VM 2};
+\node[lbl] at (-2.5,3.3) {`eth0`: 192.168.1.10};
+\node[lbl] at (2.5,3.3) {`eth0`: 192.168.1.20};
+\node[box, fill=blue!20, minimum width=6cm] (br) at (0,2.4) {br0 (Linux bridge)};
+\node[box, fill=yellow!20] (rtr) at (0,1.4) {vRouter / NAT};
+\node[box, fill=orange!15] (pnic) at (0,0.4) {Physical NIC};
+\draw[thick] (-2.5,3.0) -- (-2.5,2.7);
+\draw[thick] (2.5,3.0) -- (2.5,2.7);
+\draw[thick] (0,2.1) -- (0,1.7);
+\draw[thick] (0,1.1) -- (0,0.7);
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-0.8) {Internet};
+\draw[thick] (0,0.1) -- (0,-0.3);
 \end{tikzpicture}
 \end{center}
 
 \vfill
 \footnotesize
-No routing needed: same subnet, same bridge. The host forwards frames just like a physical switch.
+How does VM 1 reach VM 2? And how does it reach the Internet?
+
+## Example: VM-to-VM Communication (Solution)
+
+- Same subnet, same bridge $\rightarrow$ **L2 forwarding** (no routing needed)
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize},
+    lbl/.style={font=\scriptsize},
+    >=Stealth
+]
+\node[draw, thick, rounded corners, fill=gray!5, minimum width=8cm, minimum height=5.2cm] (host) at (0,2.2) {};
+\node[font=\scriptsize\bfseries] at (0,4.7) {Host (Linux)};
+\node[box, fill=green!15] (vm1) at (-2.5,3.8) {VM 1};
+\node[box, fill=purple!15] (vm2) at (2.5,3.8) {VM 2};
+\node[lbl] at (-2.5,3.3) {`eth0`: 192.168.1.10};
+\node[lbl] at (2.5,3.3) {`eth0`: 192.168.1.20};
+\node[box, fill=blue!20, minimum width=6cm] (br) at (0,2.4) {br0 (Linux bridge)};
+\node[box, fill=yellow!20] (rtr) at (0,1.4) {vRouter / NAT};
+\node[box, fill=orange!15] (pnic) at (0,0.4) {Physical NIC};
+\draw[thick] (-2.5,3.0) -- (-2.5,2.7);
+\draw[thick] (2.5,3.0) -- (2.5,2.7);
+\draw[thick] (0,2.1) -- (0,1.7);
+\draw[thick] (0,1.1) -- (0,0.7);
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-0.8) {Internet};
+\draw[thick] (0,0.1) -- (0,-0.3);
+\draw[->, thick, dashed, red!60] (-2.5,3.5) -- (-2.5,2.7) -- (2.5,2.7) -- (2.5,3.5);
+\node[font=\tiny, text=red!60] at (0,2.9) {VM-to-VM (L2)};
+\end{tikzpicture}
+\end{center}
+
+\vfill
+\footnotesize
+To reach the Internet: traffic goes through the vRouter/NAT and the physical NIC.
 
 ## Example: VMs on Different Subnets
 
@@ -447,30 +485,68 @@ No routing needed: same subnet, same bridge. The host forwards frames just like 
 - The host needs to act as a **router**: enable IP forwarding between bridges
 
 \begin{center}
-\begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.6cm, font=\scriptsize},
+\begin{tikzpicture}[scale=0.85, every node/.style={transform shape},
+    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize},
     lbl/.style={font=\scriptsize},
     >=Stealth
 ]
-\node[draw, thick, rounded corners, fill=gray!5, minimum width=10cm, minimum height=5.5cm] (host) at (0,2.0) {};
-\node[font=\scriptsize\bfseries] at (0,4.6) {Host (Linux, ip\_forward=1)};
-\node[box, fill=green!15] (vm1) at (-3,3.6) {VM 1};
-\node[box, fill=purple!15] (vm2) at (3,3.6) {VM 2};
-\node[lbl] at (-3,3.0) {`10.0.1.10/24`};
-\node[lbl] at (3,3.0) {`10.0.2.20/24`};
+\node[draw, thick, rounded corners, fill=gray!5, minimum width=10cm, minimum height=4.8cm] (host) at (0,1.8) {};
+\node[font=\scriptsize\bfseries] at (0,4.1) {Host (Linux)};
+\node[box, fill=green!15] (vm1) at (-3,3.3) {VM 1};
+\node[box, fill=purple!15] (vm2) at (3,3.3) {VM 2};
+\node[lbl] at (-3,2.8) {`10.0.1.10/24`};
+\node[lbl] at (3,2.8) {`10.0.2.20/24`};
 \node[box, fill=blue!20, minimum width=3cm] (br1) at (-3,1.8) {br0};
 \node[box, fill=blue!20, minimum width=3cm] (br2) at (3,1.8) {br1};
-\node[lbl] at (-3,1.2) {`10.0.1.1`};
-\node[lbl] at (3,1.2) {`10.0.2.1`};
+\node[lbl] at (-3,1.3) {`10.0.1.1`};
+\node[lbl] at (3,1.3) {`10.0.2.1`};
 \node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {vRouter};
-\node[box, fill=orange!15] (pnic) at (0,-0.1) {pNIC (eth0)};
-\draw[thick] (-3,2.7) -- (-3,2.1);
-\draw[thick] (3,2.7) -- (3,2.1);
+\node[box, fill=orange!15] (pnic) at (0,0.0) {Physical NIC};
+\draw[thick] (-3,2.5) -- (-3,2.1);
+\draw[thick] (3,2.5) -- (3,2.1);
 \draw[thick] (-1.5,1.8) -- (-0.8,1.1);
 \draw[thick] (1.5,1.8) -- (0.8,1.1);
-\draw[thick] (0,0.5) -- (0,0.2);
-\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.5cm, minimum height=1.2cm, font=\scriptsize] (inet) at (0,-1.5) {Internet};
-\draw[thick] (0,-0.4) -- (0,-0.9);
+\draw[thick] (0,0.5) -- (0,0.3);
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.1) {Internet};
+\draw[thick] (0,-0.3) -- (0,-0.6);
+\end{tikzpicture}
+\end{center}
+
+\vfill
+\footnotesize
+How does VM 1 (10.0.1.10) reach VM 2 (10.0.2.20)? What components are involved?
+
+## Example: VMs on Different Subnets (Solution)
+
+- Different subnets $\rightarrow$ traffic must go through the **vRouter** (L3 forwarding)
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85, every node/.style={transform shape},
+    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize},
+    lbl/.style={font=\scriptsize},
+    >=Stealth
+]
+\node[draw, thick, rounded corners, fill=gray!5, minimum width=10cm, minimum height=4.8cm] (host) at (0,1.8) {};
+\node[font=\scriptsize\bfseries] at (0,4.1) {Host (Linux)};
+\node[box, fill=green!15] (vm1) at (-3,3.3) {VM 1};
+\node[box, fill=purple!15] (vm2) at (3,3.3) {VM 2};
+\node[lbl] at (-3,2.8) {`10.0.1.10/24`};
+\node[lbl] at (3,2.8) {`10.0.2.20/24`};
+\node[box, fill=blue!20, minimum width=3cm] (br1) at (-3,1.8) {br0};
+\node[box, fill=blue!20, minimum width=3cm] (br2) at (3,1.8) {br1};
+\node[lbl] at (-3,1.3) {`10.0.1.1`};
+\node[lbl] at (3,1.3) {`10.0.2.1`};
+\node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {vRouter};
+\node[box, fill=orange!15] (pnic) at (0,0.0) {Physical NIC};
+\draw[thick] (-3,2.5) -- (-3,2.1);
+\draw[thick] (3,2.5) -- (3,2.1);
+\draw[thick] (-1.5,1.8) -- (-0.8,1.1);
+\draw[thick] (1.5,1.8) -- (0.8,1.1);
+\draw[thick] (0,0.5) -- (0,0.3);
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.1) {Internet};
+\draw[thick] (0,-0.3) -- (0,-0.6);
+\draw[->, thick, dashed, red!60] (-3,3.0) -- (-3,2.1) -- (-0.8,1.1) -- (0,0.8) -- (0.8,1.1) -- (3,2.1) -- (3,3.0);
+\node[font=\tiny, text=red!60] at (0,0.4) {VM-to-VM (L3)};
 \end{tikzpicture}
 \end{center}
 
@@ -496,51 +572,29 @@ Key characteristics:
 \footnotesize
 Same MAC/IP concepts from Blocks 1 to 3, now virtualized inside the hypervisor.
 
-## Virtual Switching
-
-\begin{center}
-\begin{tikzpicture}[
-    vm/.style={draw, thick, rounded corners, fill=green!15, minimum width=1.5cm, minimum height=0.8cm, font=\scriptsize},
-    vm2/.style={draw, thick, rounded corners, fill=purple!15, minimum width=1.5cm, minimum height=0.8cm, font=\scriptsize},
-    sw/.style={draw, thick, fill=blue!20, minimum width=5cm, minimum height=0.8cm, font=\small},
-    nic/.style={draw, thick, fill=orange!10, minimum width=1.2cm, minimum height=0.5cm, font=\tiny},
-    >=Stealth
-]
-\node[sw] (vsw) at (0,0) {Virtual Switch (vSwitch)};
-\node[vm] (vm1) at (-3,1.5) {VM 1};
-\node[vm2] (vm2) at (-1,1.5) {VM 2};
-\node[vm] (vm3) at (1,1.5) {VM 3};
-\node[vm2] (vm4) at (3,1.5) {VM 4};
-\node[nic] (pnic) at (0,-1.5) {Physical NIC};
-
-\draw[thick] (vm1) -- (-3,0.4);
-\draw[thick] (vm2) -- (-1,0.4);
-\draw[thick] (vm3) -- (1,0.4);
-\draw[thick] (vm4) -- (3,0.4);
-\draw[thick, <->] (vsw) -- node[right, font=\tiny] {uplink} (pnic);
-\end{tikzpicture}
-\end{center}
-
-- Connects VMs on the same host, works like a **physical L2 switch**
-- Maintains **MAC address table**, forwards frames by destination MAC
-- Connected to physical NIC via **uplink** for external traffic
-
 ## Types of Virtual Switches
 
-- **Standard vSwitch**: basic, built into the hypervisor
-- **Distributed vSwitch**: spans multiple hosts, centralized management
-- **Open vSwitch (OVS)**: open source, programmable, supports **SDN**
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\small
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{blue!10} \textbf{Type} & \textbf{Scope} & \textbf{Example} \\
+\hline
+Standard vSwitch & Single host & VMware vSS, Linux bridge \\
+\hline
+Distributed vSwitch & Multiple hosts, central mgmt & VMware vDS, Hyper-V \\
+\hline
+SDN-based vSwitch & Programmable, software-defined & OVS, VMware NSX \\
+\hline
+\end{tabular}
+\end{center}
+
+- All types support **VLANs** (same 802.1Q from Block 3, now inside the hypervisor)
+- OVS is open source and **programmable via software** $\rightarrow$ deep dive in **Block 5** (SDN)
 
 \vfill
-
-- Supports **VLANs** for traffic segmentation between VMs
-  - Same 802.1Q from Block 3, now inside the hypervisor
-
-\vfill
-
 \footnotesize
-OVS and SDN: we will explore how switches become programmable in \textbf{Block 5}.
-
 Source: Pfaff et al., "The Design and Implementation of Open vSwitch," *NSDI*, 2015.
 
 ## Bridging Modes
