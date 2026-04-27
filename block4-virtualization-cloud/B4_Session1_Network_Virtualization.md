@@ -380,44 +380,40 @@ Key idea: if VMs think they have real hardware, they also need a \textbf{real-lo
 ## Physical vs Virtual: Side by Side
 
 \begin{center}
-\begin{tikzpicture}[scale=0.85, every node/.style={transform shape},
+\begin{tikzpicture}[
     box/.style={draw, thick, rounded corners, minimum width=1.4cm, minimum height=0.6cm, font=\scriptsize},
     lbl/.style={font=\scriptsize\bfseries},
     >=Stealth
 ]
 % Physical side
-\node[lbl] at (-4,4.2) {Physical Network};
-\node[box, fill=green!15] (srv1) at (-5.5,3.2) {Server 1};
-\node[box, fill=purple!15] (srv2) at (-2.5,3.2) {Server 2};
-\node[box, fill=orange!15] (nic1) at (-5.5,2.2) {NIC};
-\node[box, fill=orange!15] (nic2) at (-2.5,2.2) {NIC};
-\node[box, fill=blue!20, minimum width=4cm] (psw) at (-4,1.0) {Physical Switch};
-\node[box, fill=yellow!20] (prtr) at (-4,-0.2) {Router};
+\node[lbl] at (-4,3.8) {Physical Network};
+\node[box, fill=green!15] (srv1) at (-5.5,2.8) {Server 1};
+\node[box, fill=purple!15] (srv2) at (-2.5,2.8) {Server 2};
+\node[box, fill=orange!15] (nic1) at (-5.5,1.8) {NIC};
+\node[box, fill=orange!15] (nic2) at (-2.5,1.8) {NIC};
+\node[box, fill=blue!20, minimum width=4cm] (psw) at (-4,0.6) {Physical Switch};
 \draw[thick] (srv1) -- (nic1);
 \draw[thick] (srv2) -- (nic2);
-\draw[thick] (nic1) -- (-5.5,1.3);
-\draw[thick] (nic2) -- (-2.5,1.3);
-\draw[thick] (psw) -- (prtr);
+\draw[thick] (nic1) -- (-5.5,0.9);
+\draw[thick] (nic2) -- (-2.5,0.9);
 
 % Virtual side
-\node[draw, thick, rounded corners, fill=gray!5, minimum width=4.5cm, minimum height=5cm] (host) at (4,1.8) {};
-\node[lbl] at (4,4.0) {Host};
-\node[box, fill=green!15] (vm1) at (2.5,3.2) {VM 1};
-\node[box, fill=purple!15] (vm2) at (5.5,3.2) {VM 2};
-\node[box, fill=orange!15] (vnic1) at (2.5,2.2) {vNIC};
-\node[box, fill=orange!15] (vnic2) at (5.5,2.2) {vNIC};
-\node[box, fill=blue!20, minimum width=4cm] (vsw) at (4,1.0) {vSwitch};
-\node[box, fill=yellow!20] (vrtr) at (4,-0.2) {vRouter};
+\node[draw, thick, rounded corners, fill=gray!5, minimum width=4.5cm, minimum height=4cm] (host) at (4,1.8) {};
+\node[lbl] at (4,3.6) {Host};
+\node[box, fill=green!15] (vm1) at (2.5,2.8) {VM 1};
+\node[box, fill=purple!15] (vm2) at (5.5,2.8) {VM 2};
+\node[box, fill=orange!15] (vnic1) at (2.5,1.8) {vNIC};
+\node[box, fill=orange!15] (vnic2) at (5.5,1.8) {vNIC};
+\node[box, fill=blue!20, minimum width=4cm] (vsw) at (4,0.6) {vSwitch};
 \draw[thick] (vm1) -- (vnic1);
 \draw[thick] (vm2) -- (vnic2);
-\draw[thick] (vnic1) -- (2.5,1.3);
-\draw[thick] (vnic2) -- (5.5,1.3);
-\draw[thick] (vsw) -- (vrtr);
+\draw[thick] (vnic1) -- (2.5,0.9);
+\draw[thick] (vnic2) -- (5.5,0.9);
 \end{tikzpicture}
 \end{center}
 
-\footnotesize
-Router / vRouter only needed when VMs are on **different subnets** (L3 forwarding).
+- Left: two physical servers connected by a physical switch and cables
+- Right: two VMs connected by a virtual switch, all inside **one physical host**
 
 ## Example: VM-to-VM Communication
 
