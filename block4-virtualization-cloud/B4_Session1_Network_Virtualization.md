@@ -285,7 +285,7 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
 ## VMs vs Containers: Visual Comparison
 
 \begin{center}
-\includegraphics[width=\textwidth]{img/vm-vs-container.png}
+\includegraphics[width=0.75\textwidth]{img/vm-vs-container.png}
 \end{center}
 
 \vfill
@@ -364,14 +364,22 @@ Microservices and container networking: \textbf{Block 5}.
 ::: {.column width="40%"}
 
 \begin{center}
-\includegraphics[width=3.5cm]{img/openstack-logo.png}
+\includegraphics[width=2.5cm]{img/openstack-logo.png}
+
+\vspace{0.3cm}
+
+\includegraphics[width=2.5cm]{img/vmware-logo.png}
+
+\vspace{0.3cm}
+
+\includegraphics[width=2.5cm]{img/proxmox-logo.png}
 \end{center}
 
 :::
 ::::::::::::::
 
 \vfill
-\footnotesize Source: OpenStack Foundation, openstack.org; VMware, vmware.com.
+\footnotesize Source: OpenStack Foundation, openstack.org; VMware, vmware.com; Proxmox Server Solutions, proxmox.com.
 
 ## Container Orchestration Platforms
 
