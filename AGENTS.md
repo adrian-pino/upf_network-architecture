@@ -22,9 +22,17 @@
 ## Estructura de cada clase
 1. Título + pregunta motivadora o situación real
 2. Objetivos de aprendizaje (2-3 máximo)
-3. Contenido principal dividido en bloques temáticos
+3. Contenido principal dividido en bloques temáticos (secciones `#`)
+   - Al final de cada sección, incluir una **slide de discusión** con una pregunta abierta para fomentar el debate en clase
+   - Formato: pregunta centrada en `\Large\textit{...}`, con hints o pistas debajo
+   - Objetivo: que los alumnos reflexionen y consoliden lo aprendido antes de pasar a la siguiente sección
 4. Resumen / puntos clave de la sesión
-5. Pregunta de repaso, ejercicio rápido o tema de debate
+5. Pregunta de repaso final, ejercicio rápido o tema de debate
+
+## Estilo de redacción
+- Evitar el uso de guiones largos (`--`, `—`) como conectores entre frases; usar dos puntos, punto y coma, o reestructurar la frase
+- Evitar contracciones en inglés (`don't` → `do not`, `can't` → `cannot`)
+- Preferir lenguaje directo y natural, evitando patrones repetitivos que parezcan generados por LLM
 
 ## Formato de salida
 - Genera archivos Markdown
@@ -47,7 +55,7 @@
   title: "Block N -- Session M"
   subtitle: "Topic \\& Topic"
   author: "Arquitectura de Xarxes"
-  institute: "Universitat Pompeu Fabra -- 2025/2026"
+  institute: "Universitat Pompeu Fabra"
   theme: "Madrid"
   colortheme: "dolphin"
   fonttheme: "structurebold"

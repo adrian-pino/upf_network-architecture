@@ -1,8 +1,8 @@
 ---
 title: "Block 4 -- Session 1"
-subtitle: "Network Virtualization"
+subtitle: "Data Centers \\& Network Virtualization"
 author: "Arquitectura de Xarxes"
-institute: "Universitat Pompeu Fabra -- 2025/2026"
+institute: "Universitat Pompeu Fabra"
 theme: "Madrid"
 colortheme: "dolphin"
 fonttheme: "structurebold"
@@ -18,23 +18,102 @@ header-includes:
   - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
 ---
 
-# Introduction to Network Virtualization
+# Introduction
 
-## What If One Machine Could Do the Job of Ten?
+## What Is the Cloud and How Is It Formed?
 
 \begin{center}
-\Large\textit{What is the Cloud and how is it formed?\\How do networks work in the cloud?}
+\Large\textit{Every time you use Netflix, Gmail, or ChatGPT,\\your request travels to a building full of servers.\\What happens inside that building?}
 \end{center}
 
 \vfill
 
 **Learning objectives:**
 
-1. Understand why virtualization exists and what problems it solves
-2. Distinguish VMs, hypervisors, and containers
-3. Explain how networks are virtualized (vNICs, vSwitches, vRouters)
+1. Understand why data centers exist and what they contain
+2. Explain virtualization and distinguish VMs, hypervisors, and containers
+3. Describe how networks are virtualized (vNICs, vSwitches, overlays)
 
-<!-- nota: estas dos preguntas guían los bloques 4 y 5 enteros -->
+<!-- nota: esta pregunta conecta con la experiencia diaria de los alumnos — todos usan servicios cloud sin saberlo -->
+
+## Block 4 Roadmap
+
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+& \textbf{Session 1 (today)} & \textbf{Session 2} \\
+\midrule
+Theme & \textit{The infrastructure} & \textit{The business model} \\
+\midrule
+Topics & Data centers & From virtualization to cloud \\
+& VMs \& hypervisors & NIST cloud definition \\
+& VMs vs containers (overview) & IaaS / PaaS / SaaS \\
+& vNICs, vSwitches, vRouters & VPC architecture \\
+& Multi-tenancy \& VLANs & Security groups \& ACLs \\
+& Overlay networks (VXLAN) & Governance \& GDPR \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+<!-- nota: dejar claro que hoy construimos la base técnica; la sesión 2 la convierte en negocio -->
+
+# Data Centers
+
+## What Is a Data Center?
+
+- A **data center** is a facility housing computer systems and networking equipment
+- Purpose: run applications and store data **reliably, at scale, 24/7**
+- Ranges from small server rooms to **warehouse-scale** buildings
+
+\vfill
+
+Who operates them?
+
+- **Enterprises**: banks, hospitals, universities (their own IT)
+- **Cloud providers**: AWS, Azure, GCP (sell capacity to others)
+- **Colocation**: you rent space; provider handles power and cooling
+
+\footnotesize Source: Barroso, Clidaras \& Hölzle, *The Datacenter as a Computer*, 3rd ed., Morgan \& Claypool, 2019.
+
+## A Data Center from the Inside
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{img/datacenter.jpg}
+\end{center}
+
+\vfill
+
+\footnotesize
+Rows of server racks, each containing dozens of servers, connected by structured cabling. Source: Cisco, \textit{What Is a Data Center?}, cisco.com.
+
+<!-- nota: señalar los racks, el cableado estructurado, y la refrigeración visible en el techo -->
+
+## Inside a Data Center: Five Pillars
+
+\begin{center}
+\begin{tikzpicture}[
+    pillar/.style={draw, thick, rounded corners, minimum width=2.2cm, minimum height=0.9cm, font=\scriptsize, align=center},
+    >=Stealth
+]
+\node[pillar, fill=blue!15] (compute) at (0,0) {Compute\\(CPUs)};
+\node[pillar, fill=red!15] (gpu) at (2.8,0) {Accelerators\\(GPUs/TPUs)};
+\node[pillar, fill=green!15] (storage) at (5.6,0) {Storage\\(SSDs/HDDs)};
+\node[pillar, fill=orange!15] (network) at (8.4,0) {Network\\(switches, cabling)};
+\node[pillar, fill=gray!20] (facility) at (11.2,0) {Facilities\\(power, cooling)};
+\end{tikzpicture}
+\end{center}
+
+\vfill
+
+- **Compute**: CPUs that execute workloads (web servers, databases, analytics)
+- **Accelerators**: GPUs and TPUs for AI/ML training and inference
+  - The explosive growth of AI has made GPUs a critical data center resource
+- **Storage**: SSDs and HDDs holding persistent data
+- **Network**: switches, routers, and structured cabling connecting everything
+- **Facilities**: redundant power supplies, cooling systems, physical security
+
+<!-- nota: preguntar a los alumnos si saben por qué NVIDIA vale más que muchos países — es por los GPUs en data centers -->
 
 ## The Problem with Physical Infrastructure
 
@@ -47,11 +126,11 @@ header-includes:
 \vfill
 
 \footnotesize
-Key insight: most servers sit idle most of the time. We're paying for hardware we barely use.
+Key insight: most servers sit idle most of the time. We are paying for hardware we barely use.
 
-<!-- nota: preguntar a los alumnos cuántos servidores creen que tiene Google (~1M+) -->
+<!-- nota: preguntar a los alumnos cuántos servidores creen que tiene Google (~1M+). AWS tiene data centers en ~30 regiones -->
 
-## Resource Consolidation
+## From Waste to Efficiency: Consolidation
 
 - **Consolidation** = run multiple workloads on fewer physical machines
 - Benefits:
@@ -59,24 +138,68 @@ Key insight: most servers sit idle most of the time. We're paying for hardware w
   - Lower energy, cooling, and physical space costs
   - Simpler infrastructure management
 - Trade-off: shared hardware requires **strong isolation** between workloads
+- The enabling technology? **Virtualization**
 
 \vfill
 
 \footnotesize
-Analogy: instead of one person per house, we build apartment buildings -- shared structure, private spaces.
+Analogy: instead of one person per house, we build apartment buildings. Shared structure, private spaces.
 
 ## Scalability and Elasticity
 
 - **Scalability**: ability to grow resources as demand increases
 - **Elasticity**: ability to grow \textit{and shrink} automatically
 - Physical infrastructure provides **neither** in practice:
-  - Can't add servers in minutes
-  - Can't return servers when demand drops
-- Virtualization enables both $\rightarrow$ foundation of **cloud computing**
+  - Cannot add servers in minutes
+  - Cannot return servers when demand drops
+- Virtualization enables both $\rightarrow$ foundation of **cloud computing** (Session 2)
 
 <!-- nota: ejemplo Netflix — escala servidores en horas pico, reduce de madrugada. Sin virtualización esto sería imposible -->
 
+## Discussion: Data Centers
+
+\begin{center}
+\Large\textit{A company runs 50 servers, each at 10 percent utilization.\\That is 50 machines doing the work of 5.\\What would you do to reduce waste?}
+\end{center}
+
+\vfill
+
+Hints: consolidation, fewer physical machines, higher utilization, isolation between workloads.
+
+<!-- nota: guiar hacia la idea de virtualización como solución natural al desperdicio de recursos -->
+
 # Virtualization Concepts
+
+## What Is Virtualization?
+
+- **Virtualization** makes it possible for a single computer to act like many
+- A software layer called **hypervisor** divides the physical resources (CPU, RAM, disk, NIC) into isolated **virtual machines**
+- Each VM gets its own share and believes it owns dedicated hardware
+
+\vfill
+
+\begin{center}
+\footnotesize
+\textit{Virtualization began in the 1960s as a technology for time-sharing\\on mainframe computers. It gained popularity in the 2000s as\\organizations looked for ways to make the most of their computing resources.}
+\end{center}
+
+\footnotesize Source: Red Hat, \textit{What is a Virtual Machine?}, redhat.com.
+
+## Virtual Machines (VMs)
+
+- A VM is an **isolated computing environment** with its own CPU, memory, network interface, and storage
+- Runs a **full operating system** (Linux, Windows, etc.)
+- Completely **isolated** from other VMs on the same host
+
+\vfill
+
+Key properties:
+
+- **Encapsulation**: entire VM state stored as files $\rightarrow$ easy to copy, move, backup
+- **Hardware independence**: the VM does not care about the underlying hardware
+- **Snapshotting**: save and restore VM state at any point in time
+
+\footnotesize Source: Popek \& Goldberg, "Formal Requirements for Virtualizable Third Generation Architectures," *CACM*, 1974.
 
 ## Host and Guest Systems
 
@@ -100,22 +223,7 @@ Analogy: instead of one person per house, we build apartment buildings -- shared
 - **Guest**: virtual machine running its own OS on the host
 - Each guest believes it has **dedicated hardware** (abstraction)
 
-\footnotesize Source: Popek & Goldberg, "Formal Requirements for Virtualizable Third Generation Architectures," *CACM*, 1974.
-
-## Virtual Machines (VMs)
-
-- A VM is a **software emulation** of a complete computer
-- Has its own: virtual CPU, RAM, disk, network interfaces
-- Runs a **full operating system** (Linux, Windows, etc.)
-- Completely **isolated** from other VMs on the same host
-
-Key properties:
-
-- **Encapsulation**: entire VM state stored as files $\rightarrow$ easy to copy, move, backup
-- **Hardware independence**: VM doesn't care about underlying hardware
-- **Snapshotting**: save and restore VM state at any point in time
-
-## Hypervisors -- The Key Enabler
+## Hypervisors: The Key Enabler
 
 - A **hypervisor** (or VMM) manages and allocates physical resources to VMs
 - Two types:
@@ -134,9 +242,9 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
 \end{tabular}
 \end{center}
 
-\footnotesize Source: VMware, "Understanding Full Virtualization, Paravirtualization, and Hardware Assist," 2007; Barham et al., "Xen and the Art of Virtualization," *SOSP*, 2003.
+\footnotesize Source: Barham et al., "Xen and the Art of Virtualization," *SOSP*, 2003.
 
-## Type 1 vs Type 2 -- Visual Comparison
+## Type 1 vs Type 2: Visual Comparison
 
 \begin{center}
 \begin{tikzpicture}[
@@ -165,43 +273,133 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
 - Type 1: hypervisor **replaces** the OS $\rightarrow$ less overhead, used in production
 - Type 2: hypervisor runs **as an application** $\rightarrow$ easier to set up, used for dev/testing
 
-## VMs vs Containers -- Overview
+## VMs vs Containers: Overview
+
+:::::::::::::: {.columns}
+::: {.column width="50%"}
+
+**Virtual Machines**
+
+- Include a **full guest OS** per instance
+- Size: **GBs** (full OS image)
+- Boot time: **minutes**
+- Strong isolation (hardware level)
+- Can run **different operating systems**
+
+:::
+::: {.column width="50%"}
+
+**Containers**
+
+- **No guest OS**; share the host kernel
+- Size: **MBs** (app + dependencies only)
+- Boot time: **seconds**
+- Good isolation (kernel namespaces/cgroups)
+- All containers share the **same OS kernel**
+
+:::
+::::::::::::::
+
+\vfill
+\footnotesize
+This is just an overview. We will do a deep dive into container internals and networking in \textbf{Block 5}.
+
+Source: Red Hat, \textit{Containers vs VMs}, redhat.com.
+
+## When to Use VMs vs Containers
+
+- **Use VMs when:**
+  - You need **different operating systems** (Linux + Windows on the same host)
+  - Strong **security isolation** is critical (e.g., different tenants)
+  - Legacy applications that require a specific OS environment
+
+- **Use containers when:**
+  - Running **many instances** of similar applications
+  - **Fast startup** and scaling matters
+  - **Microservices** architecture (each service in its own container)
+
+- **In practice**: most organizations use **both** together
+  - Containers run inside VMs for defense in depth
+
+\vfill
+\footnotesize
+Microservices and container networking: \textbf{Block 5}.
+
+## Discussion: Virtualization
+
+\begin{center}
+\Large\textit{You need to deploy 200 instances of the same web application\\that must scale up and down every few minutes.\\Would you use VMs, containers, or both? Why?}
+\end{center}
+
+\vfill
+
+Hints: boot time, resource overhead, isolation needs, how fast you need to scale.
+
+<!-- nota: no hay una respuesta única correcta — la clave es que razonen sobre los trade-offs -->
+
+# Virtual Network Infrastructure
+
+## From Physical to Virtual Networks
+
+- You already know how physical networks work (Blocks 1 to 3):
+  - NICs, switches, routers, VLANs, routing protocols
+- When we virtualize servers, we also need to **virtualize the network**
+- The same concepts apply, but implemented **in software** instead of hardware
 
 \begin{center}
 \small
-\begin{tabular}{lll}
+\begin{tabular}{ll}
 \toprule
-& \textbf{Virtual Machines} & \textbf{Containers} \\
+\textbf{Physical} & \textbf{Virtual equivalent} \\
 \midrule
-Isolation & Full OS per VM (hardware-level) & Shared kernel (namespace/cgroup) \\
-Size & GBs (full OS image) & MBs (app + dependencies only) \\
-Boot time & Minutes & Seconds \\
-Overhead & Higher (full OS running) & Lower (shared kernel) \\
-Security & Strong (hardware isolation) & Good (kernel-level isolation) \\
+NIC (network interface card) & \textbf{vNIC} (virtual NIC) \\
+Switch & \textbf{vSwitch} (virtual switch) \\
+Router & \textbf{vRouter} (virtual router) \\
+Cable & Internal software path \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 \vfill
 \footnotesize
-Deep dive into containers in Block 5. For now: VMs = heavy isolation, containers = lightweight isolation. Docker, Inc., "Docker Overview," docs.docker.com.
+Key idea: if VMs think they have real hardware, they also need a \textbf{real-looking network}.
 
-## When to Use VMs vs Containers
+## Physical vs Virtual: Side by Side
 
-- **Use VMs when:**
-  - You need to run **different operating systems** (Linux + Windows)
-  - Strong **security isolation** is critical (e.g., different tenants)
-  - Legacy applications that require a specific OS environment
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, minimum width=1.4cm, minimum height=0.6cm, font=\scriptsize},
+    lbl/.style={font=\scriptsize\bfseries},
+    >=Stealth
+]
+% Physical side
+\node[lbl] at (-4,3.8) {Physical Network};
+\node[box, fill=green!15] (srv1) at (-5.5,2.8) {Server 1};
+\node[box, fill=green!15] (srv2) at (-2.5,2.8) {Server 2};
+\node[box, fill=orange!15] (nic1) at (-5.5,1.8) {NIC};
+\node[box, fill=orange!15] (nic2) at (-2.5,1.8) {NIC};
+\node[box, fill=blue!20, minimum width=4cm] (psw) at (-4,0.6) {Physical Switch};
+\draw[thick] (srv1) -- (nic1);
+\draw[thick] (srv2) -- (nic2);
+\draw[thick] (nic1) -- (-5.5,0.9);
+\draw[thick] (nic2) -- (-2.5,0.9);
 
-- **Use containers when:**
-  - Running **many instances** of similar applications
-  - **Fast startup** and scaling is important
-  - **Microservices** architecture (each service in its own container)
+% Virtual side
+\node[lbl] at (4,3.8) {Virtual Network (inside one host)};
+\node[box, fill=green!15] (vm1) at (2.5,2.8) {VM 1};
+\node[box, fill=green!15] (vm2) at (5.5,2.8) {VM 2};
+\node[box, fill=orange!15] (vnic1) at (2.5,1.8) {vNIC};
+\node[box, fill=orange!15] (vnic2) at (5.5,1.8) {vNIC};
+\node[box, fill=blue!20, minimum width=4cm] (vsw) at (4,0.6) {vSwitch};
+\draw[thick] (vm1) -- (vnic1);
+\draw[thick] (vm2) -- (vnic2);
+\draw[thick] (vnic1) -- (2.5,0.9);
+\draw[thick] (vnic2) -- (5.5,0.9);
+\end{tikzpicture}
+\end{center}
 
-- **In practice**: most organizations use **both** together
-  - Containers run inside VMs for an extra layer of isolation (defense-in-depth)
-
-# Virtual Network Infrastructure
+- Left: two physical servers connected by a physical switch and cables
+- Right: two VMs connected by a virtual switch, all inside **one physical host**
 
 ## Virtual Network Interfaces (vNICs)
 
@@ -211,32 +409,15 @@ Deep dive into containers in Block 5. For now: VMs = heavy isolation, containers
 
 Key characteristics:
 
-- Has its own **MAC address** (software-assigned, not burned-in)
+- Has its own **MAC address** (software-assigned by the hypervisor)
 - Has its own **IP address** configuration
 - Connected to a **virtual switch** on the host
-
-## MAC Addressing in Virtual Environments
-
-- Physical NICs: MAC **burned into hardware** (OUI + device ID)
-- Virtual NICs: MAC **generated by the hypervisor**
-- Common vendor prefixes identify the platform:
-
-\begin{center}
-\small
-\begin{tabular}{ll}
-\toprule
-\textbf{MAC Prefix} & \textbf{Platform} \\
-\midrule
-\texttt{00:50:56} & VMware \\
-\texttt{52:54:00} & KVM / QEMU \\
-\texttt{00:15:5D} & Microsoft Hyper-V \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-- Risk: MAC collisions if addresses aren't managed properly
-- Hypervisors ensure **uniqueness** within the same host
 - Multiple vNICs per VM enable **multi-network** connectivity
+
+\vfill
+
+\footnotesize
+Same MAC/IP concepts from Blocks 1 to 3, now virtualized inside the hypervisor.
 
 ## Virtual Switching
 
@@ -262,23 +443,27 @@ Key characteristics:
 \end{tikzpicture}
 \end{center}
 
-- Connects VMs on the same host -- works like a **physical L2 switch**
+- Connects VMs on the same host, works like a **physical L2 switch**
 - Maintains **MAC address table**, forwards frames by destination MAC
 - Connected to physical NIC via **uplink** for external traffic
 
-## Virtual Switch Features
+## Types of Virtual Switches
+
+- **Standard vSwitch**: basic, built into the hypervisor
+- **Distributed vSwitch**: spans multiple hosts, centralized management
+- **Open vSwitch (OVS)**: open source, programmable, supports **SDN**
+
+\vfill
 
 - Supports **VLANs** for traffic segmentation between VMs
   - Same 802.1Q from Block 3, now inside the hypervisor
 
-- Types of virtual switches:
-  - **Standard vSwitch**: basic, built into the hypervisor
-  - **Distributed vSwitch**: spans multiple hosts, centralized management
-  - **Open vSwitch (OVS)**: open-source, programmable, supports SDN
+\vfill
 
-\footnotesize Source: Pfaff et al., "The Design and Implementation of Open vSwitch," *NSDI*, 2015.
+\footnotesize
+OVS and SDN: we will explore how switches become programmable in \textbf{Block 5}.
 
-<!-- nota: OVS se retoma en Block 5 cuando hablemos de SDN -->
+Source: Pfaff et al., "The Design and Implementation of Open vSwitch," *NSDI*, 2015.
 
 ## Bridging Modes
 
@@ -312,9 +497,12 @@ Host-only & Only sees the host & No & Isolated labs \\
 
 \vfill
 
-Same NAT concept from Block 3 -- now managed by the hypervisor instead of a physical device.
+\footnotesize
+Same NAT concept from Block 3, now managed by the hypervisor instead of a physical device.
 
-## Packet Flow -- Virtual to Physical
+In Session 2 we will see how cloud providers offer NAT as a \textbf{managed service} (NAT Gateway).
+
+## Packet Flow: Virtual to Physical
 
 \begin{center}
 \begin{tikzpicture}[
@@ -342,36 +530,40 @@ Same NAT concept from Block 3 -- now managed by the hypervisor instead of a phys
 4. vRouter may apply **NAT** (replace private IP with host IP)
 5. Frame exits through **physical NIC** to the external network
 
+## Discussion: Virtual Networks
+
+\begin{center}
+\Large\textit{Two VMs on the same host want to communicate.\\Does their traffic ever leave the physical machine?\\What if they are on different subnets?}
+\end{center}
+
+\vfill
+
+Hints: vSwitch handles same-subnet traffic locally; vRouter needed for different subnets; traffic may still stay inside the host.
+
+<!-- nota: esta pregunta refuerza la diferencia entre L2 (vSwitch) y L3 (vRouter), y que el tráfico intra-host no pasa por la red física -->
+
 # Network Isolation and Multi-Tenancy
 
-## Multi-Tenant Architectures
+## Why Isolation Matters
 
-- **Multi-tenancy**: multiple independent users (**tenants**) share the same infrastructure
-- Examples: cloud providers, enterprise data centers, university IT
-- Each tenant expects:
+- Data centers host workloads from **multiple tenants** (users, departments, companies)
+- **Multi-tenancy**: shared infrastructure, but each tenant expects:
   - **Performance isolation**: my traffic is not affected by yours
   - **Security isolation**: you cannot see or access my data
   - **Address independence**: we can both use `10.0.0.0/24`
 
 \vfill
 
+\footnotesize
+Without isolation: broadcast storms, ARP spoofing, IP conflicts, resource starvation.
+
 <!-- nota: analogía — apartamentos en un edificio: misma estructura, cada uno es privado -->
-
-## The Isolation Challenge
-
-- Physical networks are **shared by default** -- no isolation
-- Without isolation mechanisms:
-  - **Broadcast storms** affect everyone
-  - **ARP spoofing** can intercept traffic between tenants
-  - **IP address conflicts** between tenants using the same ranges
-  - No **performance guarantees** (one tenant can starve others)
-- Solution: **logical isolation** mechanisms at L2 and above
 
 ## VLANs in Virtual Environments
 
 - Same **802.1Q** concept from Block 3, now applied to virtual switches
 - Hypervisors assign VMs to specific VLANs via **vSwitch port groups**
-- Traffic tagged with VLAN IDs -- tenants separated at L2
+- Traffic tagged with VLAN IDs: tenants separated at L2
 
 \vfill
 
@@ -379,26 +571,22 @@ Same NAT concept from Block 3 -- now managed by the hypervisor instead of a phys
 
 \vfill
 
-Problem: 4,096 VLANs is **not enough** for a large cloud provider with thousands of tenants.
+Problem: 4,096 VLANs is **not enough** for a large cloud with thousands of tenants.
 
 \footnotesize Source: IEEE 802.1Q-2022, "Bridges and Bridged Networks."
 
-## Network Segmentation and Micro-Segmentation
+## Micro-Segmentation
 
-- **VLANs** provide L2 segmentation within a data center
-- Additional segmentation strategies:
-  - **Firewall rules** between VLAN groups
-  - **ACLs** on virtual routers
-  - **Micro-segmentation**: per-VM or per-workload firewall policies
+- Beyond VLANs: **per-VM or per-workload firewall policies**
+- Goal: **least privilege**, each VM should only reach what it strictly needs
+- Key concept in modern **zero trust** security architectures
 
 \vfill
 
-Goal: **least privilege** -- each VM should only reach what it strictly needs.
-
 \footnotesize
-Micro-segmentation is a key concept in modern data center security (zero trust networking).
+In Session 2 we will see how cloud providers implement this with \textbf{Security Groups} (per-instance) and \textbf{Network ACLs} (per-subnet).
 
-## Overlay Networks -- Concept
+## Overlay Networks: Concept
 
 - An **overlay network** is a virtual network built **on top of** the physical one
 - Uses **encapsulation**: wrap virtual frames inside physical packets
@@ -419,7 +607,7 @@ Micro-segmentation is a key concept in modern data center security (zero trust n
 - The physical network only sees the **outer headers**
 - The virtual (tenant) traffic is hidden inside $\rightarrow$ **full isolation**
 
-## VXLAN -- Overview
+## VXLAN: Overview
 
 - **VXLAN** (Virtual eXtensible LAN): most widely used overlay protocol
 - Encapsulates L2 frames in **UDP packets** over the physical network
@@ -428,9 +616,9 @@ Micro-segmentation is a key concept in modern data center security (zero trust n
 - Endpoints: **VTEPs** (VXLAN Tunnel Endpoints)
   - Encapsulate at source, decapsulate at destination
 
-\footnotesize Source: RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
+\footnotesize Source: IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
 
-## VXLAN -- How It Works
+## VXLAN: How It Works
 
 \begin{center}
 \begin{tikzpicture}[
@@ -461,41 +649,39 @@ Micro-segmentation is a key concept in modern data center security (zero trust n
 ## Overlay Benefits for Scalability
 
 - **16 million virtual networks** (vs 4,096 VLANs)
-- Physical network doesn't need to know about tenants
+- Physical network does not need to know about tenants
 - VMs can **migrate** across hosts without reconfiguring the underlay
 - Decouples **virtual topology** from physical topology
-- Foundation for cloud networking:
-  - AWS VPC, Azure VNet, Google VPC all use overlays internally
 
-\footnotesize Source: RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
-
-# References
-
-## References
+\vfill
 
 \footnotesize
+This is the foundation of cloud networking. In \textbf{Session 2} we will see how providers build \textbf{VPCs} (Virtual Private Clouds) on top of overlays.
 
-1. Popek & Goldberg, "Formal Requirements for Virtualizable Third Generation Architectures," *CACM*, vol. 17, no. 7, 1974.
-2. Barham et al., "Xen and the Art of Virtualization," *SOSP*, 2003.
-3. VMware, "Understanding Full Virtualization, Paravirtualization, and Hardware Assist," 2007.
-4. Pfaff et al., "The Design and Implementation of Open vSwitch," *NSDI*, 2015.
-5. IEEE 802.1Q-2022, "Bridges and Bridged Networks."
-6. IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
-7. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
-8. Docker, Inc., "Docker Overview," docs.docker.com.
-9. NIST SP 800-125, "Guide to Security for Full Virtualization Technologies," 2011.
-10. Kurose & Ross, *Computer Networking: A Top-Down Approach*, 8th ed., Pearson, 2021.
+Source: IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
 
 # Session Summary
 
 ## Key Takeaways
 
-1. Physical infrastructure is **rigid, underutilized, and slow to scale**
-2. **Hypervisors** (Type 1 and 2) enable multiple VMs on one host
-3. **Containers** are lighter than VMs but share the kernel (more in Block 5)
-4. Virtual networks mirror physical ones: **vNICs, vSwitches, vRouters**
-5. **Multi-tenancy** requires isolation $\rightarrow$ VLANs, overlays, micro-segmentation
-6. **VXLAN** extends VLANs from 4K to 16M networks using encapsulation
+1. **Data centers** house compute, accelerators (GPUs), storage, network, and facilities
+2. Physical infrastructure is **rigid, underutilized, and slow to scale**
+3. **Hypervisors** (Type 1 and 2) enable multiple VMs on one host
+4. **Containers** are lighter than VMs but share the kernel (deep dive in Block 5)
+5. Virtual networks mirror physical ones: **vNICs, vSwitches, vRouters**
+6. **Multi-tenancy** requires isolation $\rightarrow$ VLANs, overlays, micro-segmentation
+7. **VXLAN** extends VLANs from 4K to 16M networks using encapsulation
+
+## Next Session: Preview
+
+In **Session 2** we build on today's foundation:
+
+- Virtualization is the technology; cloud is the **business model**
+- NIST definition and **5 essential characteristics**
+- Service models: **IaaS / PaaS / SaaS**
+- **VPC** architecture: subnets, route tables, gateways
+- Cloud security: **Security Groups + Network ACLs**
+- Governance, **data sovereignty**, GDPR
 
 ## Discussion
 
@@ -508,3 +694,21 @@ Micro-segmentation is a key concept in modern data center security (zero trust n
 <!-- nota: guiar hacia: 4096 VLAN limit, overlapping IPs, VXLAN con 16M VNIs, y la necesidad de desacoplar red virtual de física -->
 
 Hints: VLAN ID limit, overlapping IP ranges, VM mobility.
+
+## References
+
+\footnotesize
+
+1. Popek \& Goldberg, "Formal Requirements for Virtualizable Third Generation Architectures," *CACM*, vol. 17, no. 7, 1974.
+2. Barham et al., "Xen and the Art of Virtualization," *SOSP*, 2003.
+3. VMware, "Understanding Full Virtualization, Paravirtualization, and Hardware Assist," 2007.
+4. Pfaff et al., "The Design and Implementation of Open vSwitch," *NSDI*, 2015.
+5. IEEE 802.1Q-2022, "Bridges and Bridged Networks."
+6. IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
+7. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
+8. Barroso, Clidaras \& Hölzle, *The Datacenter as a Computer*, 3rd ed., Morgan \& Claypool, 2019.
+9. NIST SP 800-125, "Guide to Security for Full Virtualization Technologies," 2011.
+10. Kurose \& Ross, *Computer Networking: A Top-Down Approach*, 8th ed., Pearson, 2021.
+11. Red Hat, "What is a Virtual Machine?", redhat.com/en/topics/virtualization/what-is-a-virtual-machine.
+12. Red Hat, "Containers vs VMs," redhat.com/en/topics/containers/containers-vs-vms.
+13. Cisco, "What Is a Data Center?", cisco.com/site/us/en/learn/topics/computing/what-is-a-data-center.html.
