@@ -285,66 +285,11 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
 ## VMs vs Containers: Visual Comparison
 
 \begin{center}
-\begin{tikzpicture}[scale=0.7, every node/.style={transform shape},
-    box/.style={draw, thick, rounded corners, minimum height=0.5cm, font=\scriptsize},
-    >=Stealth
-]
-% --- VMs side ---
-\node[font=\small\bfseries] at (-5,5.4) {Virtual Machines};
-
-\node[box, fill=gray!20, minimum width=9.5cm] (hw1) at (-5,-0.2) {Hardware};
-\node[box, fill=blue!15, minimum width=9.5cm] (hyp) at (-5,0.5) {Hypervisor};
-
-% VM 1 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=4.0cm] at (-7.8,2.7) {};
-\node[font=\scriptsize\bfseries] at (-7.8,4.5) {VM 1};
-\node[box, fill=green!15, minimum width=2.5cm, minimum height=1.2cm] at (-7.8,1.5) {Guest OS};
-\node[box, fill=green!15, minimum width=2.5cm] at (-7.8,2.5) {Bins / Libs};
-\node[box, fill=red!15, minimum width=1cm] at (-8.4,3.2) {App};
-\node[box, fill=teal!15, minimum width=1cm] at (-7.2,3.2) {App};
-
-% VM 2 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=4.0cm] at (-5,2.7) {};
-\node[font=\scriptsize\bfseries] at (-5,4.5) {VM 2};
-\node[box, fill=purple!15, minimum width=2.5cm, minimum height=1.2cm] at (-5,1.5) {Guest OS};
-\node[box, fill=purple!15, minimum width=2.5cm] at (-5,2.5) {Bins / Libs};
-\node[box, fill=red!15, minimum width=1cm] at (-5.6,3.2) {App};
-\node[box, fill=teal!15, minimum width=1cm] at (-4.4,3.2) {App};
-
-% VM 3 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=4.0cm] at (-2.2,2.7) {};
-\node[font=\scriptsize\bfseries] at (-2.2,4.5) {VM 3};
-\node[box, fill=green!15, minimum width=2.5cm, minimum height=1.2cm] at (-2.2,1.5) {Guest OS};
-\node[box, fill=green!15, minimum width=2.5cm] at (-2.2,2.5) {Bins / Libs};
-\node[box, fill=red!15, minimum width=1cm] at (-2.8,3.2) {App};
-\node[box, fill=teal!15, minimum width=1cm] at (-1.6,3.2) {App};
-
-% --- Containers side ---
-\node[font=\small\bfseries] at (5,5.4) {Containers};
-
-\node[box, fill=gray!20, minimum width=9.5cm] (hw2) at (5,-0.2) {Hardware};
-\node[box, fill=yellow!15, minimum width=9.5cm] (hos) at (5,0.5) {Host OS};
-\node[box, fill=blue!15, minimum width=9.5cm] (eng) at (5,1.3) {Container Engine};
-
-% Container 1 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (2.2,2.65) {};
-\node[font=\scriptsize\bfseries] at (2.2,3.8) {C1};
-\node[box, fill=green!15, minimum width=2.5cm] at (2.2,2.2) {Bins / Libs};
-\node[box, fill=red!15, minimum width=2.5cm] at (2.2,2.9) {App};
-
-% Container 2 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (5,2.65) {};
-\node[font=\scriptsize\bfseries] at (5,3.8) {C2};
-\node[box, fill=purple!15, minimum width=2.5cm] at (5,2.2) {Bins / Libs};
-\node[box, fill=red!15, minimum width=2.5cm] at (5,2.9) {App};
-
-% Container 3 background
-\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (7.8,2.65) {};
-\node[font=\scriptsize\bfseries] at (7.8,3.8) {C3};
-\node[box, fill=green!15, minimum width=2.5cm] at (7.8,2.2) {Bins / Libs};
-\node[box, fill=red!15, minimum width=2.5cm] at (7.8,2.9) {App};
-\end{tikzpicture}
+\includegraphics[width=\textwidth]{img/vm-vs-container.png}
 \end{center}
+
+\vfill
+\footnotesize Source: Aqueduct Technologies, "Containers and Virtual Machines," aqueducttech.com.
 
 ## VMs vs Containers: Overview
 

@@ -65,6 +65,14 @@
   - Isolation via Linux namespaces (process, network, filesystem) + cgroups (CPU, memory limits)
   - Docker: most popular platform, packages app + deps into image, runs as container
   - Milliseconds to start, MBs in size (vs minutes/GBs for VMs)
+- Container orchestration (expanding B4 introduction)
+  - Docker: runtime, build images, run containers (single host)
+  - Kubernetes (K8s): orchestrate containers at scale (multi-host)
+    - Pods, Services, Deployments
+    - Automatic scaling, load balancing, self-healing
+    - Networking model: every pod gets an IP, flat network
+    - De facto industry standard (CNCF)
+  - Brief comparison: Docker Compose (single host) vs Kubernetes (cluster)
 - Container network models
   - Bridge network (default): containers on same host via virtual bridge, NAT for external
   - Host network: container uses host's network stack directly, no isolation, max performance
