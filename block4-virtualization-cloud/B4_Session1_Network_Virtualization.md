@@ -13,7 +13,7 @@ header-includes:
   - \usepackage{booktabs}
   - \usepackage[table]{xcolor}
   - \usepackage{tikz}
-  - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, fit}
+  - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit}
   - \setbeamerfont{footnote}{size=\tiny}
   - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
 ---
@@ -40,19 +40,20 @@ header-includes:
 
 \begin{center}
 \small
-\begin{tabular}{lll}
-\toprule
-& \textbf{Session 1 (today)} & \textbf{Session 2} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{blue!10} & \textbf{Session 1 (today)} & \textbf{Session 2} \\
+\hline
 Theme & \textit{The infrastructure} & \textit{The business model} \\
-\midrule
+\hline
 Topics & Data centers & From virtualization to cloud \\
 & VMs \& hypervisors & NIST cloud definition \\
 & VMs vs containers (overview) & IaaS / PaaS / SaaS \\
 & vNICs, vSwitches, vRouters & VPC architecture \\
 & Multi-tenancy \& VLANs & Security groups \& ACLs \\
 & Overlay networks (VXLAN) & Governance \& GDPR \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -117,7 +118,7 @@ Rows of server racks, each containing dozens of servers, connected by structured
 
 ## The Problem with Physical Infrastructure
 
-- Traditional model: **one server = one application**
+- Traditional model (1990s--early 2000s): **one server = one application**
 - Typical server utilization: only **10--15\%** of capacity
 - Adding capacity means buying, racking, cabling $\rightarrow$ **weeks or months**
 - Hardware failure takes down the entire service
@@ -130,20 +131,21 @@ Key insight: most servers sit idle most of the time. We are paying for hardware 
 
 <!-- nota: preguntar a los alumnos cuántos servidores creen que tiene Google (~1M+). AWS tiene data centers en ~30 regiones -->
 
-## From Waste to Efficiency: Consolidation
+## The Cloud: From Waste to Efficiency
 
-- **Consolidation** = run multiple workloads on fewer physical machines
-- Benefits:
-  - Higher utilization: **60--80\%** instead of 10--15\%
-  - Lower energy, cooling, and physical space costs
-  - Simpler infrastructure management
-- Trade-off: shared hardware requires **strong isolation** between workloads
-- The enabling technology? **Virtualization**
+- **1990s--early 2000s**: one application per server; most capacity wasted
+- **2001**: VMware makes it possible to run **multiple systems on one machine**
+  - Technology: **Virtual Machines (VMs)**
+- **Mid-2000s**: enterprises consolidate servers (60--80\% utilization)
+- **2006--2010**: Amazon, Google, and Microsoft start **renting computing capacity** online
+  - Technology: **Cloud Computing** (AWS, Azure, GCP)
+- **2010s--today**: lightweight alternatives emerge; automation at massive scale
+  - Technologies: **Containers** (Docker) and **orchestration** (Kubernetes)
 
 \vfill
 
 \footnotesize
-Analogy: instead of one person per house, we build apartment buildings. Shared structure, private spaces.
+We will explore each of these technologies step by step throughout Blocks 4 and 5.
 
 ## Scalability and Elasticity
 
@@ -180,10 +182,8 @@ Hints: consolidation, fewer physical machines, higher utilization, isolation bet
 
 \begin{center}
 \footnotesize
-\textit{Virtualization began in the 1960s as a technology for time-sharing\\on mainframe computers. It gained popularity in the 2000s as\\organizations looked for ways to make the most of their computing resources.}
+\textit{One physical machine, many virtual ones:\\each believes it has the hardware all to itself.}
 \end{center}
-
-\footnotesize Source: Red Hat, \textit{What is a Virtual Machine?}, redhat.com.
 
 ## Virtual Machines (VMs)
 
@@ -230,15 +230,19 @@ Key properties:
 
 \begin{center}
 \small
-\begin{tabular}{lll}
-\toprule
-& \textbf{Type 1 (Bare-metal)} & \textbf{Type 2 (Hosted)} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{blue!10} & \textbf{Type 1 (Bare-metal)} & \textbf{Type 2 (Hosted)} \\
+\hline
 Runs on & Directly on hardware & On top of a host OS \\
+\hline
 Performance & Near-native & Some overhead \\
+\hline
 Use case & Data centers, production & Development, testing \\
+\hline
 Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -256,7 +260,7 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
 \node[box, fill=gray!20] (hw1) at (-3.5,0) {Hardware};
 \node[box, fill=blue!25] (hyp1) at (-3.5,1) {Hypervisor};
 \node[box, fill=green!15] (vm1a) at (-4.8,2) {VM 1};
-\node[box, fill=green!15] (vm1b) at (-2.2,2) {VM 2};
+\node[box, fill=purple!15] (vm1b) at (-2.2,2) {VM 2};
 \node[box, fill=orange!15] (a1a) at (-4.8,3) {App};
 \node[box, fill=orange!15] (a1b) at (-2.2,3) {App};
 
@@ -266,7 +270,7 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
 \node[box, fill=yellow!15] (os2) at (3.5,1) {Host OS};
 \node[box, fill=blue!25] (hyp2) at (3.5,2) {Hypervisor};
 \node[box, fill=green!15] (vm2a) at (2.2,3) {VM 1};
-\node[box, fill=green!15] (vm2b) at (4.8,3) {VM 2};
+\node[box, fill=purple!15] (vm2b) at (4.8,3) {VM 2};
 \end{tikzpicture}
 \end{center}
 
@@ -348,15 +352,19 @@ Hints: boot time, resource overhead, isolation needs, how fast you need to scale
 
 \begin{center}
 \small
-\begin{tabular}{ll}
-\toprule
-\textbf{Physical} & \textbf{Virtual equivalent} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor{blue!10} \textbf{Physical} & \textbf{Virtual equivalent} \\
+\hline
 NIC (network interface card) & \textbf{vNIC} (virtual NIC) \\
+\hline
 Switch & \textbf{vSwitch} (virtual switch) \\
+\hline
 Router & \textbf{vRouter} (virtual router) \\
+\hline
 Cable & Internal software path \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -375,7 +383,7 @@ Key idea: if VMs think they have real hardware, they also need a \textbf{real-lo
 % Physical side
 \node[lbl] at (-4,3.8) {Physical Network};
 \node[box, fill=green!15] (srv1) at (-5.5,2.8) {Server 1};
-\node[box, fill=green!15] (srv2) at (-2.5,2.8) {Server 2};
+\node[box, fill=purple!15] (srv2) at (-2.5,2.8) {Server 2};
 \node[box, fill=orange!15] (nic1) at (-5.5,1.8) {NIC};
 \node[box, fill=orange!15] (nic2) at (-2.5,1.8) {NIC};
 \node[box, fill=blue!20, minimum width=4cm] (psw) at (-4,0.6) {Physical Switch};
@@ -385,9 +393,10 @@ Key idea: if VMs think they have real hardware, they also need a \textbf{real-lo
 \draw[thick] (nic2) -- (-2.5,0.9);
 
 % Virtual side
-\node[lbl] at (4,3.8) {Virtual Network (inside one host)};
+\node[draw, thick, rounded corners, fill=gray!5, minimum width=4.5cm, minimum height=4cm] (host) at (4,1.8) {};
+\node[lbl] at (4,3.6) {Host};
 \node[box, fill=green!15] (vm1) at (2.5,2.8) {VM 1};
-\node[box, fill=green!15] (vm2) at (5.5,2.8) {VM 2};
+\node[box, fill=purple!15] (vm2) at (5.5,2.8) {VM 2};
 \node[box, fill=orange!15] (vnic1) at (2.5,1.8) {vNIC};
 \node[box, fill=orange!15] (vnic2) at (5.5,1.8) {vNIC};
 \node[box, fill=blue!20, minimum width=4cm] (vsw) at (4,0.6) {vSwitch};
@@ -400,6 +409,74 @@ Key idea: if VMs think they have real hardware, they also need a \textbf{real-lo
 
 - Left: two physical servers connected by a physical switch and cables
 - Right: two VMs connected by a virtual switch, all inside **one physical host**
+
+## Example: VM-to-VM Communication
+
+- Linux can act as a **Layer 2 switch** using a **bridge** (`br0`)
+- VMs on the same bridge share a subnet: frames forwarded by MAC address
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.6cm, font=\scriptsize},
+    lbl/.style={font=\scriptsize},
+    >=Stealth
+]
+\node[draw, thick, rounded corners, fill=gray!5, minimum width=8cm, minimum height=4.5cm] (host) at (0,1.8) {};
+\node[font=\scriptsize\bfseries] at (0,3.9) {Host (Linux)};
+\node[box, fill=green!15] (vm1) at (-2.5,3.0) {VM 1};
+\node[box, fill=purple!15] (vm2) at (2.5,3.0) {VM 2};
+\node[lbl] at (-2.5,2.4) {`eth0`: 192.168.1.10};
+\node[lbl] at (2.5,2.4) {`eth0`: 192.168.1.20};
+\node[box, fill=blue!20, minimum width=6cm] (br) at (0,1.4) {br0 (Linux bridge)};
+\node[box, fill=orange!15] (pnic) at (0,0.2) {pNIC (eth0)};
+\draw[thick] (-2.5,2.1) -- (-2.5,1.7);
+\draw[thick] (2.5,2.1) -- (2.5,1.7);
+\draw[thick] (0,1.1) -- (0,0.5);
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.5cm, minimum height=1.2cm, font=\scriptsize] (inet) at (0,-1.2) {Internet};
+\draw[thick] (0,-0.1) -- (0,-0.6);
+\end{tikzpicture}
+\end{center}
+
+\vfill
+\footnotesize
+No routing needed: same subnet, same bridge. The host forwards frames just like a physical switch.
+
+## Example: VMs on Different Subnets
+
+- What if VM 1 and VM 2 are on **different subnets**?
+- The host needs to act as a **router**: enable IP forwarding between bridges
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.6cm, font=\scriptsize},
+    lbl/.style={font=\scriptsize},
+    >=Stealth
+]
+\node[draw, thick, rounded corners, fill=gray!5, minimum width=10cm, minimum height=5.5cm] (host) at (0,2.0) {};
+\node[font=\scriptsize\bfseries] at (0,4.6) {Host (Linux, ip\_forward=1)};
+\node[box, fill=green!15] (vm1) at (-3,3.6) {VM 1};
+\node[box, fill=purple!15] (vm2) at (3,3.6) {VM 2};
+\node[lbl] at (-3,3.0) {`10.0.1.10/24`};
+\node[lbl] at (3,3.0) {`10.0.2.20/24`};
+\node[box, fill=blue!20, minimum width=3cm] (br1) at (-3,1.8) {br0};
+\node[box, fill=blue!20, minimum width=3cm] (br2) at (3,1.8) {br1};
+\node[lbl] at (-3,1.2) {`10.0.1.1`};
+\node[lbl] at (3,1.2) {`10.0.2.1`};
+\node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {vRouter};
+\node[box, fill=orange!15] (pnic) at (0,-0.1) {pNIC (eth0)};
+\draw[thick] (-3,2.7) -- (-3,2.1);
+\draw[thick] (3,2.7) -- (3,2.1);
+\draw[thick] (-1.5,1.8) -- (-0.8,1.1);
+\draw[thick] (1.5,1.8) -- (0.8,1.1);
+\draw[thick] (0,0.5) -- (0,0.2);
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.5cm, minimum height=1.2cm, font=\scriptsize] (inet) at (0,-1.5) {Internet};
+\draw[thick] (0,-0.4) -- (0,-0.9);
+\end{tikzpicture}
+\end{center}
+
+\vfill
+\footnotesize
+Each VM has a default gateway pointing to its bridge IP. The host routes packets between subnets, just like a physical router.
 
 ## Virtual Network Interfaces (vNICs)
 
@@ -424,15 +501,16 @@ Same MAC/IP concepts from Blocks 1 to 3, now virtualized inside the hypervisor.
 \begin{center}
 \begin{tikzpicture}[
     vm/.style={draw, thick, rounded corners, fill=green!15, minimum width=1.5cm, minimum height=0.8cm, font=\scriptsize},
+    vm2/.style={draw, thick, rounded corners, fill=purple!15, minimum width=1.5cm, minimum height=0.8cm, font=\scriptsize},
     sw/.style={draw, thick, fill=blue!20, minimum width=5cm, minimum height=0.8cm, font=\small},
     nic/.style={draw, thick, fill=orange!10, minimum width=1.2cm, minimum height=0.5cm, font=\tiny},
     >=Stealth
 ]
 \node[sw] (vsw) at (0,0) {Virtual Switch (vSwitch)};
 \node[vm] (vm1) at (-3,1.5) {VM 1};
-\node[vm] (vm2) at (-1,1.5) {VM 2};
+\node[vm2] (vm2) at (-1,1.5) {VM 2};
 \node[vm] (vm3) at (1,1.5) {VM 3};
-\node[vm] (vm4) at (3,1.5) {VM 4};
+\node[vm2] (vm4) at (3,1.5) {VM 4};
 \node[nic] (pnic) at (0,-1.5) {Physical NIC};
 
 \draw[thick] (vm1) -- (-3,0.4);
@@ -471,14 +549,17 @@ Three ways to connect a VM to the outside world:
 
 \begin{center}
 \small
-\begin{tabular}{llll}
-\toprule
-\textbf{Mode} & \textbf{VM visibility} & \textbf{External access?} & \textbf{Use case} \\
-\midrule
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor{blue!10} \textbf{Mode} & \textbf{VM visibility} & \textbf{External access?} & \textbf{Use case} \\
+\hline
 Bridged & Same subnet as host & Yes (direct) & Production servers \\
+\hline
 NAT & Hidden behind host IP & Outbound only & Dev/testing \\
+\hline
 Host-only & Only sees the host & No & Isolated labs \\
-\bottomrule
+\hline
 \end{tabular}
 \end{center}
 
@@ -512,7 +593,7 @@ In Session 2 we will see how cloud providers offer NAT as a \textbf{managed serv
 \node[box, fill=green!15] (vm) at (0,0) {VM};
 \node[box, fill=orange!10] (vnic) at (2.5,0) {vNIC};
 \node[box, fill=blue!15] (vsw) at (5,0) {vSwitch};
-\node[box, fill=purple!15] (vr) at (7.5,0) {vRouter};
+\node[box, fill=yellow!20] (vr) at (7.5,0) {vRouter};
 \node[box, fill=gray!20] (pnic) at (10,0) {pNIC};
 \node[box, fill=yellow!10] (ext) at (12.5,0) {Network};
 
@@ -623,13 +704,14 @@ In Session 2 we will see how cloud providers implement this with \textbf{Securit
 \begin{center}
 \begin{tikzpicture}[
     vm/.style={draw, thick, rounded corners, fill=green!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
+    vm2/.style={draw, thick, rounded corners, fill=purple!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
     vtep/.style={draw, thick, fill=blue!20, minimum width=1.5cm, minimum height=0.6cm, font=\scriptsize},
     >=Stealth
 ]
 \node[vm] (vm1) at (0,1.5) {VM A};
 \node[vtep] (v1) at (0,0) {VTEP 1};
 \node[vtep] (v2) at (8,0) {VTEP 2};
-\node[vm] (vm2) at (8,1.5) {VM B};
+\node[vm2] (vm2) at (8,1.5) {VM B};
 
 \draw[thick] (vm1) -- (v1);
 \draw[thick] (vm2) -- (v2);

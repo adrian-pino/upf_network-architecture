@@ -66,14 +66,20 @@
     - \usepackage{booktabs}
     - \usepackage[table]{xcolor}
     - \usepackage{tikz}
-    - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, fit, decorations.pathreplacing}
+    - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit, decorations.pathreplacing}
     - \setbeamerfont{footnote}{size=\tiny}
     - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
   ```
-- Nota: `[table]{xcolor}` necesario para `\rowcolor`; `decorations.pathreplacing` para llaves TikZ
-- Tablas con `booktabs` (`\toprule`, `\midrule`, `\bottomrule`)
+- Nota: `[table]{xcolor}` necesario para `\rowcolor`; `decorations.pathreplacing` para llaves TikZ; `shapes.symbols` para cloud shapes
+- Tablas con bordes completos (`|l|l|`, `\hline` entre cada fila), `\rowcolor{blue!10}` en cabecera, `\renewcommand{\arraystretch}{1.3}` para padding. NO usar `booktabs` (`\toprule`/`\midrule`/`\bottomrule`)
 - `\vfill` para espaciado vertical, `\footnotesize` para anotaciones
 - Columnas Pandoc: `:::::::::::::: {.columns}` / `::: {.column width="50%"}`
+
+## Convenciones TikZ
+- **Colores de nodos**: VM 1 / Server 1 = `green!15`, VM 2 / Server 2 = `purple!15`. Alternar para VMs adicionales
+- **No usar estilos TikZ parametrizados** (ej. `fill=#1`) porque Pandoc/Beamer los rompe (el `#` se interpreta como parámetro de macro). Usar estilos sin parámetro y aplicar `fill=` directamente en cada nodo
+- **Internet**: representar como `cloud` shape (`shapes.symbols`) con `fill=cyan!10`
+- **Physical NIC**: `fill=orange!15`, incluir conexión a Internet cuando sea relevante
 
 ## Compilación
 - Sin pandoc/xelatex local — usar Docker:
