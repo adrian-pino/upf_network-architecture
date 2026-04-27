@@ -34,3 +34,52 @@
 - Usa **negrita** para términos clave que el alumno debe retener
 - Usa `código` para comandos, protocolos o direcciones (ej. `traceroute`, `192.168.0.0/24`)
 - Incluye notas para el profesor entre comentarios HTML `<!-- nota: ... -->` cuando sea relevante
+
+## Idioma
+- Slides en **inglés** (consistente con Blocks 1-2 existentes en .pptx)
+- Título de la asignatura en catalán; contenido técnico en inglés
+
+## Beamer / Pandoc — configuración técnica
+- Formato: Pandoc Markdown → Beamer PDF via `xelatex`
+- `#` = sección (genera slide de título + auto-TOC), `##` = slide normal (`--slide-level=2`)
+- YAML front matter estándar:
+  ```yaml
+  title: "Block N -- Session M"
+  subtitle: "Topic \\& Topic"
+  author: "Arquitectura de Xarxes"
+  institute: "Universitat Pompeu Fabra -- 2025/2026"
+  theme: "Madrid"
+  colortheme: "dolphin"
+  fonttheme: "structurebold"
+  aspectratio: 169
+  navigation: horizontal
+  toc: true
+  header-includes:
+    - \usepackage{booktabs}
+    - \usepackage[table]{xcolor}
+    - \usepackage{tikz}
+    - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, fit, decorations.pathreplacing}
+    - \setbeamerfont{footnote}{size=\tiny}
+    - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
+  ```
+- Nota: `[table]{xcolor}` necesario para `\rowcolor`; `decorations.pathreplacing` para llaves TikZ
+- Tablas con `booktabs` (`\toprule`, `\midrule`, `\bottomrule`)
+- `\vfill` para espaciado vertical, `\footnotesize` para anotaciones
+- Columnas Pandoc: `:::::::::::::: {.columns}` / `::: {.column width="50%"}`
+
+## Compilación
+- Sin pandoc/xelatex local — usar Docker:
+  ```bash
+  docker run --rm -v "/home/adrian/upf/ax:/data" pandoc/extra:latest <file>.md -t beamer --slide-level=2 --pdf-engine=xelatex -o <file>.pdf
+  ```
+
+## Política de referencias
+- Solo fuentes de: organismos de estándares (IETF RFCs, ETSI, NIST, IEEE), vendors principales (AWS, Azure, GCP, VMware, Red Hat, Docker, HashiCorp), o libros publicados (O'Reilly, Pearson, Morgan Kaufmann, Wiley)
+- **NO blogs**
+- Citas inline con `\footnotesize Source: ...` al pie de slides relevantes
+- Slide de "References" consolidada al final de cada presentación
+
+## Contenido previo (ya cubierto por los alumnos)
+- **Block 1**: Fundamentos de redes
+- **Block 2**: Capa de aplicación y transporte
+- **Block 3**: Capa de red y enlace (Ethernet, VLANs 802.1Q, ARP, STP, subnetting CIDR/VLSM, OSPF, BGP, DHCP, NAT/NAPT)
