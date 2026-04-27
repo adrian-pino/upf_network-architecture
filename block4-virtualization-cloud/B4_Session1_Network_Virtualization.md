@@ -421,7 +421,7 @@ Key idea: if VMs think they have real hardware, they also need a \textbf{real-lo
 - VMs on the same bridge share a subnet: frames forwarded by MAC address
 
 \begin{center}
-\begin{tikzpicture}[
+\begin{tikzpicture}[scale=0.75, every node/.style={transform shape},
     box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize},
     lbl/.style={font=\scriptsize},
     >=Stealth
@@ -440,7 +440,7 @@ Key idea: if VMs think they have real hardware, they also need a \textbf{real-lo
 \draw[thick] (0,2.1) -- (0,1.7);
 \draw[thick] (0,1.1) -- (0,-0.15);
 \node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.6) {Internet};
-\draw[thick] (0,-0.65) -- (0,-1.1);
+\draw[thick] (pnic) -- (inet);
 \end{tikzpicture}
 \end{center}
 
@@ -453,7 +453,7 @@ How does VM 1 reach VM 2? And how does it reach the Internet?
 - Same subnet, same bridge $\rightarrow$ **L2 forwarding** (no routing needed)
 
 \begin{center}
-\begin{tikzpicture}[
+\begin{tikzpicture}[scale=0.75, every node/.style={transform shape},
     box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize},
     lbl/.style={font=\scriptsize},
     >=Stealth
@@ -472,7 +472,7 @@ How does VM 1 reach VM 2? And how does it reach the Internet?
 \draw[thick] (0,2.1) -- (0,1.7);
 \draw[thick] (0,1.1) -- (0,-0.15);
 \node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.6) {Internet};
-\draw[thick] (0,-0.65) -- (0,-1.1);
+\draw[thick] (pnic) -- (inet);
 \draw[->, thick, dashed, red!60] (-2.5,3.0) -- (-2.5,2.7) -- (2.5,2.7) -- (2.5,3.0);
 \node[font=\tiny, text=red!60] at (0,2.9) {VM-to-VM (L2)};
 \end{tikzpicture}
@@ -488,7 +488,7 @@ Both VMs share `br0`: the bridge forwards frames by MAC address, just like a phy
 - Two bridges (`br0`, `br1`), each with its own subnet
 
 \begin{center}
-\begin{tikzpicture}[scale=0.85, every node/.style={transform shape},
+\begin{tikzpicture}[scale=0.75, every node/.style={transform shape},
     box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize},
     lbl/.style={font=\scriptsize},
     >=Stealth
@@ -511,7 +511,7 @@ Both VMs share `br0`: the bridge forwards frames by MAC address, just like a phy
 \draw[thick] (1.5,1.8) -- (0.8,1.1);
 \draw[thick] (0,0.5) -- (0,-0.35);
 \node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.8) {Internet};
-\draw[thick] (0,-0.85) -- (0,-1.3);
+\draw[thick] (pnic) -- (inet);
 \end{tikzpicture}
 \end{center}
 
@@ -524,7 +524,7 @@ How does VM 1 (10.0.1.10) reach VM 2 (10.0.2.20)? What components are involved?
 - Different subnets $\rightarrow$ traffic must go through the **vRouter** (L3 forwarding)
 
 \begin{center}
-\begin{tikzpicture}[scale=0.85, every node/.style={transform shape},
+\begin{tikzpicture}[scale=0.75, every node/.style={transform shape},
     box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize},
     lbl/.style={font=\scriptsize},
     >=Stealth
@@ -547,7 +547,7 @@ How does VM 1 (10.0.1.10) reach VM 2 (10.0.2.20)? What components are involved?
 \draw[thick] (1.5,1.8) -- (0.8,1.1);
 \draw[thick] (0,0.5) -- (0,-0.35);
 \node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.8) {Internet};
-\draw[thick] (0,-0.85) -- (0,-1.3);
+\draw[thick] (pnic) -- (inet);
 \draw[->, thick, dashed, red!60] (-3,3.0) -- (-3,2.1) -- (-0.8,1.1) -- (0,0.8) -- (0.8,1.1) -- (3,2.1) -- (3,3.0);
 \node[font=\tiny, text=red!60] at (0,0.4) {VM-to-VM (L3)};
 \end{tikzpicture}
