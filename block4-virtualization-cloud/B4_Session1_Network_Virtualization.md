@@ -285,58 +285,64 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
 ## VMs vs Containers: Visual Comparison
 
 \begin{center}
-\begin{tikzpicture}[scale=0.8, every node/.style={transform shape},
+\begin{tikzpicture}[scale=0.65, every node/.style={transform shape},
     box/.style={draw, thick, rounded corners, minimum height=0.5cm, font=\scriptsize},
     >=Stealth
 ]
 % --- VMs side ---
-\node[font=\small\bfseries] at (-4.5,4.2) {Virtual Machines};
+\node[font=\small\bfseries] at (-6.5,4.6) {Virtual Machines};
 
-\node[box, fill=gray!20, minimum width=9cm] (hw1) at (-4.5,-0.2) {Hardware};
-\node[box, fill=blue!15, minimum width=9cm] (hyp) at (-4.5,0.5) {Hypervisor};
+\node[box, fill=gray!20, minimum width=10cm] (hw1) at (-6.5,-0.2) {Hardware};
+\node[box, fill=blue!15, minimum width=10cm] (hyp) at (-6.5,0.5) {Hypervisor};
 
-% VM 1
-\node[box, fill=green!15, minimum width=2.5cm] (gos1) at (-7,1.3) {Guest OS};
-\node[box, fill=green!15, minimum width=2.5cm] (bins1) at (-7,2.0) {Bins / Libs};
-\node[box, fill=red!15, minimum width=1cm] (a1) at (-7.7,2.7) {App};
-\node[box, fill=teal!15, minimum width=1cm] (a2) at (-6.3,2.7) {App};
-\node[draw, thick, dashed, rounded corners, inner sep=4pt, fit=(gos1)(bins1)(a1)(a2), label=above:{\scriptsize VM 1}] {};
+% VM 1 background
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=3.2cm] at (-9.5,2.35) {};
+\node[font=\scriptsize\bfseries] at (-9.5,3.8) {VM 1};
+\node[box, fill=green!15, minimum width=2.5cm] at (-9.5,1.3) {Guest OS};
+\node[box, fill=green!15, minimum width=2.5cm] at (-9.5,2.0) {Bins / Libs};
+\node[box, fill=red!15, minimum width=1cm] at (-10.2,2.7) {App};
+\node[box, fill=teal!15, minimum width=1cm] at (-8.8,2.7) {App};
 
-% VM 2
-\node[box, fill=purple!15, minimum width=2.5cm] (gos2) at (-4.5,1.3) {Guest OS};
-\node[box, fill=purple!15, minimum width=2.5cm] (bins2) at (-4.5,2.0) {Bins / Libs};
-\node[box, fill=red!15, minimum width=1cm] (a3) at (-5.2,2.7) {App};
-\node[box, fill=teal!15, minimum width=1cm] (a4) at (-3.8,2.7) {App};
-\node[draw, thick, dashed, rounded corners, inner sep=4pt, fit=(gos2)(bins2)(a3)(a4), label=above:{\scriptsize VM 2}] {};
+% VM 2 background
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=3.2cm] at (-6.5,2.35) {};
+\node[font=\scriptsize\bfseries] at (-6.5,3.8) {VM 2};
+\node[box, fill=purple!15, minimum width=2.5cm] at (-6.5,1.3) {Guest OS};
+\node[box, fill=purple!15, minimum width=2.5cm] at (-6.5,2.0) {Bins / Libs};
+\node[box, fill=red!15, minimum width=1cm] at (-7.2,2.7) {App};
+\node[box, fill=teal!15, minimum width=1cm] at (-5.8,2.7) {App};
 
-% VM 3
-\node[box, fill=green!15, minimum width=2.5cm] (gos3) at (-2,1.3) {Guest OS};
-\node[box, fill=green!15, minimum width=2.5cm] (bins3) at (-2,2.0) {Bins / Libs};
-\node[box, fill=red!15, minimum width=1cm] (a5) at (-2.7,2.7) {App};
-\node[box, fill=teal!15, minimum width=1cm] (a6) at (-1.3,2.7) {App};
-\node[draw, thick, dashed, rounded corners, inner sep=4pt, fit=(gos3)(bins3)(a5)(a6), label=above:{\scriptsize VM 3}] {};
+% VM 3 background
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=3.2cm] at (-3.5,2.35) {};
+\node[font=\scriptsize\bfseries] at (-3.5,3.8) {VM 3};
+\node[box, fill=green!15, minimum width=2.5cm] at (-3.5,1.3) {Guest OS};
+\node[box, fill=green!15, minimum width=2.5cm] at (-3.5,2.0) {Bins / Libs};
+\node[box, fill=red!15, minimum width=1cm] at (-4.2,2.7) {App};
+\node[box, fill=teal!15, minimum width=1cm] at (-2.8,2.7) {App};
 
 % --- Containers side ---
-\node[font=\small\bfseries] at (4.5,4.2) {Containers};
+\node[font=\small\bfseries] at (6.5,4.6) {Containers};
 
-\node[box, fill=gray!20, minimum width=9cm] (hw2) at (4.5,-0.2) {Hardware};
-\node[box, fill=yellow!15, minimum width=9cm] (hos) at (4.5,0.5) {Host OS};
-\node[box, fill=blue!15, minimum width=9cm] (eng) at (4.5,1.3) {Container Engine};
+\node[box, fill=gray!20, minimum width=10cm] (hw2) at (6.5,-0.2) {Hardware};
+\node[box, fill=yellow!15, minimum width=10cm] (hos) at (6.5,0.5) {Host OS};
+\node[box, fill=blue!15, minimum width=10cm] (eng) at (6.5,1.3) {Container Engine};
 
-% Container 1
-\node[box, fill=green!15, minimum width=2.5cm] (cb1) at (2,2.0) {Bins / Libs};
-\node[box, fill=red!15, minimum width=2.5cm] (ca1) at (2,2.7) {App};
-\node[draw, thick, dashed, rounded corners, inner sep=4pt, fit=(cb1)(ca1), label=above:{\scriptsize C1}] {};
+% Container 1 background
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (3.5,2.65) {};
+\node[font=\scriptsize\bfseries] at (3.5,3.8) {C1};
+\node[box, fill=green!15, minimum width=2.5cm] at (3.5,2.2) {Bins / Libs};
+\node[box, fill=red!15, minimum width=2.5cm] at (3.5,2.9) {App};
 
-% Container 2
-\node[box, fill=purple!15, minimum width=2.5cm] (cb2) at (4.5,2.0) {Bins / Libs};
-\node[box, fill=red!15, minimum width=2.5cm] (ca2) at (4.5,2.7) {App};
-\node[draw, thick, dashed, rounded corners, inner sep=4pt, fit=(cb2)(ca2), label=above:{\scriptsize C2}] {};
+% Container 2 background
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (6.5,2.65) {};
+\node[font=\scriptsize\bfseries] at (6.5,3.8) {C2};
+\node[box, fill=purple!15, minimum width=2.5cm] at (6.5,2.2) {Bins / Libs};
+\node[box, fill=red!15, minimum width=2.5cm] at (6.5,2.9) {App};
 
-% Container 3
-\node[box, fill=green!15, minimum width=2.5cm] (cb3) at (7,2.0) {Bins / Libs};
-\node[box, fill=red!15, minimum width=2.5cm] (ca3) at (7,2.7) {App};
-\node[draw, thick, dashed, rounded corners, inner sep=4pt, fit=(cb3)(ca3), label=above:{\scriptsize C3}] {};
+% Container 3 background
+\node[draw, thick, rounded corners, fill=white, minimum width=2.8cm, minimum height=1.8cm] at (9.5,2.65) {};
+\node[font=\scriptsize\bfseries] at (9.5,3.8) {C3};
+\node[box, fill=green!15, minimum width=2.5cm] at (9.5,2.2) {Bins / Libs};
+\node[box, fill=red!15, minimum width=2.5cm] at (9.5,2.9) {App};
 \end{tikzpicture}
 \end{center}
 
