@@ -427,7 +427,7 @@ Key idea: if VMs think they have real hardware, they also need a \textbf{real-lo
     >=Stealth
 ]
 \node[draw, thick, rounded corners, fill=gray!5, minimum width=8cm, minimum height=5.2cm] (host) at (0,2.2) {};
-\node[font=\scriptsize\bfseries] at (0,4.7) {Host (Linux)};
+\node[font=\scriptsize\bfseries] at (0,4.4) {Host (Linux)};
 \node[box, fill=green!15] (vm1) at (-2.5,3.8) {VM 1};
 \node[box, fill=purple!15] (vm2) at (2.5,3.8) {VM 2};
 \node[lbl] at (-2.5,3.3) {`eth0`: 192.168.1.10};
@@ -459,59 +459,24 @@ How does VM 1 reach VM 2? And how does it reach the Internet?
     >=Stealth
 ]
 \node[draw, thick, rounded corners, fill=gray!5, minimum width=8cm, minimum height=5.2cm] (host) at (0,2.2) {};
-\node[font=\scriptsize\bfseries] at (0,4.7) {Host (Linux)};
-\node[box, fill=green!15] (vm1) at (-2.5,3.8) {VM 1};
-\node[box, fill=purple!15] (vm2) at (2.5,3.8) {VM 2};
-\node[lbl] at (-2.5,3.3) {`eth0`: 192.168.1.10};
-\node[lbl] at (2.5,3.3) {`eth0`: 192.168.1.20};
-\node[box, fill=blue!20, minimum width=6cm] (br) at (0,2.4) {br0 (Linux bridge)};
-\node[box, fill=yellow!20] (rtr) at (0,1.4) {vRouter / NAT};
-\node[box, fill=orange!15] (pnic) at (0,0.4) {Physical NIC};
-\draw[thick] (-2.5,3.0) -- (-2.5,2.7);
-\draw[thick] (2.5,3.0) -- (2.5,2.7);
-\draw[thick] (0,2.1) -- (0,1.7);
-\draw[thick] (0,1.1) -- (0,0.7);
-\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-0.8) {Internet};
-\draw[thick] (0,0.1) -- (0,-0.3);
-\draw[->, thick, dashed, red!60] (-2.5,3.5) -- (-2.5,2.7) -- (2.5,2.7) -- (2.5,3.5);
-\node[font=\tiny, text=red!60] at (0,2.9) {VM-to-VM (L2)};
-\end{tikzpicture}
-\end{center}
-
-\vfill
-\footnotesize
-To reach the Internet: traffic goes through the vRouter/NAT and the physical NIC.
-
-## Example: VMs on Different Subnets
-
-- What if VM 1 and VM 2 are on **different subnets**?
-- The host needs to act as a **router**: enable IP forwarding between bridges
-
-\begin{center}
-\begin{tikzpicture}[scale=0.85, every node/.style={transform shape},
-    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize},
-    lbl/.style={font=\scriptsize},
-    >=Stealth
-]
-\node[draw, thick, rounded corners, fill=gray!5, minimum width=10cm, minimum height=4.8cm] (host) at (0,1.8) {};
-\node[font=\scriptsize\bfseries] at (0,4.1) {Host (Linux)};
-\node[box, fill=green!15] (vm1) at (-3,3.3) {VM 1};
-\node[box, fill=purple!15] (vm2) at (3,3.3) {VM 2};
-\node[lbl] at (-3,2.8) {`10.0.1.10/24`};
-\node[lbl] at (3,2.8) {`10.0.2.20/24`};
-\node[box, fill=blue!20, minimum width=3cm] (br1) at (-3,1.8) {br0};
-\node[box, fill=blue!20, minimum width=3cm] (br2) at (3,1.8) {br1};
-\node[lbl] at (-3,1.3) {`10.0.1.1`};
-\node[lbl] at (3,1.3) {`10.0.2.1`};
-\node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {vRouter};
-\node[box, fill=orange!15] (pnic) at (0,0.0) {Physical NIC};
-\draw[thick] (-3,2.5) -- (-3,2.1);
-\draw[thick] (3,2.5) -- (3,2.1);
-\draw[thick] (-1.5,1.8) -- (-0.8,1.1);
-\draw[thick] (1.5,1.8) -- (0.8,1.1);
-\draw[thick] (0,0.5) -- (0,0.3);
+\node[font=\scriptsize\bfseries] at (0,4.4) {Host (Linux)};
+\node[box, fill=green!15] (vm1) at (-1.5,3.8) {VM 1};
+\node[box, fill=purple!15] (vm2) at (1.5,3.8) {VM 2};
+\node[lbl] at (-1.5,3.3) {`10.0.1.10/24`};
+\node[lbl] at (1.5,3.3) {`10.0.2.20/24`};
+\node[box, fill=blue!20, minimum width=3cm] (br1) at (-1.5,2.3) {br0};
+\node[box, fill=blue!20, minimum width=3cm] (br2) at (1.5,2.3) {br1};
+\node[lbl] at (-1.5,1.8) {`10.0.1.1`};
+\node[lbl] at (1.5,1.8) {`10.0.2.1`};
+\node[box, fill=yellow!15] (vr) at (0,1.0) {vRouter};
+\node[box, fill=orange!15] (nic) at (0,0.1) {Physical NIC};
+\draw[thick] (-1.5,3.5) -- (-1.5,2.55);
+\draw[thick] (1.5,3.5) -- (1.5,2.55);
+\draw[thick] (-1.5,2.05) -- (-0.8,1.25);
+\draw[thick] (1.5,2.05) -- (0.8,1.25);
+\draw[thick] (0,0.75) -- (0,0.35);
 \node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.1) {Internet};
-\draw[thick] (0,-0.3) -- (0,-0.6);
+\draw[thick] (0,-0.15) -- (0,-0.6);
 \end{tikzpicture}
 \end{center}
 
@@ -528,7 +493,7 @@ To reach the Internet: traffic goes through the vRouter/NAT and the physical NIC
     >=Stealth
 ]
 \node[draw, thick, rounded corners, fill=gray!5, minimum width=10cm, minimum height=4.8cm] (host) at (0,1.8) {};
-\node[font=\scriptsize\bfseries] at (0,4.1) {Host (Linux)};
+\node[font=\scriptsize\bfseries] at (0,3.8) {Host (Linux)};
 \node[box, fill=green!15] (vm1) at (-3,3.3) {VM 1};
 \node[box, fill=purple!15] (vm2) at (3,3.3) {VM 2};
 \node[lbl] at (-3,2.8) {`10.0.1.10/24`};
