@@ -482,6 +482,43 @@ How does VM 1 reach VM 2? And how does it reach the Internet?
 
 \vfill
 
+## Example: VMs on Different Subnets
+
+- Now VMs are on **different subnets**: they need L3 routing
+- Two bridges (`br0`, `br1`), each with its own subnet
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85, every node/.style={transform shape},
+    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize},
+    lbl/.style={font=\scriptsize},
+    >=Stealth
+]
+\node[draw, thick, rounded corners, fill=gray!5, minimum width=10cm, minimum height=4.8cm] (host) at (0,1.8) {};
+\node[font=\scriptsize\bfseries] at (0,3.8) {Host (Linux)};
+\node[box, fill=green!15] (vm1) at (-3,3.3) {VM 1};
+\node[box, fill=purple!15] (vm2) at (3,3.3) {VM 2};
+\node[lbl] at (-3,2.8) {`10.0.1.10/24`};
+\node[lbl] at (3,2.8) {`10.0.2.20/24`};
+\node[box, fill=blue!20, minimum width=3cm] (br1) at (-3,1.8) {br0};
+\node[box, fill=blue!20, minimum width=3cm] (br2) at (3,1.8) {br1};
+\node[lbl] at (-3,1.3) {`10.0.1.1`};
+\node[lbl] at (3,1.3) {`10.0.2.1`};
+\node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {vRouter};
+\node[box, fill=orange!15] (pnic) at (0,0.0) {Physical NIC};
+\draw[thick] (-3,2.5) -- (-3,2.1);
+\draw[thick] (3,2.5) -- (3,2.1);
+\draw[thick] (-1.5,1.8) -- (-0.8,1.1);
+\draw[thick] (1.5,1.8) -- (0.8,1.1);
+\draw[thick] (0,0.5) -- (0,0.3);
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.2cm, minimum height=1cm, font=\scriptsize] (inet) at (0,-1.1) {Internet};
+\draw[thick] (0,-0.3) -- (0,-0.6);
+\end{tikzpicture}
+\end{center}
+
+\vfill
+\footnotesize
+How does VM 1 (10.0.1.10) reach VM 2 (10.0.2.20)? What components are involved?
+
 ## Example: VMs on Different Subnets (Solution)
 
 - Different subnets $\rightarrow$ traffic must go through the **vRouter** (L3 forwarding)
