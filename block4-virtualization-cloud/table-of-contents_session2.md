@@ -13,7 +13,7 @@
 - Discussion: from virtualization to cloud
 
 ### Fundamentals of Cloud Computing
-- Cloud Computing — Definition (NIST SP 800-145)
+- Cloud Computing — Definition (NIST)
 - Five Essential Characteristics (all must be present)
 - On-Demand Self-Service
 - Broad Network Access + Resource Pooling

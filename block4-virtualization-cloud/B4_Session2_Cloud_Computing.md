@@ -40,24 +40,30 @@ header-includes:
 
 \begin{center}
 \begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=2.5cm, minimum height=0.7cm, font=\small},
+    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.7cm, font=\scriptsize, align=center},
     >=Stealth
 ]
-\node[box, fill=green!15] (vm) at (0,2) {VMs};
-\node[box, fill=blue!15] (vnic) at (4,2) {vNICs};
-\node[box, fill=orange!15] (vsw) at (8,2) {vSwitches};
-\node[box, fill=yellow!15] (isol) at (4,0.5) {VLANs / Isolation};
+\node[box, fill=green!15] (vm) at (0,0) {VM};
+\node[box, fill=green!10] (vnic) at (2.5,0) {Virtual\\NIC};
+\node[box, fill=blue!15] (vsw) at (5,0) {Virtual\\Switch};
+\node[box, fill=yellow!20] (vr) at (7.5,0) {Virtual\\Router};
+\node[box, fill=orange!15] (pnic) at (10,0) {Physical\\NIC};
+\node[box, fill=cyan!10] (ext) at (12.5,0) {External\\Networks};
 
 \draw[->, thick] (vm) -- (vnic);
 \draw[->, thick] (vnic) -- (vsw);
-\draw[->, thick] (vsw) -- (isol);
-\draw[->, thick, dashed] (isol) -- ++(0,-1) node[below, font=\small] {\textbf{What's next?}};
+\draw[->, thick] (vsw) -- (vr);
+\draw[->, thick] (vr) -- (pnic);
+\draw[->, thick] (pnic) -- (ext);
+
+\node[font=\tiny, text=gray] at (12.5,-0.7) {(e.g. Internet)};
 \end{tikzpicture}
 \end{center}
 
-- Compute virtualization: VMs and containers
-- Network virtualization: vNICs, vSwitches, vRouters, VXLAN overlays
-- Together: the **building blocks** of the cloud
+- **Compute**: VMs share physical hardware via hypervisors; containers share the host kernel directly
+- **Networking**: Virtual NICs, Switches, and Routers replicate the physical stack in software
+- **Isolation**: VLANs separate tenants, but limited to 4,096 networks
+- Missing piece: how to scale this to **millions of tenants** $\rightarrow$ overlay networks (later this session)
 
 ## The Leap to Cloud
 
@@ -98,7 +104,7 @@ Hints: think about CapEx vs OpEx, scaling speed, and who manages what.
 
 # Fundamentals of Cloud Computing
 
-## Cloud Computing -- Definition (NIST: National Institute of Standards and Technology)
+## Cloud Computing -- Definition (NIST)
 
 \begin{quote}
 \textit{A model for enabling ubiquitous, convenient, \textbf{on-demand network access} to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort.}
@@ -295,7 +301,7 @@ Hints: consider the IT team size, maintenance burden, and how much control they 
 
 ## Putting It All Together
 
-- In Session 1 we saw the **building blocks**: vSwitches, vRouters, vNICs, VLANs
+- In Session 1 we saw the **building blocks**: Virtual Switches, Virtual Routers, Virtual NICs, VLANs
 - These components do not run in isolation; they are managed by **platforms**
 - Platforms orchestrate **VMs** or **containers** and configure virtual networking under the hood
 
@@ -645,7 +651,7 @@ Source: AWS, "Security Groups for Your VPC," docs.aws.amazon.com.
 
 ## Network ACLs (Access Control Lists) -- Subnet-Level Firewall
 
-- **Network ACL (Access Control List)** = firewall at the **subnet** level
+- **Network ACL** = firewall at the **subnet** level
 - Rules evaluated in **order** (numbered, first match wins)
 - **Stateless**: must explicitly allow both inbound AND outbound
 
@@ -742,4 +748,4 @@ Think about: public vs private subnets, security groups, NAT gateways, route tab
 7. Erl, Puttini & Mahmood, \textit{Cloud Computing: Concepts, Technology \& Architecture}, Prentice Hall, 2013.
 8. Kurose & Ross, \textit{Computer Networking: A Top-Down Approach}, 8th ed., Pearson, 2021.
 9. IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
-12. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
+10. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
