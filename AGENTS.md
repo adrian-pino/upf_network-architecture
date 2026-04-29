@@ -86,6 +86,16 @@
 - **Internet**: represent as `cloud` shape (`shapes.symbols`) with `fill=cyan!10`
 - **Physical NIC**: `fill=orange!15`, include connection to Internet when relevant
 
+## Diagram naming conventions
+- **Virtual switches**: use `bridge-1`, `bridge-2` (the Linux term students will encounter in practice)
+  - First appearance in a presentation: label as `bridge-1 (virtual switch)` to establish the connection
+  - Add footnote on first use: "In Linux, a bridge is named `br0`, `br1`, etc. We use `bridge-1` for clarity."
+  - Compact diagrams (Packet Flow) and summaries/roadmaps may use the abbreviation `vSwitch`
+- **Virtual routers**: spell out as `Virtual Router` in exercise diagrams and bullet text
+  - Compact diagrams and summaries may use `vRouter`
+- **Virtual NICs**: spell out as `Virtual NIC` in diagrams; abbreviation `vNIC` acceptable in running text
+- **Nesting**: NICs should be drawn inside their parent box (NIC inside Server on the physical side, Virtual NIC inside VM on the virtual side)
+
 ## Compilation
 - No local pandoc/xelatex — use Docker:
   ```bash

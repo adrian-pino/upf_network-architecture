@@ -681,70 +681,17 @@ How does a VM connect to the outside world? Three options:
 
 \vspace{0.2cm}
 
-**Bridged** --- VM appears directly on the physical network
+1. **Bridged**: VM appears directly on the physical network
+   - Same subnet as the host; gets its own IP from the network
+   - Anyone on the network can reach it (like plugging in a new computer)
 
-- Same subnet as the host; gets its own IP from the network
-- Anyone on the network can reach it (like plugging in a new computer)
+2. **NAT**: VM hides behind the host's IP
+   - VM can reach the Internet, but the Internet cannot reach the VM
+   - Same NAT concept from Block 3, now applied by the hypervisor
 
-**NAT** --- VM hides behind the host's IP
-
-- VM can reach the Internet, but the Internet cannot reach the VM
-- Same NAT concept from Block 3, now applied by the hypervisor
-
-**Host-only** --- VM can only talk to the host
-
-- Completely isolated from external networks
-- Use for: testing, isolated labs
-
-## Networking Modes: Visual Comparison
-
-\begin{center}
-\begin{tikzpicture}[
-    vm/.style={draw, thick, rounded corners, fill=green!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
-    sw/.style={draw, thick, fill=blue!15, minimum width=1.2cm, minimum height=0.5cm, font=\scriptsize},
-    nic/.style={draw, thick, fill=orange!15, minimum width=1.2cm, minimum height=0.5cm, font=\scriptsize},
-    net/.style={draw, thick, cloud, cloud puffs=8, cloud puff arc=120, fill=cyan!10, minimum width=1.5cm, minimum height=0.8cm, font=\scriptsize, aspect=1.5},
-    lbl/.style={font=\scriptsize\bfseries},
-    >=Stealth
-]
-
-% --- Bridged ---
-\node[lbl] at (0,3.2) {Bridged};
-\node[vm] (vm1) at (0,2.3) {VM};
-\node[sw] (sw1) at (0,1.3) {vSwitch};
-\node[nic] (nic1) at (0,0.3) {Physical NIC};
-\node[net] (net1) at (0,-0.9) {Network};
-\draw[thick] (vm1) -- (sw1);
-\draw[thick] (sw1) -- (nic1);
-\draw[thick] (nic1) -- (net1);
-\node[font=\tiny, text=gray] at (0,-1.9) {VM has its own IP};
-\node[font=\tiny, text=gray] at (0,-2.3) {on the physical network};
-
-% --- NAT ---
-\node[lbl] at (4.5,3.2) {NAT};
-\node[vm] (vm2) at (4.5,2.3) {VM};
-\node[sw] (sw2) at (4.5,1.3) {vSwitch};
-\node[draw, thick, fill=yellow!15, minimum width=1.2cm, minimum height=0.5cm, font=\scriptsize] (nat) at (4.5,0.3) {NAT};
-\node[nic] (nic2) at (4.5,-0.5) {Physical NIC};
-\node[net] (net2) at (4.5,-1.6) {Network};
-\draw[thick] (vm2) -- (sw2);
-\draw[thick] (sw2) -- (nat);
-\draw[thick] (nat) -- (nic2);
-\draw[->, thick] (nic2) -- (net2);
-\node[font=\tiny, text=gray] at (4.5,-2.3) {VM hidden behind host IP};
-
-% --- Host-only ---
-\node[lbl] at (9,3.2) {Host-only};
-\node[vm] (vm3) at (9,2.3) {VM};
-\node[sw] (sw3) at (9,1.3) {vSwitch};
-\node[font=\scriptsize, text=red] at (9,0.3) {$\times$ No uplink};
-\node[font=\tiny, text=gray] at (9,-0.3) {VM can only reach};
-\node[font=\tiny, text=gray] at (9,-0.7) {the host};
-\draw[thick] (vm2) -- (sw2);
-\draw[thick] (vm3) -- (sw3);
-
-\end{tikzpicture}
-\end{center}
+3. **Host-only**: VM can only talk to the host
+   - Completely isolated from external networks
+   - Use for: testing, isolated labs
 
 ## Virtual Routing and NAT
 
