@@ -41,9 +41,8 @@
 - Example: VM-to-VM Communication (Solution)
 - Example: VMs on Different Subnets (exercise)
 - Example: VMs on Different Subnets (Solution)
-- Virtual Network Interfaces (vNICs): software-emulated NICs, MAC prefixes
-- Networking Modes: bridged, NAT, host-only
-- Virtual Routing and NAT
+- Virtual NIC, Virtual Switch, Virtual Router
+- VM Networking Modes: NAT (default), Bridged, Host-only
 - Packet Flow: Virtual to Physical (end-to-end path)
 - Discussion: virtual networking
 

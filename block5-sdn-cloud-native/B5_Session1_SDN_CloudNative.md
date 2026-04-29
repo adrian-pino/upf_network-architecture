@@ -16,7 +16,7 @@ header-includes:
   - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit, decorations.pathreplacing}
   - \setbeamerfont{footnote}{size=\tiny}
   - \logo{\includegraphics[height=0.6cm]{img/upf-logo.png}}
-  - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}}
+  - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}\\[0.3cm]\scriptsize Adrián Pino \texttt{<adrian.pino@upf.edu>}}
   - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
 ---
 
