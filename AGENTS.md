@@ -103,6 +103,9 @@
 - **Block 2**: Application and transport layer
 - **Block 3**: Network and link layer (Ethernet, VLANs 802.1Q, ARP, STP, subnetting CIDR/VLSM, OSPF, BGP, DHCP, NAT/NAPT)
 
+## Self-maintenance rule
+- **After every session that modifies slides or project structure**, review this file (AGENTS.md) and evaluate whether any section needs updating: new acronyms, new conventions learned, corrected rules, or structural changes. Apply updates immediately rather than deferring them.
+
 ## Defined acronyms (centralised registry)
 
 Check this list before using an acronym. If it was already defined in a previous Block, there is no need to redefine it. If it is new, expand it on first use and add it here.
