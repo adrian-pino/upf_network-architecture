@@ -130,7 +130,7 @@ The control plane is **distributed** by design. What if we **centralized** it?
 Examples:
 
 - **OpenDaylight** (Linux Foundation, Java-based, widely adopted)
-- **ONOS** (Open Network OS, carrier-grade, telecom-focused)
+- **ONOS** (Open Network Operating System, carrier-grade, telecom-focused)
 - **Floodlight** (open-source, lightweight, educational)
 - Proprietary: **Cisco ACI**, **VMware NSX**
 
@@ -164,7 +164,7 @@ src IP = \texttt{192.168.1.100} & Drop & 200 \\
 
 \footnotesize ONF, "Software-Defined Networking: The New Norm for Networks," ONF White Paper, 2012.
 
-## Northbound Interface -- REST APIs
+## Northbound Interface -- Representational State Transfer (REST) APIs
 
 - Applications interact with the controller via **REST APIs**
 - Example operations:
@@ -236,7 +236,7 @@ Hardware router & Virtual router (VyOS, FRRouting) \\
 \hline
 WAN optimizer & Virtual WAN optimizer \\
 \hline
-IDS/IPS & Virtual IDS (Snort, Suricata) \\
+Intrusion Detection / Prevention (IDS/IPS) & Virtual IDS (Snort, Suricata) \\
 \hline
 \end{tabular}
 \end{center}
@@ -396,7 +396,7 @@ No hardware procurement, no shipping, no rack-and-stack.
 - **Monolithic** app: one big process, one deployment, one codebase
 - **Microservices**: app split into small, independent services
   - Each service runs in its **own container**
-  - Services communicate over the **network** (HTTP/REST, gRPC)
+  - Services communicate over the **network** (HTTP/REST, gRPC Remote Procedure Call)
 
 \vfill
 
@@ -505,7 +505,7 @@ resource "aws_security_group" "web" {
 
 ## Serverless Computing (FaaS)
 
-- **Serverless** (Function as a Service):
+- **Serverless** (Function as a Service, FaaS):
   - Deploy individual **functions**, not entire servers
   - Triggered by **events** (HTTP request, file upload, timer)
   - Provider manages **all infrastructure**: zero server management

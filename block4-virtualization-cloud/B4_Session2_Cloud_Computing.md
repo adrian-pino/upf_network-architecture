@@ -32,8 +32,8 @@ header-includes:
 **Learning objectives:**
 
 1. Understand cloud computing's definition and essential characteristics
-2. Distinguish IaaS, PaaS, and SaaS service models
-3. Design a basic cloud network with VPCs, subnets, and security controls
+2. Distinguish IaaS (Infrastructure as a Service), PaaS (Platform as a Service), and SaaS (Software as a Service) service models
+3. Design a basic cloud network with VPCs (Virtual Private Clouds), subnets, and security controls
 
 ## Recap -- What We Virtualized (Session 1)
 
@@ -97,7 +97,7 @@ Hints: think about CapEx vs OpEx, scaling speed, and who manages what.
 
 # Fundamentals of Cloud Computing
 
-## Cloud Computing -- Definition (NIST)
+## Cloud Computing -- Definition (NIST: National Institute of Standards and Technology)
 
 \begin{quote}
 \textit{A model for enabling ubiquitous, convenient, \textbf{on-demand network access} to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort.}
@@ -140,7 +140,7 @@ Source: NIST SP 800-145, Mell & Grance, 2011.
 
 ## On-Demand Self-Service
 
-- Users provision resources through a **portal or API**
+- Users provision resources through a **portal or API (Application Programming Interface)**
 - No phone calls, no tickets, no waiting for approval
 - Example: launch a VM in **30 seconds** via a web console
 
@@ -209,7 +209,7 @@ Analogy: vending machine (cloud) vs restaurant with a waiter (traditional IT).
 
 Examples:
 
-- **AWS EC2**: virtual machines
+- **AWS EC2 (Elastic Compute Cloud)**: virtual machines
 - **Azure Virtual Machines**
 - **Google Compute Engine**
 
@@ -546,9 +546,9 @@ Outbound & All & All & \texttt{0.0.0.0/0} \\
 \footnotesize
 Source: AWS, "Security Groups for Your VPC," docs.aws.amazon.com.
 
-## Network ACLs -- Subnet-Level Firewall
+## Network ACLs (Access Control Lists) -- Subnet-Level Firewall
 
-- **Network ACL** = firewall at the **subnet** level
+- **Network ACL (Access Control List)** = firewall at the **subnet** level
 - Rules evaluated in **order** (numbered, first match wins)
 - **Stateless**: must explicitly allow both inbound AND outbound
 
