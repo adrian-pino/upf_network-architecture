@@ -13,8 +13,8 @@
 - Include real-world examples that connect with the student's experience
 
 ## Bullet point format
-- Maximum 5-6 bullets per slide
-- Each bullet: 1 line, maximum 15 words
+- Aim for 5-7 bullets per slide (fewer on diagram-heavy slides; up to 8 if items are short)
+- Keep bullets concise: prefer one line, but two-line bullets are acceptable when needed for clarity
 - Use active verbs and direct language
 - Do not use full sentences; prioritize clear and memorable fragments
 - If a concept needs nuance, use a sub-bullet (maximum 1 level of depth)
@@ -27,7 +27,6 @@
    - Format: centred question in `\Large\textit{...}`, with hints below
    - Goal: students reflect and consolidate before moving to the next section
 4. Summary / key takeaways
-5. Final review question, quick exercise, or debate topic
 
 ## Writing style
 - **No long dashes** in slide content: do not use em dashes (`—`), en dashes (`–`), or LaTeX double hyphens (`--`) as phrase connectors. Use colons, semicolons, parentheses, or restructure the sentence instead. This applies to all visible slide text; HTML comments are exempt.
@@ -42,7 +41,8 @@
 
 ## Output format
 - Generate Markdown files
-- `#` = slide title
+- `#` = section title (generates a title slide + auto-TOC entry)
+- `##` = slide title
 - `-` = bullet points
 - Use **bold** for key terms the student should retain
 - Use `code` for commands, protocols, or addresses (e.g. `traceroute`, `192.168.0.0/24`)
@@ -74,10 +74,13 @@
     - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit, decorations.pathreplacing}
     - \setbeamerfont{footnote}{size=\tiny}
     - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
+    - \logo{\includegraphics[height=0.6cm]{img/upf-logo.png}}
+    - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}\\[0.3cm]\scriptsize Adrián Pino \texttt{<adrian.pino@upf.edu>}}
   ```
 - Note: `[table]{xcolor}` needed for `\rowcolor`; `decorations.pathreplacing` for TikZ braces; `shapes.symbols` for cloud shapes
 - Tables with full borders (`|l|l|`, `\hline` between each row), `\rowcolor{blue!10}` in header, `\renewcommand{\arraystretch}{1.3}` for padding. Do NOT use `booktabs` (`\toprule`/`\midrule`/`\bottomrule`)
 - `\vfill` for vertical spacing, `\footnotesize` for annotations
+- **Spacing between bullet groups**: blank lines between Markdown bullets with sub-bullets do NOT produce visible spacing in Beamer. Use `\vspace{0.2cm}` or `\vspace{0.3cm}` between bullet groups when needed. Same applies inside Pandoc columns. Only add spacing on slides with few bullets/content (visual judgment); dense slides risk overflow
 - Pandoc columns: `:::::::::::::: {.columns}` / `::: {.column width="50%"}`
 
 ## TikZ conventions
@@ -139,8 +142,8 @@ Check this list before using an acronym. If it was already defined in a previous
 | VMM | Virtual Machine Monitor | B4 Session 1 |
 | KVM | Kernel-based VM | B4 Session 1 |
 | CI/CD | Continuous Integration / Continuous Deployment | B4 Session 1 |
-| OVS | Open vSwitch | B4 Session 1 |
-| SDN | Software-Defined Networking | B4 Session 1 |
+| OVS | Open vSwitch | B5 Session 1 |
+| SDN | Software-Defined Networking | B5 Session 1 |
 | ACL | Access Control List | B4 Session 1 |
 | VXLAN | Virtual Extensible LAN | B4 Session 1 |
 | IaaS | Infrastructure as a Service | B4 Session 2 |
