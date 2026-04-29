@@ -290,6 +290,106 @@ Hardware & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolo
 
 Hints: consider the IT team size, maintenance burden, and how much control they need.
 
+# Cloud & Container Platforms
+
+## Putting It All Together
+
+- In Session 1 we saw the **building blocks**: vSwitches, vRouters, vNICs, VLANs
+- These components do not run in isolation; they are managed by **platforms**
+- Platforms orchestrate **VMs** or **containers** and configure virtual networking under the hood
+
+\vspace{0.3cm}
+
+Two categories:
+
+- **Cloud platforms**: manage infrastructure at scale
+  - Compute, storage, networking, and **VMs**
+- **Container orchestration platforms**: deploy and scale **containerized** applications
+
+## Cloud Platforms
+
+\scriptsize
+
+- **Self-managed / Private Cloud**: you own or rent the servers, install and manage the virtualization software yourself. Full control, but requires dedicated staff and expertise.
+
+\vspace{0.1cm}
+
+\renewcommand{\arraystretch}{1.2}
+\scriptsize
+\begin{tabular}{|l|l|c|}
+\hline
+\rowcolor{blue!10} \textbf{Platform} & \textbf{Description} & \textbf{Logo} \\
+\hline
+OpenStack & Open-source, widely used in private clouds & \includegraphics[height=0.4cm]{img/openstack-logo.png} \\
+\hline
+VMware vSphere & Enterprise leader, proprietary & \includegraphics[height=0.32cm]{img/vmware-logo.png} \\
+\hline
+Proxmox VE & Open-source, lightweight alternative & \includegraphics[height=0.32cm]{img/proxmox-logo.png} \\
+\hline
+\end{tabular}
+
+\vspace{0.2cm}
+
+\scriptsize
+
+- **Managed / Public Cloud**: rent capacity on demand, pay-as-you-go. Provider handles hardware, networking, cooling, security, and updates.
+
+\vspace{0.1cm}
+
+\begin{tabular}{|l|l|c|}
+\hline
+\rowcolor{blue!10} \textbf{Provider} & \textbf{Description} & \textbf{Logo} \\
+\hline
+Amazon Web Services & Market leader since 2006 & \includegraphics[height=0.3cm]{img/aws-logo.png} \\
+\hline
+Microsoft Azure & Strong enterprise integration & \includegraphics[height=0.32cm]{img/azure-logo.png} \\
+\hline
+Google Cloud Platform & Data and AI focus & \includegraphics[height=0.25cm]{img/gcp-logo.png} \\
+\hline
+\end{tabular}
+
+\vfill
+\footnotesize
+These map directly to the IaaS model we just covered: the provider (or you) manages compute, storage, and networking.
+
+## Container Orchestration Platforms
+
+\scriptsize
+
+- **Self-hosted / Private**: you install and operate on your own servers
+
+\vspace{0.1cm}
+
+\renewcommand{\arraystretch}{1.2}
+\scriptsize
+\begin{tabular}{|l|l|c|}
+\hline
+\rowcolor{blue!10} \textbf{Platform} & \textbf{Description} & \textbf{Logo} \\
+\hline
+Docker & Container runtime; works well on a single host & \includegraphics[height=0.4cm]{img/docker-logo.png} \\
+& Managing hundreds of containers across hosts? Unmanageable & \\
+\hline
+Kubernetes (K8s) & Created to solve this: scheduling, scaling, networking, self-healing & \includegraphics[height=0.5cm]{img/kubernetes-logo.png} \\
+\hline
+OpenShift & Enterprise K8s by Red Hat; adds security, CI/CD, UI & \includegraphics[height=0.45cm]{img/openshift-logo.png} \\
+\hline
+\end{tabular}
+
+\vspace{0.2cm}
+\scriptsize
+
+- **Hosted / Public**: cloud providers offer the same platforms as managed services. Each provider uses different names for essentially the same product (e.g., AWS ECS/EKS, Azure AKS, Google GKE, OpenShift on all major clouds).
+
+## Discussion: Platforms
+
+\begin{center}
+\Large\textit{A startup with 5 engineers needs to deploy\\a web application that may go from 100 to 100,000 users.\\Would you build a private cloud or use a public one? Why?}
+\end{center}
+
+\vfill
+
+Hints: team size, upfront cost, time to market, scaling needs, control over infrastructure.
+
 # From VLANs to Overlay Networks
 
 ## The VLAN Scalability Problem
@@ -493,29 +593,24 @@ Source: AWS, "Amazon VPC User Guide"; Azure, "Virtual Network Documentation"; GC
 
 ## Internet Gateway vs NAT Gateway
 
-\begin{center}
-\small
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{|l|l|l|}
-\hline
-\rowcolor{blue!10} & \textbf{Internet Gateway} & \textbf{NAT Gateway} \\
-\hline
-Direction & Bidirectional & Outbound only \\
-\hline
-Use case & Public-facing services & Private instances need updates \\
-\hline
-Assigned to & Virtual network (one per network) & Public subnet \\
-\hline
-Instance needs & Public IP & Only private IP \\
-\hline
-\end{tabular}
-\end{center}
+**Internet Gateway** — the front door:
+
+- **Bidirectional**: the world can reach your instance, and it can reach the world
+- Instance needs a **public IP**
+- Use for: web servers, load balancers, anything public-facing
+
+\vspace{0.3cm}
+
+**NAT Gateway** — the fire exit:
+
+- **One-way**: your instance can reach the Internet (e.g., download updates, call APIs), but nobody outside can reach it directly
+- Instance keeps a **private IP** only
+- Use for: databases, backends that need to download patches but must stay hidden
 
 \vfill
 
-- Internet GW: allows the world to **reach** your public instances
-- NAT GW: lets private instances **reach out** without being reachable
-- Same **NAT concept from Block 3**, now as a managed cloud service
+\footnotesize
+Same \textbf{NAT concept from Block 3}, now as a managed cloud service.
 
 ## Security Groups -- Instance-Level Firewall
 

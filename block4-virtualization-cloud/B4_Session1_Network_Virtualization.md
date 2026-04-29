@@ -49,11 +49,12 @@ header-includes:
 \hline
 Theme & \textit{The infrastructure} & \textit{The business model} \\
 \hline
-Topics & Data centers & Overlay networks (VXLAN) \\
-& VMs \& hypervisors & NIST cloud definition \\
-& VMs vs containers (overview) & IaaS / PaaS / SaaS \\
-& vNICs, vSwitches, vRouters & Security groups \& ACLs \\
-& Multi-tenancy \& VLANs & Governance \& GDPR \\
+Topics & Data centers & Cloud \& container platforms \\
+& VMs \& hypervisors & Overlay networks (VXLAN) \\
+& VMs vs containers (overview) & NIST cloud definition \\
+& vNICs, vSwitches, vRouters & IaaS / PaaS / SaaS \\
+& Multi-tenancy \& VLANs & Security groups \& ACLs \\
+& & Governance \& GDPR \\
 \hline
 \end{tabular}
 \end{center}
@@ -407,7 +408,7 @@ Cable & Internal software path \\
 
 \vfill
 \footnotesize
-Key idea: if VMs think they have real hardware, they also need a \textbf{real-looking network}.
+\textbf{Note:} This section focuses on VMs. Containers follow similar principles (Block 5).
 
 ## Physical vs Virtual: Side by Side (Same Network)
 
@@ -664,56 +665,78 @@ Key characteristics:
 \vfill
 
 \footnotesize
-Same MAC/IP concepts from Blocks 1 to 3, now virtualized inside the hypervisor.
+Same MAC/IP concepts from Blocks 1--3, now virtualized inside the hypervisor. Virtual switches range from simple (Linux bridge) to programmable (Open vSwitch); we will explore SDN-based switches in Block 5.
 
-## Types of Virtual Switches
+## Networking Modes
 
-\begin{center}
-\renewcommand{\arraystretch}{1.3}
-\small
-\begin{tabular}{|l|l|l|}
-\hline
-\rowcolor{blue!10} \textbf{Type} & \textbf{Scope} & \textbf{Example} \\
-\hline
-Standard vSwitch & Single host & VMware vSS, Linux bridge \\
-\hline
-Distributed vSwitch & Multiple hosts, central mgmt & VMware vDS, Hyper-V \\
-\hline
-SDN-based vSwitch & Programmable, software-defined & OVS (Open vSwitch), VMware NSX \\
-\hline
-\end{tabular}
-\end{center}
+How does a VM connect to the outside world? Three options:
 
-- All types support **VLANs** (same 802.1Q from Block 3, now inside the hypervisor)
-- OVS is open source and **programmable via software** $\rightarrow$ deep dive in **Block 5** (Software-Defined Networking, or SDN)
+\vspace{0.2cm}
 
-\vfill
-\footnotesize
-Source: Pfaff et al., "The Design and Implementation of Open vSwitch," *NSDI*, 2015.
+**Bridged** --- VM appears directly on the physical network
 
-## Bridging Modes
+- Same subnet as the host; gets its own IP from the network
+- Anyone on the network can reach it (like plugging in a new computer)
 
-Three ways to connect a VM to the outside world:
+**NAT** --- VM hides behind the host's IP
+
+- VM can reach the Internet, but the Internet cannot reach the VM
+- Same NAT concept from Block 3, now applied by the hypervisor
+
+**Host-only** --- VM can only talk to the host
+
+- Completely isolated from external networks
+- Use for: testing, isolated labs
+
+## Networking Modes: Visual Comparison
 
 \begin{center}
-\small
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{|l|l|l|l|}
-\hline
-\rowcolor{blue!10} \textbf{Mode} & \textbf{VM visibility} & \textbf{External access?} & \textbf{Use case} \\
-\hline
-Bridged & Same subnet as host & Yes (direct) & Production servers \\
-\hline
-NAT & Hidden behind host IP & Outbound only & Dev/testing \\
-\hline
-Host-only & Only sees the host & No & Isolated labs \\
-\hline
-\end{tabular}
-\end{center}
+\begin{tikzpicture}[
+    vm/.style={draw, thick, rounded corners, fill=green!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
+    sw/.style={draw, thick, fill=blue!15, minimum width=1.2cm, minimum height=0.5cm, font=\scriptsize},
+    nic/.style={draw, thick, fill=orange!15, minimum width=1.2cm, minimum height=0.5cm, font=\scriptsize},
+    net/.style={draw, thick, cloud, cloud puffs=8, cloud puff arc=120, fill=cyan!10, minimum width=1.5cm, minimum height=0.8cm, font=\scriptsize, aspect=1.5},
+    lbl/.style={font=\scriptsize\bfseries},
+    >=Stealth
+]
 
-- **Bridged**: VM appears directly on the physical network
-- **NAT**: VM traffic translated through the host's IP (same NAT from Block 3)
-- **Host-only**: completely isolated from external networks
+% --- Bridged ---
+\node[lbl] at (0,3.2) {Bridged};
+\node[vm] (vm1) at (0,2.3) {VM};
+\node[sw] (sw1) at (0,1.3) {vSwitch};
+\node[nic] (nic1) at (0,0.3) {Physical NIC};
+\node[net] (net1) at (0,-0.9) {Network};
+\draw[thick] (vm1) -- (sw1);
+\draw[thick] (sw1) -- (nic1);
+\draw[thick] (nic1) -- (net1);
+\node[font=\tiny, text=gray] at (0,-1.9) {VM has its own IP};
+\node[font=\tiny, text=gray] at (0,-2.3) {on the physical network};
+
+% --- NAT ---
+\node[lbl] at (4.5,3.2) {NAT};
+\node[vm] (vm2) at (4.5,2.3) {VM};
+\node[sw] (sw2) at (4.5,1.3) {vSwitch};
+\node[draw, thick, fill=yellow!15, minimum width=1.2cm, minimum height=0.5cm, font=\scriptsize] (nat) at (4.5,0.3) {NAT};
+\node[nic] (nic2) at (4.5,-0.5) {Physical NIC};
+\node[net] (net2) at (4.5,-1.6) {Network};
+\draw[thick] (vm2) -- (sw2);
+\draw[thick] (sw2) -- (nat);
+\draw[thick] (nat) -- (nic2);
+\draw[->, thick] (nic2) -- (net2);
+\node[font=\tiny, text=gray] at (4.5,-2.3) {VM hidden behind host IP};
+
+% --- Host-only ---
+\node[lbl] at (9,3.2) {Host-only};
+\node[vm] (vm3) at (9,2.3) {VM};
+\node[sw] (sw3) at (9,1.3) {vSwitch};
+\node[font=\scriptsize, text=red] at (9,0.3) {$\times$ No uplink};
+\node[font=\tiny, text=gray] at (9,-0.3) {VM can only reach};
+\node[font=\tiny, text=gray] at (9,-0.7) {the host};
+\draw[thick] (vm2) -- (sw2);
+\draw[thick] (vm3) -- (sw3);
+
+\end{tikzpicture}
+\end{center}
 
 ## Virtual Routing and NAT
 
@@ -771,106 +794,6 @@ Hints: vSwitch handles same-subnet traffic locally; vRouter needed for different
 
 <!-- nota: esta pregunta refuerza la diferencia entre L2 (vSwitch) y L3 (vRouter), y que el tráfico intra-host no pasa por la red física -->
 
-# Cloud & Container Platforms
-
-## Putting It All Together
-
-- We have seen the **building blocks**: vSwitches, vRouters, vNICs, VLANs
-- These components do not run in isolation; they are managed by **cloud platforms**
-- Platforms orchestrate **VMs** or **containers** and configure virtual networking under the hood
-
-\vspace{0.3cm}
-
-Two categories:
-
-- **Cloud platforms**: manage infrastructure at scale
-  - Compute, storage, networking, and **VMs**
-- **Container orchestration platforms**: deploy and scale **containerized** applications
-
-## Cloud Platforms
-
-\scriptsize
-
-- **Self-managed / Private Cloud**: you own or rent the servers, install and manage the virtualization software yourself. Full control, but requires dedicated staff and expertise.
-
-\vspace{0.1cm}
-
-\renewcommand{\arraystretch}{1.2}
-\scriptsize
-\begin{tabular}{|l|l|c|}
-\hline
-\rowcolor{blue!10} \textbf{Platform} & \textbf{Description} & \textbf{Logo} \\
-\hline
-OpenStack & Open-source, widely used in private clouds & \includegraphics[height=0.4cm]{img/openstack-logo.png} \\
-\hline
-VMware vSphere & Enterprise leader, proprietary & \includegraphics[height=0.32cm]{img/vmware-logo.png} \\
-\hline
-Proxmox VE & Open-source, lightweight alternative & \includegraphics[height=0.32cm]{img/proxmox-logo.png} \\
-\hline
-\end{tabular}
-
-\vspace{0.2cm}
-
-\scriptsize
-
-- **Managed / Public Cloud**: rent capacity on demand, pay-as-you-go. Provider handles hardware, networking, cooling, security, and updates.
-
-\vspace{0.1cm}
-
-\begin{tabular}{|l|l|c|}
-\hline
-\rowcolor{blue!10} \textbf{Provider} & \textbf{Description} & \textbf{Logo} \\
-\hline
-Amazon Web Services & Market leader since 2006 & \includegraphics[height=0.3cm]{img/aws-logo.png} \\
-\hline
-Microsoft Azure & Strong enterprise integration & \includegraphics[height=0.32cm]{img/azure-logo.png} \\
-\hline
-Google Cloud Platform & Data and AI focus & \includegraphics[height=0.25cm]{img/gcp-logo.png} \\
-\hline
-\end{tabular}
-
-\vfill
-\footnotesize
-Trade-offs between private and public cloud: \textbf{Session 2} (NIST cloud definition, IaaS/PaaS/SaaS).
-
-## Container Orchestration Platforms
-
-\scriptsize
-
-- **Self-hosted / Private**: you install and operate on your own servers
-
-\vspace{0.1cm}
-
-\renewcommand{\arraystretch}{1.2}
-\scriptsize
-\begin{tabular}{|l|l|c|}
-\hline
-\rowcolor{blue!10} \textbf{Platform} & \textbf{Description} & \textbf{Logo} \\
-\hline
-Docker & Container runtime; works well on a single host & \includegraphics[height=0.4cm]{img/docker-logo.png} \\
-& Managing hundreds of containers across hosts? Unmanageable & \\
-\hline
-Kubernetes (K8s) & Created to solve this: scheduling, scaling, networking, self-healing & \includegraphics[height=0.5cm]{img/kubernetes-logo.png} \\
-\hline
-OpenShift & Enterprise K8s by Red Hat; adds security, CI/CD, UI & \includegraphics[height=0.45cm]{img/openshift-logo.png} \\
-\hline
-\end{tabular}
-
-\vspace{0.2cm}
-\scriptsize
-
-- **Hosted / Public**: cloud providers offer the same platforms as managed services. Each provider uses different names for essentially the same product (e.g., AWS ECS/EKS, Azure AKS, Google GKE, OpenShift on all major clouds).
-
-## Discussion: Platforms
-
-\begin{center}
-\Large\textit{A startup with 5 engineers needs to deploy\\a web application that may go from 100 to 100,000 users.\\Would you build a private cloud or use a public one? Why?}
-\end{center}
-
-\vfill
-
-Hints: team size, upfront cost, time to market, scaling needs, control over infrastructure.
-
 # Network Isolation and Multi-Tenancy
 
 ## The Problem: Shared Infrastructure, Private Data
@@ -901,7 +824,7 @@ Cloud platforms solve this with **three layers of isolation**:
 **But there is a problem:**
 
 - VLAN ID field is 12 bits $\rightarrow$ max **4,096 VLANs**
-- A large cloud platform may have **tens of thousands** of tenants
+- A large data center may have **tens of thousands** of tenants
 - VLANs also do not support **overlapping IP ranges** across tenants
 
 \vfill
@@ -988,6 +911,7 @@ Hints: think about the VLAN ID limit (4,096), overlapping IP ranges, and what ha
 
 In **Session 2** we build on today's foundation:
 
+- **Cloud and container platforms**: who runs the infrastructure?
 - **Overlay networks** (VXLAN): scaling beyond the 4,096 VLAN limit
 - Virtualization is the technology; cloud is the **business model**
 - NIST definition and **5 essential characteristics**

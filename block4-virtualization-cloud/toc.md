@@ -42,17 +42,10 @@
 - Example: VMs on Different Subnets (exercise)
 - Example: VMs on Different Subnets (Solution)
 - Virtual Network Interfaces (vNICs): software-emulated NICs, MAC prefixes
-- Types of Virtual Switches: standard, distributed, OVS
-- Bridging Modes: bridged, NAT, host-only
+- Networking Modes: bridged, NAT, host-only
 - Virtual Routing and NAT
 - Packet Flow: Virtual to Physical (end-to-end path)
 - Discussion: virtual networking
-
-### Cloud & Container Platforms
-- Putting It All Together (building blocks → platforms)
-- Cloud Platforms: private (OpenStack, VMware, Proxmox) and public (AWS, Azure, GCP)
-- Container Orchestration Platforms: Docker, Kubernetes, OpenShift (private + hosted)
-- Discussion: startup choosing private vs public cloud
 
 ### Network Isolation and Multi-Tenancy
 - The Problem: Shared Infrastructure, Private Data (security, performance, address independence)
@@ -89,6 +82,12 @@
 - SaaS — Software as a Service
 - Service Models — Who Manages What? (responsibility spectrum)
 - Discussion: cloud fundamentals
+
+### Cloud & Container Platforms
+- Putting It All Together (building blocks → platforms)
+- Cloud Platforms: private (OpenStack, VMware, Proxmox) and public (AWS, Azure, GCP)
+- Container Orchestration Platforms: Docker, Kubernetes, OpenShift (private + hosted)
+- Discussion: startup choosing private vs public cloud
 
 ### From VLANs to Overlay Networks
 - The VLAN Scalability Problem
