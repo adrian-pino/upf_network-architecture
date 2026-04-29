@@ -285,6 +285,106 @@ No hardware procurement, no shipping, no rack-and-stack.
 - Hint: think about latency, throughput, and specialized workloads
 - What about hardware accelerators (FPGAs, SmartNICs)?
 
+# From VLANs to Overlay Networks
+
+## The VLAN Scalability Problem
+
+- In Block 4 we used **VLANs** to isolate tenants on virtual networks
+- VLANs use a **12-bit ID** $\rightarrow$ maximum **4,096** virtual networks
+- Cloud providers host **millions** of tenants $\rightarrow$ VLANs are not enough
+- Additional limitations:
+  - VLANs are confined to a **single L2 domain**
+  - Moving a VM to another host may require VLAN reconfiguration
+
+\vfill
+\footnotesize
+We need a technology that scales beyond 4K networks and works across L3 boundaries.
+
+## Overlay Networks: Concept
+
+- An **overlay network** is a virtual network built **on top of** the physical one
+- Uses **encapsulation**: wrap virtual frames inside physical packets
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, font=\scriptsize, minimum height=0.6cm},
+    >=Stealth
+]
+\node[box, fill=green!15, minimum width=2cm] (inner) at (0,0) {Original Frame};
+\node[box, fill=blue!15, minimum width=1.5cm] (hdr) at (-2.2,0) {Overlay Hdr};
+\node[box, fill=gray!20, minimum width=1.2cm] (outer) at (-4,0) {Outer IP/UDP};
+
+\node[draw, thick, dashed, rounded corners, fit=(outer)(hdr)(inner), inner sep=4pt, label=above:{\scriptsize Encapsulated Packet}] {};
+\end{tikzpicture}
+\end{center}
+
+- The physical network only sees the **outer headers**
+- The virtual (tenant) traffic is hidden inside $\rightarrow$ **full isolation**
+
+## VXLAN: Overview
+
+- **VXLAN** (Virtual eXtensible LAN): most widely used overlay protocol
+- Encapsulates L2 frames in **UDP packets** over the physical network
+- Uses a **24-bit VNI** (VXLAN Network Identifier)
+  - $2^{24}$ = **16 million** virtual networks (vs 4,096 VLANs)
+- Endpoints: **VTEPs** (VXLAN Tunnel Endpoints)
+  - Encapsulate at source, decapsulate at destination
+
+\footnotesize Source: IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
+
+## VXLAN: How It Works
+
+\begin{center}
+\begin{tikzpicture}[
+    vm/.style={draw, thick, rounded corners, fill=green!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
+    vm2/.style={draw, thick, rounded corners, fill=purple!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
+    vtep/.style={draw, thick, fill=blue!20, minimum width=1.5cm, minimum height=0.6cm, font=\scriptsize},
+    >=Stealth
+]
+\node[vm] (vm1) at (0,1.5) {VM A};
+\node[vtep] (v1) at (0,0) {VTEP 1};
+\node[vtep] (v2) at (8,0) {VTEP 2};
+\node[vm2] (vm2) at (8,1.5) {VM B};
+
+\draw[thick] (vm1) -- (v1);
+\draw[thick] (vm2) -- (v2);
+\draw[thick, dashed, blue] (v1) -- node[above, font=\scriptsize] {UDP tunnel over physical network} (v2);
+
+\node[font=\tiny, text=gray] at (0,-0.8) {Encapsulates frame};
+\node[font=\tiny, text=gray] at (8,-0.8) {Decapsulates frame};
+\node[font=\tiny, text=gray] at (4,-0.5) {VNI identifies the virtual network};
+\end{tikzpicture}
+\end{center}
+
+- VM A sends a frame $\rightarrow$ VTEP 1 wraps it in UDP with a VNI
+- Travels over the physical network as a regular UDP packet
+- VTEP 2 strips outer headers, delivers original frame to VM B
+- VMs on the **same VNI** form an isolated L2 domain
+
+## Overlay Benefits for Scalability
+
+- **16 million virtual networks** (vs 4,096 VLANs)
+- Physical network does not need to know about tenants
+- VMs can **migrate** across hosts without reconfiguring the underlay
+- Decouples **virtual topology** from physical topology
+
+\vfill
+
+\footnotesize
+Overlays are the foundation of cloud networking: every virtual network (VPC) you create runs on top of VXLAN or similar protocols.
+
+Source: IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
+
+## Discussion: Overlay Networks
+
+\begin{center}
+\Large\textit{Why can the physical network remain simple\\if we use overlay networks?\\What are the trade-offs of encapsulation?}
+\end{center}
+
+\vfill
+
+Hints: think about overhead (extra headers), MTU implications, and troubleshooting complexity.
+
 # Container Networking
 
 ## Containers -- Deep Dive (Expanding Block 4 Overview)
@@ -354,7 +454,7 @@ No hardware procurement, no shipping, no rack-and-stack.
 **Overlay network:**
 
 - Containers on **different hosts** connected via VXLAN overlay
-- Same overlay concept from Block 4, now applied to containers
+- Same overlay concept we just covered, now applied to containers
 - Enables **multi-host** container deployments
 
 \footnotesize Docker, Inc., "Docker Networking Documentation," docs.docker.com/network.
@@ -389,7 +489,7 @@ No hardware procurement, no shipping, no rack-and-stack.
 \end{center}
 
 - Within a host: containers use a **bridge** network
-- Across hosts: an **overlay** connects the bridges (same VXLAN from B4)
+- Across hosts: an **overlay** connects the bridges (VXLAN from the previous section)
 
 ## Microservices -- From Monolith to Distributed
 
@@ -580,6 +680,8 @@ Each layer builds on the previous one. This is the **evolution of networking**.
 12. ETSI, "Multi-access Edge Computing (MEC)," etsi.org/technologies/multi-access-edge-computing.
 13. Goransson & Black, *Software Defined Networks*, 2nd ed., Morgan Kaufmann, 2017.
 14. Kurose & Ross, *Computer Networking: A Top-Down Approach*, 8th ed., Pearson, 2021.
+15. IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
+16. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
 
 # Session Summary
 
@@ -589,9 +691,10 @@ Each layer builds on the previous one. This is the **evolution of networking**.
 2. **SDN** separates control from data plane $\rightarrow$ centralized, programmable
 3. **NFV** replaces hardware appliances with software $\rightarrow$ flexible, cheap
 4. SDN + NFV are **complementary**: SDN steers, NFV processes
-5. **Containers** are lightweight (shared kernel), networked via bridges/overlays
-6. **Microservices** = many containers communicating over the network
-7. **IaC** automates infrastructure $\rightarrow$ reproducible, fast, auditable
+5. **VXLAN** overlays scale isolation to 16M networks (vs 4K VLANs)
+6. **Containers** are lightweight (shared kernel), networked via bridges/overlays
+7. **Microservices** = many containers communicating over the network
+8. **IaC** automates infrastructure $\rightarrow$ reproducible, fast, auditable
 
 ## Discussion
 

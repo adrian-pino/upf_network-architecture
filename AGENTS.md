@@ -165,3 +165,6 @@ Check this list before using an acronym. If it was already defined in a previous
 | FaaS | Function as a Service | B5 Session 1 |
 | MEC | Multi-access Edge Computing | B5 Session 1 |
 | OCI | Open Container Initiative | B5 Session 1 |
+| VPN | Virtual Private Network | B4 Session 2 |
+| LB | Load Balancer | B4 Session 2 |
+| TLS | Transport Layer Security | B4 Session 2 |

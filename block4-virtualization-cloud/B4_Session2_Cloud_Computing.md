@@ -1,6 +1,6 @@
 ---
 title: "Block 4 -- Session 2"
-subtitle: "Cloud Computing \\& Cloud Networking"
+subtitle: "Cloud Computing \\& Cloud Architectures"
 author: "Arquitectura de Xarxes"
 institute: "Universitat Pompeu Fabra"
 theme: "Madrid"
@@ -33,8 +33,8 @@ header-includes:
 **Learning objectives:**
 
 1. Understand cloud computing's definition and essential characteristics
-2. Distinguish IaaS (Infrastructure as a Service), PaaS (Platform as a Service), and SaaS (Software as a Service) service models
-3. Design a basic cloud virtual network with subnets and security controls
+2. Distinguish IaaS (Infrastructure as a Service), PaaS (Platform as a Service), and SaaS (Software as a Service)
+3. Design a cloud virtual network with subnets, security controls, and network services
 
 ## Recap -- What We Virtualized (Session 1)
 
@@ -62,8 +62,7 @@ header-includes:
 
 - **Compute**: VMs share physical hardware via hypervisors; containers share the host kernel directly
 - **Networking**: Virtual NICs, Switches, and Routers replicate the physical stack in software
-- **Isolation**: VLANs separate tenants, but limited to 4,096 networks
-- Missing piece: how to scale this to **millions of tenants** $\rightarrow$ overlay networks (later this session)
+- **Isolation**: VLANs and overlay networks separate tenants on shared infrastructure
 
 ## The Leap to Cloud
 
@@ -123,15 +122,15 @@ Source: NIST SP 800-145 (2011). Still the standard definition used industry-wide
 \hline
 \rowcolor{blue!10} \textbf{Characteristic} & \textbf{What it means} \\
 \hline
-On-demand self-service & Provision resources without human interaction \\
+On-demand self-service & Provision resources via portal/API, no human interaction \\
 \hline
-Broad network access & Available over the network from any device \\
+Broad network access & Available from any device over the network \\
 \hline
 Resource pooling & Shared infrastructure, multi-tenant \\
 \hline
-Rapid elasticity & Scale up/down automatically \\
+Rapid elasticity & Scale up/down automatically (e.g. Black Friday $\rightarrow$ 10$\times$) \\
 \hline
-Measured service & Pay only for what you use (metered) \\
+Measured service & Pay only for what you use (CPU-hours, GB stored) \\
 \hline
 \end{tabular}
 \end{center}
@@ -144,47 +143,6 @@ Measured service & Pay only for what you use (metered) \\
 \vfill
 \footnotesize
 Source: NIST SP 800-145, Mell & Grance, 2011.
-
-## On-Demand Self-Service
-
-- Users provision resources through a **portal or API (Application Programming Interface)**
-- No phone calls, no tickets, no waiting for approval
-- Example: launch a VM in **30 seconds** via a web console
-
-\vfill
-
-<!-- nota: si hay tiempo, demo en vivo creando una instancia en algún cloud -->
-
-Analogy: vending machine (cloud) vs restaurant with a waiter (traditional IT).
-
-## Broad Network Access + Resource Pooling
-
-**Broad network access:**
-
-- Resources accessible from **any device** with network connectivity
-- Standard protocols: HTTPS, SSH, REST APIs
-- No proprietary client software needed
-
-**Resource pooling:**
-
-- Provider's resources serve **multiple tenants** simultaneously
-- Tenants do not know (or care) where their resources are physically located
-- Dynamically assigned based on demand
-- Builds on the **multi-tenancy** concepts from Session 1
-
-## Rapid Elasticity + Measured Service
-
-**Rapid elasticity:**
-
-- Resources appear **unlimited** to the consumer
-- Scale out (add) and scale in (remove) automatically
-- Example: web store on Black Friday $\rightarrow$ 10$\times$ servers, then back to normal
-
-**Measured service:**
-
-- Usage is **metered** (CPU-hours, GB stored, GB transferred)
-- **Pay-per-use** model $\rightarrow$ OpEx instead of CapEx
-- Transparent monitoring and billing reports
 
 ## Cloud Service Models -- The Stack
 
@@ -208,57 +166,28 @@ Analogy: vending machine (cloud) vs restaurant with a waiter (traditional IT).
 
 <!-- nota: ir de abajo a arriba, explicando qué gestiona el proveedor vs el cliente en cada modelo -->
 
-## IaaS -- Infrastructure as a Service
+## IaaS, PaaS, SaaS -- In Practice
 
-- Provider gives you: **VMs, storage, networks**
-- You manage: OS, middleware, applications, data
-- **Maximum control, maximum responsibility**
+\small
 
-Examples:
+**IaaS** (e.g. AWS EC2, Azure VMs, Google Compute Engine):
 
-- **AWS EC2 (Elastic Compute Cloud)**: virtual machines
-- **Azure Virtual Machines**
-- **Google Compute Engine**
+- Provider gives you VMs, storage, networks. You manage everything else
+- "I want a Linux server in Frankfurt, 4 CPUs, 16 GB RAM, right now"
 
-\vfill
+\vspace{0.2cm}
 
-Use case: "I want a Linux server in Frankfurt, 4 CPUs, 16 GB RAM, right now."
+**PaaS** (e.g. Google App Engine, AWS Elastic Beanstalk, Heroku):
 
-\vfill
-\footnotesize
-Source: AWS EC2 Documentation, docs.aws.amazon.com.
+- Provider gives you runtime + tools. You only manage your code and data
+- "I wrote a Python web app. Just run it, I do not care about servers"
 
-## PaaS -- Platform as a Service
+\vspace{0.2cm}
 
-- Provider gives you: **runtime environment + tools**
-- You manage: only your **application code and data**
-- No need to manage OS, patches, or scaling infrastructure
+**SaaS** (e.g. Google Workspace, Microsoft 365, Slack, Zoom):
 
-Examples:
-
-- **Google App Engine**
-- **AWS Elastic Beanstalk**
-- **Heroku**
-
-\vfill
-
-Use case: "I wrote a Python web app. Just run it, scale it, I do not care about servers."
-
-## SaaS -- Software as a Service
-
-- Provider gives you: a **complete application**
-- You manage: your **data and user configuration**
-- No installation, no maintenance, no updates to worry about
-
-Examples:
-
-- **Google Workspace** (Gmail, Docs, Drive)
-- **Microsoft 365** (Word, Excel, Teams)
-- **Salesforce**, **Slack**, **Zoom**
-
-\vfill
-
-Use case: "I need email for 500 employees. I do not want to run a mail server."
+- Provider gives you a complete application. You manage your data only
+- "I need email for 500 employees. I do not want to run a mail server"
 
 ## Service Models -- Who Manages What?
 
@@ -397,106 +326,6 @@ OpenShift & Enterprise K8s by Red Hat; adds security, CI/CD, UI & \includegraphi
 
 Hints: team size, upfront cost, time to market, scaling needs, control over infrastructure.
 
-# From VLANs to Overlay Networks
-
-## The VLAN Scalability Problem
-
-- In Session 1 we used **VLANs** to isolate tenants on virtual networks
-- VLANs use a **12-bit ID** $\rightarrow$ maximum **4,096** virtual networks
-- Cloud providers host **millions** of tenants $\rightarrow$ VLANs are not enough
-- Additional limitations:
-  - VLANs are confined to a **single L2 domain**
-  - Moving a VM to another host may require VLAN reconfiguration
-
-\vfill
-\footnotesize
-We need a technology that scales beyond 4K networks and works across L3 boundaries.
-
-## Overlay Networks: Concept
-
-- An **overlay network** is a virtual network built **on top of** the physical one
-- Uses **encapsulation**: wrap virtual frames inside physical packets
-
-\begin{center}
-\begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, font=\scriptsize, minimum height=0.6cm},
-    >=Stealth
-]
-\node[box, fill=green!15, minimum width=2cm] (inner) at (0,0) {Original Frame};
-\node[box, fill=blue!15, minimum width=1.5cm] (hdr) at (-2.2,0) {Overlay Hdr};
-\node[box, fill=gray!20, minimum width=1.2cm] (outer) at (-4,0) {Outer IP/UDP};
-
-\node[draw, thick, dashed, rounded corners, fit=(outer)(hdr)(inner), inner sep=4pt, label=above:{\scriptsize Encapsulated Packet}] {};
-\end{tikzpicture}
-\end{center}
-
-- The physical network only sees the **outer headers**
-- The virtual (tenant) traffic is hidden inside $\rightarrow$ **full isolation**
-
-## VXLAN: Overview
-
-- **VXLAN** (Virtual eXtensible LAN): most widely used overlay protocol
-- Encapsulates L2 frames in **UDP packets** over the physical network
-- Uses a **24-bit VNI** (VXLAN Network Identifier)
-  - $2^{24}$ = **16 million** virtual networks (vs 4,096 VLANs)
-- Endpoints: **VTEPs** (VXLAN Tunnel Endpoints)
-  - Encapsulate at source, decapsulate at destination
-
-\footnotesize Source: IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
-
-## VXLAN: How It Works
-
-\begin{center}
-\begin{tikzpicture}[
-    vm/.style={draw, thick, rounded corners, fill=green!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
-    vm2/.style={draw, thick, rounded corners, fill=purple!15, minimum width=1.2cm, minimum height=0.6cm, font=\scriptsize},
-    vtep/.style={draw, thick, fill=blue!20, minimum width=1.5cm, minimum height=0.6cm, font=\scriptsize},
-    >=Stealth
-]
-\node[vm] (vm1) at (0,1.5) {VM A};
-\node[vtep] (v1) at (0,0) {VTEP 1};
-\node[vtep] (v2) at (8,0) {VTEP 2};
-\node[vm2] (vm2) at (8,1.5) {VM B};
-
-\draw[thick] (vm1) -- (v1);
-\draw[thick] (vm2) -- (v2);
-\draw[thick, dashed, blue] (v1) -- node[above, font=\scriptsize] {UDP tunnel over physical network} (v2);
-
-\node[font=\tiny, text=gray] at (0,-0.8) {Encapsulates frame};
-\node[font=\tiny, text=gray] at (8,-0.8) {Decapsulates frame};
-\node[font=\tiny, text=gray] at (4,-0.5) {VNI identifies the virtual network};
-\end{tikzpicture}
-\end{center}
-
-- VM A sends a frame $\rightarrow$ VTEP 1 wraps it in UDP with a VNI
-- Travels over the physical network as a regular UDP packet
-- VTEP 2 strips outer headers, delivers original frame to VM B
-- VMs on the **same VNI** form an isolated L2 domain
-
-## Overlay Benefits for Scalability
-
-- **16 million virtual networks** (vs 4,096 VLANs)
-- Physical network does not need to know about tenants
-- VMs can **migrate** across hosts without reconfiguring the underlay
-- Decouples **virtual topology** from physical topology
-
-\vfill
-
-\footnotesize
-This is the foundation of cloud networking. Next: how providers build \textbf{virtual networks} on top of overlays.
-
-Source: IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
-
-## Discussion: Overlay Networks
-
-\begin{center}
-\Large\textit{Why can the physical network remain simple\\if we use overlay networks?\\What are the trade-offs of encapsulation?}
-\end{center}
-
-\vfill
-
-Hints: think about overhead (extra headers), MTU implications, and troubleshooting complexity.
-
 # Cloud Network Architecture
 
 ## Virtual Networks in the Cloud
@@ -511,9 +340,9 @@ Hints: think about overhead (extra headers), MTU implications, and troubleshooti
 
 \vfill
 
-<!-- nota: el virtual network usa los overlays VXLAN de la sección anterior por debajo — conectar con overlays -->
+<!-- nota: el virtual network usa overlays VXLAN por debajo — se cubrirán en Block 5 -->
 
-Key: virtual networks are built on top of the **overlay network** concepts we just covered.
+Key: under the hood, cloud providers use **overlay networks** (covered in Block 5) to isolate tenants at scale.
 
 \vfill
 \footnotesize
@@ -714,6 +543,157 @@ Default & Deny all inbound & Allow all \\
 
 Hints: think about public vs private subnets, security groups, and NAT gateways.
 
+# Cloud Network Services
+
+## Load Balancer
+
+- Distributes incoming traffic across **multiple instances** (VMs or containers)
+- Prevents any single instance from being overwhelmed
+- If one instance fails, traffic is **redirected** to healthy ones
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, minimum width=1.8cm, minimum height=0.6cm, font=\scriptsize},
+    >=Stealth
+]
+\node[font=\scriptsize] (client) at (0,0) {Clients};
+\node[box, fill=blue!20] (lb) at (3.5,0) {Load Balancer};
+\node[box, fill=green!15] (s1) at (7,1) {Instance 1};
+\node[box, fill=green!15] (s2) at (7,0) {Instance 2};
+\node[box, fill=green!15] (s3) at (7,-1) {Instance 3};
+
+\draw[->, thick] (client) -- (lb);
+\draw[->, thick] (lb) -- (s1);
+\draw[->, thick] (lb) -- (s2);
+\draw[->, thick] (lb) -- (s3);
+\end{tikzpicture}
+\end{center}
+
+- **L4 (Transport Layer)** Load Balancer: routes based on IP and port (fast, simple)
+- **L7 (Application Layer)** Load Balancer: routes based on HTTP headers, URL path, cookies (smarter)
+- Cloud examples: AWS ALB/NLB, Azure Load Balancer, GCP Cloud Load Balancing
+
+\footnotesize Source: AWS, "Elastic Load Balancing Documentation," docs.aws.amazon.com.
+
+## Reverse Proxy
+
+- Sits **in front of** backend servers, receives all client requests
+- Clients never communicate directly with the backend
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, minimum width=1.8cm, minimum height=0.6cm, font=\scriptsize},
+    >=Stealth
+]
+\node[font=\scriptsize] (client) at (0,0) {Clients};
+\node[box, fill=orange!20] (rp) at (3.5,0) {Reverse Proxy};
+\node[box, fill=green!15] (api) at (7.5,0.7) {API Server};
+\node[box, fill=purple!15] (web) at (7.5,-0.7) {Web App};
+
+\draw[->, thick] (client) -- node[above, font=\tiny] {HTTPS} (rp);
+\draw[->, thick] (rp) -- node[above, font=\tiny] {/api/*} (api);
+\draw[->, thick] (rp) -- node[below, font=\tiny] {/*} (web);
+\end{tikzpicture}
+\end{center}
+
+Key functions:
+
+- **TLS (Transport Layer Security) termination**: handles HTTPS encryption, backends receive plain HTTP
+- **URL routing**: `/api/*` $\rightarrow$ API server, `/*` $\rightarrow$ web app
+- **Caching**: stores responses to reduce backend load
+- Examples: NGINX, HAProxy, AWS CloudFront, Azure Front Door
+
+## Forward Proxy
+
+- Sits **in front of clients**, controls their **outbound** traffic
+- Clients send requests to the proxy, which forwards them to the Internet
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, minimum width=1.8cm, minimum height=0.6cm, font=\scriptsize},
+    >=Stealth
+]
+\node[box, fill=green!15] (c1) at (0,0.7) {Client 1};
+\node[box, fill=green!15] (c2) at (0,-0.7) {Client 2};
+\node[box, fill=yellow!20] (proxy) at (3.5,0) {Forward Proxy};
+\node[font=\scriptsize] (inet) at (7,0) {Internet};
+
+\draw[->, thick] (c1) -- (proxy);
+\draw[->, thick] (c2) -- (proxy);
+\draw[->, thick] (proxy) -- (inet);
+\end{tikzpicture}
+\end{center}
+
+Key functions:
+
+- **Access control**: block certain websites or domains
+- **Caching**: store frequently accessed content, reduce bandwidth
+- **Anonymity**: external servers see the proxy's IP, not the client's
+- **Logging**: monitor what employees or VMs access
+- Examples: Squid, corporate firewalls with proxy mode
+
+## Reverse Proxy vs Forward Proxy
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{blue!10} & \textbf{Forward Proxy} & \textbf{Reverse Proxy} \\
+\hline
+Protects & Clients (outbound) & Servers (inbound) \\
+\hline
+Position & In front of clients & In front of servers \\
+\hline
+Who knows? & Server sees proxy, not client & Client sees proxy, not server \\
+\hline
+Use case & Control outbound access & TLS termination, routing, caching \\
+\hline
+\end{tabular}
+\end{center}
+
+\vfill
+
+Think of it this way:
+
+- **Forward proxy**: "I control what my users can access outside"
+- **Reverse proxy**: "I control how outside users reach my servers"
+
+## VPN -- Virtual Private Network
+
+- A **VPN (Virtual Private Network)** creates a **secure, encrypted tunnel** over the public Internet
+- Connects remote networks or users as if they were on the same private network
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, minimum width=2.2cm, minimum height=0.8cm, font=\scriptsize, align=center},
+    >=Stealth
+]
+\node[box, fill=green!15] (office) at (0,0) {Corporate\\Office};
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.5cm, minimum height=1.2cm, font=\scriptsize] (inet) at (5,0) {Internet};
+\node[box, fill=blue!15] (vpc) at (10,0) {Cloud Virtual\\Network};
+
+\draw[thick, dashed, red] (office) -- node[above, font=\tiny] {Encrypted VPN tunnel} (inet);
+\draw[thick, dashed, red] (inet) -- (vpc);
+\end{tikzpicture}
+\end{center}
+
+Two main types:
+
+- **Site-to-site VPN**: connects two networks (e.g. office $\leftrightarrow$ cloud VPC)
+- **Client VPN**: individual user connects to a remote network (e.g. employee working from home)
+- Cloud examples: AWS VPN, Azure VPN Gateway, GCP Cloud VPN
+
+## Discussion: Cloud Network Services
+
+\begin{center}
+\Large\textit{A company has a web application with a public frontend,\\a private API, and a database. They also need employees\\to access the cloud from the office.\\Which services would you use and where?}
+\end{center}
+
+\vfill
+
+Hints: load balancer for the frontend, reverse proxy for routing, VPN for office access, private subnet for the database.
+
 # Session Summary
 
 ## Key Takeaways
@@ -721,9 +701,10 @@ Hints: think about public vs private subnets, security groups, and NAT gateways.
 1. Virtualization is the **technology**; cloud is the **business model**
 2. Five NIST characteristics define true cloud computing
 3. **IaaS / PaaS / SaaS** differ in who manages what
-4. **VXLAN** overlays scale isolation to 16M networks (vs 4K VLANs)
-5. A **virtual network** is your isolated cloud network, built on top of overlays
+4. Cloud and container **platforms** deliver these models at scale
+5. A **virtual network** is your isolated cloud network (CIDR, subnets, route tables)
 6. **Security groups** (instance) + **ACLs** (subnet) = defense in depth
+7. **Load balancers**, **reverse/forward proxies**, and **VPNs** are essential cloud network services
 
 ## Discussion
 
@@ -733,7 +714,7 @@ Hints: think about public vs private subnets, security groups, and NAT gateways.
 
 \vfill
 
-Think about: public vs private subnets, security groups, NAT gateways, route tables.
+Think about: public vs private subnets, security groups, NAT gateways, load balancers, VPN.
 
 ## References
 
@@ -747,5 +728,6 @@ Think about: public vs private subnets, security groups, NAT gateways, route tab
 6. CSA, "Security Guidance for Critical Areas of Focus in Cloud Computing v5," 2022.
 7. Erl, Puttini & Mahmood, \textit{Cloud Computing: Concepts, Technology \& Architecture}, Prentice Hall, 2013.
 8. Kurose & Ross, \textit{Computer Networking: A Top-Down Approach}, 8th ed., Pearson, 2021.
-9. IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
-10. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
+9. AWS, "Elastic Load Balancing Documentation," docs.aws.amazon.com.
+10. NGINX, Inc., "What Is a Reverse Proxy?," nginx.com/resources.
+11. AWS, "AWS VPN Documentation," docs.aws.amazon.com.
