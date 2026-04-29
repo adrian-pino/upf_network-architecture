@@ -57,8 +57,8 @@
 - `#` = section (generates title slide + auto-TOC), `##` = normal slide (`--slide-level=2`)
 - Standard YAML front matter:
   ```yaml
-  title: "Block N -- Session M"
-  subtitle: "Topic \\& Topic"
+  title: "Block N -- Topic Title"
+  subtitle: "Subtopic \\& Subtopic"
   author: "Arquitectura de Xarxes"
   institute: "Universitat Pompeu Fabra"
   theme: "Madrid"
@@ -115,6 +115,7 @@
 
 ## Self-maintenance rule
 - **After every session that modifies slides or project structure**, review this file (AGENTS.md) and evaluate whether any section needs updating: new acronyms, new conventions learned, corrected rules, or structural changes. Apply updates immediately rather than deferring them.
+- **After modifying the content of any presentation**, check whether the corresponding `table-of-contents_sessionN.md` file needs updating. Each block directory contains one toc file per session (e.g., `table-of-contents_session1.md`, `table-of-contents_session2.md`). These files are not used for compilation but serve as a structural reference.
 
 ## Defined acronyms (centralised registry)
 
@@ -149,8 +150,6 @@ Check this list before using an acronym. If it was already defined in a previous
 | NIST | National Institute of Standards and Technology | B4 Session 2 |
 | API | Application Programming Interface | B4 Session 2 |
 | EC2 | Elastic Compute Cloud | B4 Session 2 |
-| IAM | Identity and Access Management | B4 Session 2 |
-| GDPR | General Data Protection Regulation | B4 Session 2 |
 | VNI | VXLAN Network Identifier | B4 Session 2 |
 | VTEP | VXLAN Tunnel Endpoint | B4 Session 2 |
 | NFV | Network Functions Virtualization | B5 Session 1 |

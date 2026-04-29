@@ -708,66 +708,6 @@ Default & Deny all inbound & Allow all \\
 
 Hints: think about public vs private subnets, security groups, and NAT gateways.
 
-# Cloud Governance, Sovereignty \& Compliance
-
-## Cloud Governance
-
-- **Governance** = policies and controls for managing cloud resources
-- Key areas:
-  - **Resource management**: who can create/delete what, tagging
-  - **Cost control**: budgets, alerts, spending limits
-  - **Access control**: Identity and Access Management (IAM)
-  - **Compliance**: ensuring regulatory requirements are met
-
-\vfill
-
-Without governance: resource sprawl, security gaps, surprise bills.
-
-## Data Sovereignty and GDPR
-
-- **Data sovereignty**: data is subject to the laws where it is **stored**
-- Cloud providers have data centers worldwide $\rightarrow$ your data location matters
-- Risks: jurisdiction conflicts (EU data in US), government access (CLOUD Act)
-
-**GDPR** (EU, 2018) -- key principles:
-
-- **Lawfulness** + **purpose limitation** + **data minimization**
-- **Right to erasure**: users can request data deletion
-- **Breach notification**: 72 hours to report
-- Relevance: you must know **where** your data is and **who** can access it
-
-\vfill
-\footnotesize
-Source: Regulation (EU) 2016/679, General Data Protection Regulation, 2018.
-
-## Shared Responsibility Model
-
-\begin{center}
-\begin{tikzpicture}[
-    layer/.style={draw, thick, minimum width=9cm, minimum height=0.8cm, font=\small},
-    >=Stealth
-]
-\node[layer, fill=orange!20] (app) at (0,2.4) {Applications \& Data};
-\node[layer, fill=orange!20] (access) at (0,1.6) {Identity \& Access Management};
-\node[layer, fill=orange!20] (os) at (0,0.8) {OS, Network Config, Firewall};
-\node[layer, fill=blue!20] (infra) at (0,0) {Compute, Storage, Networking};
-\node[layer, fill=blue!20] (phys) at (0,-0.8) {Physical Infrastructure};
-
-\node[font=\small\bfseries, text=orange!70!black] at (6,1.6) {Customer};
-\node[font=\small\bfseries, text=blue!70!black] at (6,-0.4) {Provider};
-
-\draw[thick, dashed, gray] (-5,0.4) -- (5,0.4);
-\end{tikzpicture}
-\end{center}
-
-- **Provider**: physical security, hardware, hypervisors, network fabric
-- **Customer**: data, access policies, OS patches, application security
-- The dividing line **shifts** depending on IaaS / PaaS / SaaS
-
-\vfill
-\footnotesize
-Source: AWS, "Shared Responsibility Model," aws.amazon.com/compliance/shared-responsibility-model.
-
 # Session Summary
 
 ## Key Takeaways
@@ -778,19 +718,16 @@ Source: AWS, "Shared Responsibility Model," aws.amazon.com/compliance/shared-res
 4. **VXLAN** overlays scale isolation to 16M networks (vs 4K VLANs)
 5. A **virtual network** is your isolated cloud network, built on top of overlays
 6. **Security groups** (instance) + **ACLs** (subnet) = defense in depth
-7. **Data sovereignty** and GDPR affect where and how you store data
 
 ## Discussion
 
 \begin{center}
-\Large\textit{A Spanish startup stores user data in an AWS region\\in Ireland. A US law enforcement agency requests access.\\Who is responsible? What does GDPR say?}
+\Large\textit{You are designing a cloud network for a company\\with public web servers and private databases.\\Which components would you use and why?}
 \end{center}
 
 \vfill
 
-<!-- nota: discutir shared responsibility model, data sovereignty, GDPR, y el US CLOUD Act. No hay una respuesta simple — es un dilema real -->
-
-Think about: shared responsibility, data location, and which laws apply.
+Think about: public vs private subnets, security groups, NAT gateways, route tables.
 
 ## References
 
@@ -799,12 +736,10 @@ Think about: shared responsibility, data location, and which laws apply.
 1. NIST SP 800-145, Mell & Grance, "The NIST Definition of Cloud Computing," 2011.
 2. NIST SP 800-144, "Guidelines on Security and Privacy in Public Cloud Computing," 2011.
 3. AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
-4. AWS, "Shared Responsibility Model," aws.amazon.com/compliance/shared-responsibility-model.
-5. Microsoft Azure, "Azure Virtual Network Documentation," docs.microsoft.com.
-6. Google Cloud, "VPC Documentation," cloud.google.com/vpc/docs.
-7. Regulation (EU) 2016/679, General Data Protection Regulation (GDPR), 2018.
-8. CSA, "Security Guidance for Critical Areas of Focus in Cloud Computing v5," 2022.
-9. Erl, Puttini & Mahmood, \textit{Cloud Computing: Concepts, Technology \& Architecture}, Prentice Hall, 2013.
-10. Kurose & Ross, \textit{Computer Networking: A Top-Down Approach}, 8th ed., Pearson, 2021.
-11. IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
+4. Microsoft Azure, "Azure Virtual Network Documentation," docs.microsoft.com.
+5. Google Cloud, "VPC Documentation," cloud.google.com/vpc/docs.
+6. CSA, "Security Guidance for Critical Areas of Focus in Cloud Computing v5," 2022.
+7. Erl, Puttini & Mahmood, \textit{Cloud Computing: Concepts, Technology \& Architecture}, Prentice Hall, 2013.
+8. Kurose & Ross, \textit{Computer Networking: A Top-Down Approach}, 8th ed., Pearson, 2021.
+9. IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
 12. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
