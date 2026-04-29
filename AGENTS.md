@@ -1,63 +1,61 @@
-# Generador de slides - Arquitectura de Xarxes (UPF)
+# Slide Generator - Arquitectura de Xarxes (UPF)
 
-## Contexto
-- Asignatura: Arquitectura de Xarxes
-- Universidad: Universitat Pompeu Fabra (UPF)
-- Alumnos: mix heterogéneo, desde 2o de Ingeniería de Telecomunicaciones / Data Science hasta 4o de carreras vecinas (optativa)
-- Idioma principal: español (pueden aparecer términos técnicos en inglés o catalán según contexto)
+## Context
+- Course: Arquitectura de Xarxes
+- University: Universitat Pompeu Fabra (UPF)
+- Students: heterogeneous mix, from 2nd-year Telecom / Data Science to 4th-year students from neighbouring degrees (elective)
+- Primary language: Spanish (technical terms may appear in English or Catalan)
 
-## Consideraciones pedagógicas
-- Adapta el nivel: no asumas conocimientos previos avanzados de redes, ya que hay alumnos de carreras vecinas
-- Cuando introduzcas un concepto técnico, añade una definición breve o analogía
-- Prioriza la intuición antes que la formalidad matemática
-- Incluye ejemplos del mundo real que conecten con la experiencia del alumno
+## Pedagogical considerations
+- Adapt the level: do not assume advanced networking knowledge, since some students come from neighbouring degrees
+- When introducing a technical concept, add a brief definition or analogy
+- Prioritize intuition over mathematical formality
+- Include real-world examples that connect with the student's experience
 
-## Formato de bullet points
-- Máximo 5-6 bullets por slide
-- Cada bullet: 1 línea, máximo 15 palabras
-- Usa verbos activos y lenguaje directo
-- No uses frases completas; prioriza fragmentos claros y memorables
-- Si un concepto necesita matiz, usa un sub-bullet (máximo 1 nivel de profundidad)
+## Bullet point format
+- Maximum 5-6 bullets per slide
+- Each bullet: 1 line, maximum 15 words
+- Use active verbs and direct language
+- Do not use full sentences; prioritize clear and memorable fragments
+- If a concept needs nuance, use a sub-bullet (maximum 1 level of depth)
 
-## Estructura de cada clase
-1. Título + pregunta motivadora o situación real
-2. Objetivos de aprendizaje (2-3 máximo)
-3. Contenido principal dividido en bloques temáticos (secciones `#`)
-   - Al final de cada sección, incluir una **slide de discusión** con una pregunta abierta para fomentar el debate en clase
-   - Formato: pregunta centrada en `\Large\textit{...}`, con hints o pistas debajo
-   - Objetivo: que los alumnos reflexionen y consoliden lo aprendido antes de pasar a la siguiente sección
-4. Resumen / puntos clave de la sesión
-5. Pregunta de repaso final, ejercicio rápido o tema de debate
+## Session structure
+1. Title + motivating question or real-world scenario
+2. Learning objectives (2-3 maximum)
+3. Main content divided into thematic blocks (`#` sections)
+   - At the end of each section, include a **discussion slide** with an open question to encourage classroom debate
+   - Format: centred question in `\Large\textit{...}`, with hints below
+   - Goal: students reflect and consolidate before moving to the next section
+4. Summary / key takeaways
+5. Final review question, quick exercise, or debate topic
 
-## Estilo de redacción
-- Evitar el uso de guiones largos (`--`, `—`) como conectores entre frases; usar dos puntos, punto y coma, o reestructurar la frase
-- Evitar contracciones en inglés (`don't` → `do not`, `can't` → `cannot`)
-- Preferir lenguaje directo y natural, evitando patrones repetitivos que parezcan generados por LLM
-- **Acrónimos**: siempre definir un acrónimo la primera vez que aparece (ej. "Virtual Private Cloud (VPC)"). En usos posteriores se puede usar solo el acrónimo. No asumir que el alumno conoce el significado.
-  - **CRÍTICO**: antes de entregar o compilar cualquier presentación, hacer un audit de acrónimos: buscar todos los acrónimos en el archivo y verificar que cada uno está expandido antes de su primer uso. Esto incluye acrónimos en títulos y tablas.
-  - Excepción: la slide de "References" al final no requiere expansión de acrónimos (son citas bibliográficas, no contenido docente).
-  - Excepción: footnotes inline (`\footnotesize Source: ...`) no requieren expansión de acrónimos (son citas, no contenido docente).
-  - Excepción: los "Learning objectives" al inicio de la presentación son un preview/roadmap; los acrónimos se expanden en el contenido principal, no en los objetivos.
-  - Excepción: acrónimos universales que cualquier estudiante de 2o conoce (CPU, RAM, IP, OS, USB, HTTP, TCP, UDP, DNS, MAC, Wi-Fi).
-  - Excepción: acrónimos ya definidos en Blocks anteriores (los alumnos ya los conocen, no hace falta redefinirlos). Ver tabla en la sección "Acrónimos definidos" al final de este archivo.
+## Writing style
+- Avoid long dashes (`--`, `—`) as connectors between phrases; use colons, semicolons, or restructure the sentence
+- Avoid English contractions (`don't` → `do not`, `can't` → `cannot`)
+- Prefer direct and natural language, avoiding repetitive patterns that look LLM-generated
+- **Acronyms**: always expand an acronym on first use (e.g. "Virtual Private Cloud (VPC)"). Subsequent uses can use the acronym alone. Do not assume the student knows the meaning.
+  - **CRITICAL**: before delivering or compiling any presentation, run an acronym audit: search all acronyms in the file and verify each one is expanded before its first use. This includes acronyms in titles and tables.
+  - Exception: the "References" slide at the end does not require acronym expansion (bibliographic citations, not teaching content).
+  - Exception: inline footnotes (`\footnotesize Source: ...`) do not require acronym expansion (citations, not teaching content).
+  - Exception: universal acronyms that any 2nd-year student knows (CPU, RAM, IP, OS, USB, HTTP, TCP, UDP, DNS, MAC, Wi-Fi).
+  - Exception: acronyms already defined in previous Blocks (students already know them, no need to redefine). See the table in the "Defined acronyms" section at the end of this file.
 
-## Formato de salida
-- Genera archivos Markdown
-- Usa `---` como separador entre slides
-- `#` = título de slide
+## Output format
+- Generate Markdown files
+- `#` = slide title
 - `-` = bullet points
-- Usa **negrita** para términos clave que el alumno debe retener
-- Usa `código` para comandos, protocolos o direcciones (ej. `traceroute`, `192.168.0.0/24`)
-- Incluye notas para el profesor entre comentarios HTML `<!-- nota: ... -->` cuando sea relevante
+- Use **bold** for key terms the student should retain
+- Use `code` for commands, protocols, or addresses (e.g. `traceroute`, `192.168.0.0/24`)
+- Include instructor notes in HTML comments `<!-- note: ... -->` when relevant
 
-## Idioma
-- Slides en **inglés** (consistente con Blocks 1-2 existentes en .pptx)
-- Título de la asignatura en catalán; contenido técnico en inglés
+## Language
+- Slides in **English** (consistent with existing Blocks 1-2 in .pptx)
+- Course title in Catalan; technical content in English
 
-## Beamer / Pandoc — configuración técnica
-- Formato: Pandoc Markdown → Beamer PDF via `xelatex`
-- `#` = sección (genera slide de título + auto-TOC), `##` = slide normal (`--slide-level=2`)
-- YAML front matter estándar:
+## Beamer / Pandoc — technical configuration
+- Format: Pandoc Markdown → Beamer PDF via `xelatex`
+- `#` = section (generates title slide + auto-TOC), `##` = normal slide (`--slide-level=2`)
+- Standard YAML front matter:
   ```yaml
   title: "Block N -- Session M"
   subtitle: "Topic \\& Topic"
@@ -77,40 +75,40 @@
     - \setbeamerfont{footnote}{size=\tiny}
     - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
   ```
-- Nota: `[table]{xcolor}` necesario para `\rowcolor`; `decorations.pathreplacing` para llaves TikZ; `shapes.symbols` para cloud shapes
-- Tablas con bordes completos (`|l|l|`, `\hline` entre cada fila), `\rowcolor{blue!10}` en cabecera, `\renewcommand{\arraystretch}{1.3}` para padding. NO usar `booktabs` (`\toprule`/`\midrule`/`\bottomrule`)
-- `\vfill` para espaciado vertical, `\footnotesize` para anotaciones
-- Columnas Pandoc: `:::::::::::::: {.columns}` / `::: {.column width="50%"}`
+- Note: `[table]{xcolor}` needed for `\rowcolor`; `decorations.pathreplacing` for TikZ braces; `shapes.symbols` for cloud shapes
+- Tables with full borders (`|l|l|`, `\hline` between each row), `\rowcolor{blue!10}` in header, `\renewcommand{\arraystretch}{1.3}` for padding. Do NOT use `booktabs` (`\toprule`/`\midrule`/`\bottomrule`)
+- `\vfill` for vertical spacing, `\footnotesize` for annotations
+- Pandoc columns: `:::::::::::::: {.columns}` / `::: {.column width="50%"}`
 
-## Convenciones TikZ
-- **Colores de nodos**: VM 1 / Server 1 = `green!15`, VM 2 / Server 2 = `purple!15`. Alternar para VMs adicionales
-- **No usar estilos TikZ parametrizados** (ej. `fill=#1`) porque Pandoc/Beamer los rompe (el `#` se interpreta como parámetro de macro). Usar estilos sin parámetro y aplicar `fill=` directamente en cada nodo
-- **Internet**: representar como `cloud` shape (`shapes.symbols`) con `fill=cyan!10`
-- **Physical NIC**: `fill=orange!15`, incluir conexión a Internet cuando sea relevante
+## TikZ conventions
+- **Node colours**: VM 1 / Server 1 = `green!15`, VM 2 / Server 2 = `purple!15`. Alternate for additional VMs
+- **Do not use parameterised TikZ styles** (e.g. `fill=#1`) because Pandoc/Beamer breaks them (`#` is interpreted as a macro parameter). Use parameter-free styles and apply `fill=` directly on each node
+- **Internet**: represent as `cloud` shape (`shapes.symbols`) with `fill=cyan!10`
+- **Physical NIC**: `fill=orange!15`, include connection to Internet when relevant
 
-## Compilación
-- Sin pandoc/xelatex local — usar Docker:
+## Compilation
+- No local pandoc/xelatex — use Docker:
   ```bash
   docker run --rm -v "/home/adrian/upf/ax:/data" pandoc/extra:latest <file>.md -t beamer --slide-level=2 --pdf-engine=xelatex -o <file>.pdf
   ```
 
-## Política de referencias
-- Solo fuentes de: organismos de estándares (IETF RFCs, ETSI, NIST, IEEE), vendors principales (AWS, Azure, GCP, VMware, Red Hat, Docker, HashiCorp), o libros publicados (O'Reilly, Pearson, Morgan Kaufmann, Wiley)
+## References policy
+- Only sources from: standards bodies (IETF RFCs, ETSI, NIST, IEEE), major vendors (AWS, Azure, GCP, VMware, Red Hat, Docker, HashiCorp), or published books (O'Reilly, Pearson, Morgan Kaufmann, Wiley)
 - **NO blogs**
-- Citas inline con `\footnotesize Source: ...` al pie de slides relevantes
-- Slide de "References" consolidada al final de cada presentación
+- Inline citations with `\footnotesize Source: ...` at the bottom of relevant slides
+- Consolidated "References" slide at the end of each presentation
 
-## Contenido previo (ya cubierto por los alumnos)
-- **Block 1**: Fundamentos de redes
-- **Block 2**: Capa de aplicación y transporte
-- **Block 3**: Capa de red y enlace (Ethernet, VLANs 802.1Q, ARP, STP, subnetting CIDR/VLSM, OSPF, BGP, DHCP, NAT/NAPT)
+## Prior content (already covered by students)
+- **Block 1**: Networking fundamentals
+- **Block 2**: Application and transport layer
+- **Block 3**: Network and link layer (Ethernet, VLANs 802.1Q, ARP, STP, subnetting CIDR/VLSM, OSPF, BGP, DHCP, NAT/NAPT)
 
-## Acrónimos definidos (registro centralizado)
+## Defined acronyms (centralised registry)
 
-Consultar esta lista antes de usar un acrónimo. Si ya fue definido en un Block anterior, no hace falta redefinirlo. Si es nuevo, expandirlo en su primer uso y añadirlo aquí.
+Check this list before using an acronym. If it was already defined in a previous Block, there is no need to redefine it. If it is new, expand it on first use and add it here.
 
-| Acrónimo | Expansión | Definido en |
-|----------|-----------|-------------|
+| Acronym | Expansion | Defined in |
+|---------|-----------|------------|
 | VLAN | Virtual LAN | Block 3 |
 | NAT | Network Address Translation | Block 3 |
 | NAPT | Network Address Port Translation | Block 3 |
