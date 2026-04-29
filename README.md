@@ -9,6 +9,11 @@ Beamer slide decks for the "Arquitectura de Xarxes" course (Blocks 4–5).
 | `block4-virtualization-cloud/` | Network Virtualization & Cloud Computing (Sessions 1–2) |
 | `block5-sdn-cloud-native/` | SDN & Cloud Native (Session 1) |
 
+## Dependencies
+
+- [Docker](https://docs.docker.com/get-docker/) — compiles slides via the `pandoc/extra` image
+- [OpenCode](https://opencode.ai/) — AI coding agent used to author and maintain the slides
+
 ## Building
 
 Requires Docker. No local pandoc/xelatex installation needed.
