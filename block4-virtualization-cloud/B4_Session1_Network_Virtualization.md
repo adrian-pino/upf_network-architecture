@@ -395,11 +395,11 @@ Hints: boot time, resource overhead, isolation needs, how fast you need to scale
 \hline
 \rowcolor{blue!10} \textbf{Physical} & \textbf{Virtual equivalent} \\
 \hline
-NIC (network interface card) & \textbf{vNIC} (virtual NIC) \\
+NIC (network interface card) & \textbf{Virtual NIC} (vNIC) \\
 \hline
-Switch & \textbf{vSwitch} (virtual switch) \\
+Switch & \textbf{Virtual Switch} (bridge) \\
 \hline
-Router & \textbf{vRouter} (virtual router) \\
+Router & \textbf{Virtual Router} \\
 \hline
 Cable & Internal software path \\
 \hline
@@ -420,26 +420,26 @@ Cable & Internal software path \\
 ]
 % Physical side
 \node[lbl] at (-4,3.8) {Physical Network};
-\node[box, fill=green!15] (srv1) at (-5.5,2.8) {Server 1};
-\node[box, fill=purple!15] (srv2) at (-2.5,2.8) {Server 2};
-\node[box, fill=orange!15] (nic1) at (-5.5,1.8) {NIC};
-\node[box, fill=orange!15] (nic2) at (-2.5,1.8) {NIC};
+\node[draw, thick, rounded corners, fill=green!15, minimum width=2cm, minimum height=1.2cm] (srv1) at (-5.5,2.6) {};
+\node[font=\scriptsize] at (-5.5,2.95) {Server 1};
+\node[box, fill=orange!15, minimum width=1.4cm] (nic1) at (-5.5,2.35) {NIC};
+\node[draw, thick, rounded corners, fill=purple!15, minimum width=2cm, minimum height=1.2cm] (srv2) at (-2.5,2.6) {};
+\node[font=\scriptsize] at (-2.5,2.95) {Server 2};
+\node[box, fill=orange!15, minimum width=1.4cm] (nic2) at (-2.5,2.35) {NIC};
 \node[box, fill=blue!20, minimum width=4cm] (psw) at (-4,0.6) {Physical Switch};
-\draw[thick] (srv1) -- (nic1);
-\draw[thick] (srv2) -- (nic2);
 \draw[thick] (nic1) -- (-5.5,0.9);
 \draw[thick] (nic2) -- (-2.5,0.9);
 
 % Virtual side
 \node[draw, thick, rounded corners, fill=gray!5, minimum width=4.5cm, minimum height=4cm] (host) at (4,1.8) {};
 \node[lbl] at (4,3.6) {Host};
-\node[box, fill=green!15] (vm1) at (2.5,2.8) {VM 1};
-\node[box, fill=purple!15] (vm2) at (5.5,2.8) {VM 2};
-\node[box, fill=orange!15] (vnic1) at (2.5,1.8) {vNIC};
-\node[box, fill=orange!15] (vnic2) at (5.5,1.8) {vNIC};
-\node[box, fill=blue!20, minimum width=4cm] (vsw) at (4,0.6) {vSwitch};
-\draw[thick] (vm1) -- (vnic1);
-\draw[thick] (vm2) -- (vnic2);
+\node[draw, thick, rounded corners, fill=green!15, minimum width=2cm, minimum height=1.2cm] (vm1) at (2.5,2.6) {};
+\node[font=\scriptsize] at (2.5,2.95) {VM 1};
+\node[box, fill=orange!15, minimum width=1.4cm] (vnic1) at (2.5,2.35) {Virtual NIC};
+\node[draw, thick, rounded corners, fill=purple!15, minimum width=2cm, minimum height=1.2cm] (vm2) at (5.5,2.6) {};
+\node[font=\scriptsize] at (5.5,2.95) {VM 2};
+\node[box, fill=orange!15, minimum width=1.4cm] (vnic2) at (5.5,2.35) {Virtual NIC};
+\node[box, fill=blue!20, minimum width=4cm] (vsw) at (4,0.6) {Virtual Switch};
 \draw[thick] (vnic1) -- (2.5,0.9);
 \draw[thick] (vnic2) -- (5.5,0.9);
 \end{tikzpicture}
@@ -461,18 +461,18 @@ Cable & Internal software path \\
 
 % Location A
 \node[draw, thick, dashed, rounded corners, inner sep=8pt, fit={(-6.5,1.8)(-2.8,5.2)}, label=above:{\scriptsize Location A (10.0.1.0/24)}] {};
-\node[box, fill=green!15] (srv1) at (-5.5,4.4) {Server 1};
-\node[box, fill=orange!15] (nic1) at (-5.5,3.5) {NIC};
+\node[draw, thick, rounded corners, fill=green!15, minimum width=2.4cm, minimum height=1.2cm] (srv1) at (-5.5,4.2) {};
+\node[font=\scriptsize] at (-5.5,4.55) {Server 1};
+\node[box, fill=orange!15, minimum width=1.8cm] (nic1) at (-5.5,3.95) {NIC};
 \node[box, fill=blue!20, minimum width=2.8cm] (sw1) at (-4.6,2.4) {Switch A};
-\draw[thick] (srv1) -- (nic1);
 \draw[thick] (nic1) -- (-5.5,2.7);
 
 % Location B
 \node[draw, thick, dashed, rounded corners, inner sep=8pt, fit={(2.8,1.8)(6.5,5.2)}, label=above:{\scriptsize Location B (10.0.2.0/24)}] {};
-\node[box, fill=purple!15] (srv2) at (5.5,4.4) {Server 2};
-\node[box, fill=orange!15] (nic2) at (5.5,3.5) {NIC};
+\node[draw, thick, rounded corners, fill=purple!15, minimum width=2.4cm, minimum height=1.2cm] (srv2) at (5.5,4.2) {};
+\node[font=\scriptsize] at (5.5,4.55) {Server 2};
+\node[box, fill=orange!15, minimum width=1.8cm] (nic2) at (5.5,3.95) {NIC};
 \node[box, fill=blue!20, minimum width=2.8cm] (sw2) at (4.6,2.4) {Switch B};
-\draw[thick] (srv2) -- (nic2);
 \draw[thick] (nic2) -- (5.5,2.7);
 
 % Router
@@ -486,19 +486,23 @@ Cable & Internal software path \\
 \node[draw, thick, rounded corners, fill=gray!5, minimum width=12cm, minimum height=3.2cm] (host) at (0,-2.5) {};
 \node[lbl, font=\scriptsize] at (0,-1.1) {Host (Linux)};
 
-\node[box, fill=green!15] (vm1) at (-4,-1.7) {VM 1};
-\node[box, fill=orange!15] (vnic1) at (-4,-2.4) {vNIC};
-\node[box, fill=blue!20, minimum width=2.8cm] (vbr1) at (-4,-3.3) {vSwitch (br0)};
-\draw[thick] (vm1) -- (vnic1);
+% VM 1 with Virtual NIC inside
+\node[draw, thick, rounded corners, fill=green!15, minimum width=2.4cm, minimum height=1.2cm] (vm1) at (-4,-1.9) {};
+\node[font=\scriptsize] at (-4,-1.55) {VM 1};
+\node[box, fill=orange!15, minimum width=1.8cm] (vnic1) at (-4,-2.25) {Virtual NIC};
+
+% VM 2 with Virtual NIC inside
+\node[draw, thick, rounded corners, fill=purple!15, minimum width=2.4cm, minimum height=1.2cm] (vm2) at (4,-1.9) {};
+\node[font=\scriptsize] at (4,-1.55) {VM 2};
+\node[box, fill=orange!15, minimum width=1.8cm] (vnic2) at (4,-2.25) {Virtual NIC};
+
+\node[box, fill=blue!20, minimum width=2.8cm] (vbr1) at (-4,-3.3) {Virtual Switch 1};
 \draw[thick] (vnic1) -- (-4,-3.05);
 
-\node[box, fill=purple!15] (vm2) at (4,-1.7) {VM 2};
-\node[box, fill=orange!15] (vnic2) at (4,-2.4) {vNIC};
-\node[box, fill=blue!20, minimum width=2.8cm] (vbr2) at (4,-3.3) {vSwitch (br1)};
-\draw[thick] (vm2) -- (vnic2);
+\node[box, fill=blue!20, minimum width=2.8cm] (vbr2) at (4,-3.3) {Virtual Switch 2};
 \draw[thick] (vnic2) -- (4,-3.05);
 
-\node[box, fill=yellow!20, minimum width=1.8cm] (vrtr) at (0,-3.3) {vRouter};
+\node[box, fill=yellow!20, minimum width=1.8cm] (vrtr) at (0,-3.3) {Virtual Router};
 \draw[thick] (vbr1) -- (vrtr);
 \draw[thick] (vrtr) -- (vbr2);
 \end{tikzpicture}
@@ -509,7 +513,7 @@ Different subnets $\rightarrow$ router needed (Layer 3). Physical uses hardware;
 
 ## Example: VM-to-VM Communication
 
-- Linux can act as a **Layer 2 switch** using a **bridge** (`br0`)
+- The hypervisor creates a **bridge** (a virtual switch) to connect VMs
 - VMs on the same bridge share a subnet: frames forwarded by MAC address
 
 \begin{center}
@@ -524,8 +528,8 @@ Different subnets $\rightarrow$ router needed (Layer 3). Physical uses hardware;
 \node[box, fill=purple!15] (vm2) at (2.5,3.8) {VM 2};
 \node[lbl] at (-2.5,3.3) {`eth0`: 192.168.1.10};
 \node[lbl] at (2.5,3.3) {`eth0`: 192.168.1.20};
-\node[box, fill=blue!20, minimum width=6cm] (br) at (0,2.4) {br0 (Linux bridge)};
-\node[box, fill=yellow!20] (rtr) at (0,1.4) {vRouter / NAT};
+\node[box, fill=blue!20, minimum width=6cm] (br) at (0,2.4) {bridge-1 (virtual switch)};
+\node[box, fill=yellow!20] (rtr) at (0,1.4) {Virtual Router / NAT};
 \node[box, fill=orange!15] (pnic) at (0,-0.4) {Physical NIC};
 \draw[thick] (-2.5,3.0) -- (-2.5,2.7);
 \draw[thick] (2.5,3.0) -- (2.5,2.7);
@@ -539,6 +543,9 @@ Different subnets $\rightarrow$ router needed (Layer 3). Physical uses hardware;
 \vfill
 \footnotesize
 How does VM 1 reach VM 2? And how does it reach the Internet?
+
+\vspace{0.1cm}
+\tiny In Linux, a bridge is named \texttt{br0}, \texttt{br1}, etc. We use \texttt{bridge-1} for clarity.
 
 ## Example: VM-to-VM Communication (Solution)
 
@@ -556,8 +563,8 @@ How does VM 1 reach VM 2? And how does it reach the Internet?
 \node[box, fill=purple!15] (vm2) at (2.5,3.8) {VM 2};
 \node[lbl] at (-2.5,3.3) {`eth0`: 192.168.1.10};
 \node[lbl] at (2.5,3.3) {`eth0`: 192.168.1.20};
-\node[box, fill=blue!20, minimum width=6cm] (br) at (0,2.4) {br0 (Linux bridge)};
-\node[box, fill=yellow!20] (rtr) at (0,1.4) {vRouter / NAT};
+\node[box, fill=blue!20, minimum width=6cm] (br) at (0,2.4) {bridge-1 (virtual switch)};
+\node[box, fill=yellow!20] (rtr) at (0,1.4) {Virtual Router / NAT};
 \node[box, fill=orange!15] (pnic) at (0,-0.4) {Physical NIC};
 \draw[thick] (-2.5,3.0) -- (-2.5,2.7);
 \draw[thick] (2.5,3.0) -- (2.5,2.7);
@@ -572,12 +579,13 @@ How does VM 1 reach VM 2? And how does it reach the Internet?
 
 \vfill
 \footnotesize
-Both VMs share `br0`: the bridge forwards frames by MAC address, just like a physical switch. No routing needed.
+Both VMs share bridge-1: it forwards frames by MAC address, just like a physical switch. No routing needed.
 
 ## Example: VMs on Different Subnets
 
 - Now VMs are on **different subnets**: they need Layer 3 (L3) routing
-- Two bridges (`br0`, `br1`), each with its own subnet
+- Two bridges (`bridge-1`, `bridge-2`), each with its own subnet
+- Linux can act as a **virtual router** by default: no extra software needed
 
 \begin{center}
 \begin{tikzpicture}[scale=0.75, every node/.style={transform shape},
@@ -591,11 +599,11 @@ Both VMs share `br0`: the bridge forwards frames by MAC address, just like a phy
 \node[box, fill=purple!15] (vm2) at (3,3.3) {VM 2};
 \node[lbl] at (-3,2.8) {`10.0.1.10/24`};
 \node[lbl] at (3,2.8) {`10.0.2.20/24`};
-\node[box, fill=blue!20, minimum width=3cm] (br1) at (-3,1.8) {br0};
-\node[box, fill=blue!20, minimum width=3cm] (br2) at (3,1.8) {br1};
+\node[box, fill=blue!20, minimum width=3cm] (br1) at (-3,1.8) {bridge-1};
+\node[box, fill=blue!20, minimum width=3cm] (br2) at (3,1.8) {bridge-2};
 \node[lbl] at (-3,1.3) {`10.0.1.1`};
 \node[lbl] at (3,1.3) {`10.0.2.1`};
-\node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {vRouter};
+\node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {Virtual Router};
 \node[box, fill=orange!15] (pnic) at (0,-0.6) {Physical NIC};
 \draw[thick] (-3,2.5) -- (-3,2.1);
 \draw[thick] (3,2.5) -- (3,2.1);
@@ -613,7 +621,7 @@ How does VM 1 (10.0.1.10) reach VM 2 (10.0.2.20)? What components are involved?
 
 ## Example: VMs on Different Subnets (Solution)
 
-- Different subnets $\rightarrow$ traffic must go through the **vRouter** (L3 forwarding)
+- Different subnets $\rightarrow$ traffic must go through the **virtual router** (L3 forwarding)
 
 \begin{center}
 \begin{tikzpicture}[scale=0.75, every node/.style={transform shape},
@@ -627,11 +635,11 @@ How does VM 1 (10.0.1.10) reach VM 2 (10.0.2.20)? What components are involved?
 \node[box, fill=purple!15] (vm2) at (3,3.3) {VM 2};
 \node[lbl] at (-3,2.8) {`10.0.1.10/24`};
 \node[lbl] at (3,2.8) {`10.0.2.20/24`};
-\node[box, fill=blue!20, minimum width=3cm] (br1) at (-3,1.8) {br0};
-\node[box, fill=blue!20, minimum width=3cm] (br2) at (3,1.8) {br1};
+\node[box, fill=blue!20, minimum width=3cm] (br1) at (-3,1.8) {bridge-1};
+\node[box, fill=blue!20, minimum width=3cm] (br2) at (3,1.8) {bridge-2};
 \node[lbl] at (-3,1.3) {`10.0.1.1`};
 \node[lbl] at (3,1.3) {`10.0.2.1`};
-\node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {vRouter};
+\node[box, fill=yellow!20, minimum width=2cm] (rtr) at (0,0.8) {Virtual Router};
 \node[box, fill=orange!15] (pnic) at (0,-0.6) {Physical NIC};
 \draw[thick] (-3,2.5) -- (-3,2.1);
 \draw[thick] (3,2.5) -- (3,2.1);
@@ -778,8 +786,8 @@ In Session 2 we will see how cloud providers offer NAT as a \textbf{managed serv
 
 1. VM generates packet with **virtual MAC/IP** as source
 2. vNIC passes frame to **vSwitch** (L2 forwarding)
-3. If destination is another subnet $\rightarrow$ **vRouter** (L3 forwarding)
-4. vRouter may apply **NAT** (replace private IP with host IP)
+3. If destination is another subnet $\rightarrow$ **virtual router** (L3 forwarding)
+4. Virtual router may apply **NAT** (replace private IP with host IP)
 5. Frame exits through **physical NIC** to the external network
 
 ## Discussion: Virtual Networking
@@ -790,9 +798,9 @@ In Session 2 we will see how cloud providers offer NAT as a \textbf{managed serv
 
 \vfill
 
-Hints: vSwitch handles same-subnet traffic locally; vRouter needed for different subnets; traffic may still stay inside the host.
+Hints: vSwitch handles same-subnet traffic locally; virtual router needed for different subnets; traffic may still stay inside the host.
 
-<!-- nota: esta pregunta refuerza la diferencia entre L2 (vSwitch) y L3 (vRouter), y que el tráfico intra-host no pasa por la red física -->
+<!-- nota: esta pregunta refuerza la diferencia entre L2 (vSwitch) y L3 (virtual router), y que el tráfico intra-host no pasa por la red física -->
 
 # Network Isolation and Multi-Tenancy
 

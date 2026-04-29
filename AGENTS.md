@@ -30,7 +30,7 @@
 5. Final review question, quick exercise, or debate topic
 
 ## Writing style
-- Avoid long dashes (`--`, `—`) as connectors between phrases; use colons, semicolons, or restructure the sentence
+- **No long dashes** in slide content: do not use em dashes (`—`), en dashes (`–`), or LaTeX double hyphens (`--`) as phrase connectors. Use colons, semicolons, parentheses, or restructure the sentence instead. This applies to all visible slide text; HTML comments are exempt.
 - Avoid English contractions (`don't` → `do not`, `can't` → `cannot`)
 - Prefer direct and natural language, avoiding repetitive patterns that look LLM-generated
 - **Acronyms**: always expand an acronym on first use (e.g. "Virtual Private Cloud (VPC)"). Subsequent uses can use the acronym alone. Do not assume the student knows the meaning.

@@ -593,7 +593,7 @@ Source: AWS, "Amazon VPC User Guide"; Azure, "Virtual Network Documentation"; GC
 
 ## Internet Gateway vs NAT Gateway
 
-**Internet Gateway** — the front door:
+**Internet Gateway** (the front door):
 
 - **Bidirectional**: the world can reach your instance, and it can reach the world
 - Instance needs a **public IP**
@@ -601,7 +601,7 @@ Source: AWS, "Amazon VPC User Guide"; Azure, "Virtual Network Documentation"; GC
 
 \vspace{0.3cm}
 
-**NAT Gateway** — the fire exit:
+**NAT Gateway** (the fire exit):
 
 - **One-way**: your instance can reach the Internet (e.g., download updates, call APIs), but nobody outside can reach it directly
 - Instance keeps a **private IP** only
