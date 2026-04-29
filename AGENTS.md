@@ -33,6 +33,14 @@
 - Evitar el uso de guiones largos (`--`, `—`) como conectores entre frases; usar dos puntos, punto y coma, o reestructurar la frase
 - Evitar contracciones en inglés (`don't` → `do not`, `can't` → `cannot`)
 - Preferir lenguaje directo y natural, evitando patrones repetitivos que parezcan generados por LLM
+- **Acrónimos**: siempre definir un acrónimo la primera vez que aparece (ej. "Virtual Private Cloud (VPC)"). En usos posteriores se puede usar solo el acrónimo. No asumir que el alumno conoce el significado.
+  - **CRÍTICO**: antes de entregar o compilar cualquier presentación, hacer un audit de acrónimos: buscar todos los acrónimos en el archivo y verificar que cada uno está expandido antes de su primer uso. Esto incluye acrónimos en títulos y tablas.
+  - Excepción: la slide de "References" al final no requiere expansión de acrónimos (son citas bibliográficas, no contenido docente).
+  - Excepción: footnotes inline (`\footnotesize Source: ...`) no requieren expansión de acrónimos (son citas, no contenido docente).
+  - Excepción: los "Learning objectives" al inicio de la presentación son un preview/roadmap; los acrónimos se expanden en el contenido principal, no en los objetivos.
+  - Excepción: acrónimos universales que cualquier estudiante de 2o conoce (CPU, RAM, IP, OS, USB, HTTP, TCP, UDP, DNS, MAC, Wi-Fi).
+  - Excepción: acrónimos ya definidos en Blocks anteriores y que los alumnos ya manejan (VLAN, NAT, NAPT, ARP, STP, CIDR, VLSM, OSPF, BGP, DHCP, L2, L3, L4).
+  - Si un acrónimo fue definido en un Block anterior pero NO está en la lista de excepciones, redefinirlo igualmente en el Block actual (cada presentación debe ser autocontenida).
 
 ## Formato de salida
 - Genera archivos Markdown

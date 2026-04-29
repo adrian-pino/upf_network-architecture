@@ -50,12 +50,10 @@ header-includes:
 Theme & \textit{The infrastructure} & \textit{The business model} \\
 \hline
 Topics & Data centers & Overlay networks (VXLAN) \\
-& VMs \& hypervisors & From virtualization to cloud \\
-& VMs vs containers (overview) & NIST cloud definition \\
-& vNICs, vSwitches, vRouters & IaaS / PaaS / SaaS \\
-& Multi-tenancy \& VLANs & VPC architecture \\
-& & Security groups \& ACLs \\
-& & Governance \& GDPR \\
+& VMs \& hypervisors & NIST cloud definition \\
+& VMs vs containers (overview) & IaaS / PaaS / SaaS \\
+& vNICs, vSwitches, vRouters & Security groups \& ACLs \\
+& Multi-tenancy \& VLANs & Governance \& GDPR \\
 \hline
 \end{tabular}
 \end{center}
@@ -178,7 +176,7 @@ Hints: consolidation, fewer physical machines, higher utilization, isolation bet
 ## What Is Virtualization?
 
 - **Virtualization** makes it possible for a single computer to act like many
-- A software layer called **hypervisor** divides the physical resources (CPU, RAM, disk, NIC) into isolated **virtual machines (VMs)**
+- A software layer called **hypervisor** divides the physical resources (CPU, RAM, disk, Network Interface Card (NIC)) into isolated **virtual machines (VMs)**
 - Each VM gets its own share and believes it owns dedicated hardware
 
 \vfill
@@ -245,7 +243,7 @@ Key properties:
 
 ## Hypervisors: The Key Enabler
 
-- A **hypervisor** (or VMM) manages and allocates physical resources to VMs
+- A **hypervisor** (also called Virtual Machine Monitor, or VMM) manages and allocates physical resources to VMs
 - Two types:
 
 \begin{center}
@@ -261,7 +259,7 @@ Performance & Near-native & Some overhead \\
 \hline
 Use case & Data centers, production & Development, testing \\
 \hline
-Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
+Examples & VMware ESXi, KVM (Kernel-based VM) & VirtualBox, VMware Workstation \\
 \hline
 \end{tabular}
 \end{center}
@@ -358,7 +356,7 @@ This is just an overview. We will do a deep dive into container internals and ne
 - **Use containers when** the app allows it:
   - Cloud-native or **microservices** applications
   - Need for **fast scaling** (seconds, not minutes)
-  - **CI/CD pipelines**: build, test, deploy in identical environments
+  - **CI/CD (Continuous Integration / Continuous Deployment) pipelines**: build, test, deploy in identical environments
 
 - **The trend**: most new applications are designed for containers
   - VMs remain essential for legacy workloads and strong isolation
@@ -506,7 +504,7 @@ Key idea: if VMs think they have real hardware, they also need a \textbf{real-lo
 \end{center}
 
 \footnotesize
-Different subnets $\rightarrow$ router needed (L3). Physical uses hardware; virtual uses software inside one host.
+Different subnets $\rightarrow$ router needed (Layer 3). Physical uses hardware; virtual uses software inside one host.
 
 ## Example: VM-to-VM Communication
 
@@ -543,7 +541,7 @@ How does VM 1 reach VM 2? And how does it reach the Internet?
 
 ## Example: VM-to-VM Communication (Solution)
 
-- Same subnet, same bridge $\rightarrow$ **L2 forwarding** (no routing needed)
+- Same subnet, same bridge $\rightarrow$ **Layer 2 (L2) forwarding** (no routing needed)
 
 \begin{center}
 \begin{tikzpicture}[scale=0.75, every node/.style={transform shape},
@@ -577,7 +575,7 @@ Both VMs share `br0`: the bridge forwards frames by MAC address, just like a phy
 
 ## Example: VMs on Different Subnets
 
-- Now VMs are on **different subnets**: they need L3 routing
+- Now VMs are on **different subnets**: they need Layer 3 (L3) routing
 - Two bridges (`br0`, `br1`), each with its own subnet
 
 \begin{center}
@@ -652,7 +650,7 @@ Each VM has a default gateway pointing to its bridge IP. The host routes packets
 
 ## Virtual Network Interfaces (vNICs)
 
-- A **vNIC** is a software-emulated network interface card
+- A **virtual NIC (vNIC)** is a software-emulated network interface card
 - From the guest's perspective: behaves exactly like a real NIC
 - Each VM gets **one or more vNICs**
 
@@ -681,13 +679,13 @@ Standard vSwitch & Single host & VMware vSS, Linux bridge \\
 \hline
 Distributed vSwitch & Multiple hosts, central mgmt & VMware vDS, Hyper-V \\
 \hline
-SDN-based vSwitch & Programmable, software-defined & OVS, VMware NSX \\
+SDN-based vSwitch & Programmable, software-defined & OVS (Open vSwitch), VMware NSX \\
 \hline
 \end{tabular}
 \end{center}
 
 - All types support **VLANs** (same 802.1Q from Block 3, now inside the hypervisor)
-- OVS is open source and **programmable via software** $\rightarrow$ deep dive in **Block 5** (SDN)
+- OVS is open source and **programmable via software** $\rightarrow$ deep dive in **Block 5** (Software-Defined Networking, or SDN)
 
 \vfill
 \footnotesize
@@ -778,20 +776,22 @@ Hints: vSwitch handles same-subnet traffic locally; vRouter needed for different
 ## Putting It All Together
 
 - We have seen the **building blocks**: vSwitches, vRouters, vNICs, VLANs
-- These components do not run in isolation; they are managed by **platforms**
-- Platforms orchestrate VMs or containers and configure virtual networking under the hood
+- These components do not run in isolation; they are managed by **cloud platforms**
+- Platforms orchestrate **VMs** or **containers** and configure virtual networking under the hood
 
 \vspace{0.3cm}
 
 Two categories:
 
-- **VM management platforms**: create and manage virtual machines at scale
-- **Container orchestration platforms**: deploy and scale containerized applications
+- **Cloud platforms**: manage infrastructure at scale
+  - Compute, storage, networking, and **VMs**
+- **Container orchestration platforms**: deploy and scale **containerized** applications
 
-## Cloud Management Platforms (VMs)
+## Cloud Platforms
 
-- VMs need a **management layer** to orchestrate resources
-- These platforms let you build and manage your **own (private) cloud**
+\scriptsize
+
+- **Self-managed / Private Cloud**: you own or rent the servers, install and manage the virtualization software yourself. Full control, but requires dedicated staff and expertise.
 
 \vspace{0.1cm}
 
@@ -801,36 +801,43 @@ Two categories:
 \hline
 \rowcolor{blue!10} \textbf{Platform} & \textbf{Description} & \textbf{Logo} \\
 \hline
-OpenStack & Open-source, widely used in private clouds & \includegraphics[height=0.45cm]{img/openstack-logo.png} \\
+OpenStack & Open-source, widely used in private clouds & \includegraphics[height=0.4cm]{img/openstack-logo.png} \\
 \hline
-VMware vSphere & Enterprise leader, proprietary & \includegraphics[height=0.35cm]{img/vmware-logo.png} \\
+VMware vSphere & Enterprise leader, proprietary & \includegraphics[height=0.32cm]{img/vmware-logo.png} \\
 \hline
-Proxmox VE & Open-source, lightweight alternative & \includegraphics[height=0.35cm]{img/proxmox-logo.png} \\
+Proxmox VE & Open-source, lightweight alternative & \includegraphics[height=0.32cm]{img/proxmox-logo.png} \\
 \hline
 \end{tabular}
 
 \vspace{0.2cm}
 
-As an alternative: **public cloud providers** (pay-per-use, no hardware to manage)
+\scriptsize
+
+- **Managed / Public Cloud**: rent capacity on demand, pay-as-you-go. Provider handles hardware, networking, cooling, security, and updates.
 
 \vspace{0.1cm}
 
-\begin{tabular}{|l|c|}
+\begin{tabular}{|l|l|c|}
 \hline
-\rowcolor{blue!10} \textbf{Provider} & \textbf{Logo} \\
+\rowcolor{blue!10} \textbf{Provider} & \textbf{Description} & \textbf{Logo} \\
 \hline
-Amazon Web Services (AWS) & \includegraphics[height=0.3cm]{img/aws-logo.png} \\
+Amazon Web Services & Market leader since 2006 & \includegraphics[height=0.3cm]{img/aws-logo.png} \\
 \hline
-Microsoft Azure & \includegraphics[height=0.35cm]{img/azure-logo.png} \\
+Microsoft Azure & Strong enterprise integration & \includegraphics[height=0.32cm]{img/azure-logo.png} \\
 \hline
-Google Cloud Platform (GCP) & \includegraphics[height=0.25cm]{img/gcp-logo.png} \\
+Google Cloud Platform & Data and AI focus & \includegraphics[height=0.25cm]{img/gcp-logo.png} \\
 \hline
 \end{tabular}
 
+\vfill
+\footnotesize
+Trade-offs between private and public cloud: \textbf{Session 2} (NIST cloud definition, IaaS/PaaS/SaaS).
+
 ## Container Orchestration Platforms
 
-- Containers need **orchestration** to manage hundreds or thousands of instances
-- Key tasks: scheduling, scaling, networking, self-healing
+\scriptsize
+
+- **Self-hosted / Private**: you install and operate on your own servers
 
 \vspace{0.1cm}
 
@@ -840,72 +847,124 @@ Google Cloud Platform (GCP) & \includegraphics[height=0.25cm]{img/gcp-logo.png} 
 \hline
 \rowcolor{blue!10} \textbf{Platform} & \textbf{Description} & \textbf{Logo} \\
 \hline
-Docker & Standard container runtime; package and run containers & \includegraphics[height=0.35cm]{img/docker-logo.png} \\
+Docker & Container runtime; works well on a single host & \includegraphics[height=0.4cm]{img/docker-logo.png} \\
+& Managing hundreds of containers across hosts? Unmanageable & \\
 \hline
-Kubernetes (K8s) & De facto standard for orchestration at scale & \includegraphics[height=0.45cm]{img/kubernetes-logo.png} \\
+Kubernetes (K8s) & Created to solve this: scheduling, scaling, networking, self-healing & \includegraphics[height=0.5cm]{img/kubernetes-logo.png} \\
 \hline
-OpenShift & Enterprise K8s distribution by Red Hat & \includegraphics[height=0.4cm]{img/openshift-logo.png} \\
+OpenShift & Enterprise K8s by Red Hat; adds security, CI/CD, UI & \includegraphics[height=0.45cm]{img/openshift-logo.png} \\
 \hline
 \end{tabular}
+
+\vspace{0.2cm}
+\scriptsize
+
+- **Hosted / Public**: cloud providers offer the same platforms as managed services. Each provider uses different names for essentially the same product (e.g., AWS ECS/EKS, Azure AKS, Google GKE, OpenShift on all major clouds).
 
 ## Discussion: Platforms
 
 \begin{center}
-\Large\textit{A company runs 50 legacy Windows applications\\and 200 microservices. Which platform(s)\\would you recommend and why?}
+\Large\textit{A startup with 5 engineers needs to deploy\\a web application that may go from 100 to 100,000 users.\\Would you build a private cloud or use a public one? Why?}
 \end{center}
 
 \vfill
 
-Hints: VMs for legacy Windows apps (different OS); containers for microservices (fast scaling); possibly both on the same infrastructure.
+Hints: team size, upfront cost, time to market, scaling needs, control over infrastructure.
 
 # Network Isolation and Multi-Tenancy
 
-## Why Isolation Matters
+## The Problem: Shared Infrastructure, Private Data
 
-- Data centers host workloads from **multiple tenants** (users, departments, companies)
-- **Multi-tenancy**: shared infrastructure, but each tenant expects:
-  - **Performance isolation**: my traffic is not affected by yours
-  - **Security isolation**: you cannot see or access my data
-  - **Address independence**: we can both use `10.0.0.0/24`
+- Cloud platforms host workloads from **multiple tenants** (users, departments, companies)
+- All tenants share the same physical servers, switches, and cabling
+- But each tenant expects:
+  - **Security**: you cannot see or access my data
+  - **Performance**: my traffic is not affected by yours
+  - **Address independence**: we can both use `10.0.0.0/24` without conflicts
+
+\vfill
+
+Cloud platforms solve this with **three layers of isolation**:
+
+1. **VLANs**: separate traffic at the switch level (L2)
+2. **Overlay networks**: encapsulate tenant traffic over the shared physical network (L2/L3)
+3. **Micro-segmentation**: per-VM firewall rules via Security Groups and Access Control Lists (ACLs) (L3/L4)
+
+## Layer 1: VLANs (What You Already Know)
+
+- Same **802.1Q** concept from Block 3, now applied to **virtual switches**
+- Hypervisors assign VMs to specific VLANs via **vSwitch port groups**
+- Traffic tagged with VLAN IDs $\rightarrow$ tenants separated at **L2**
+
+\vfill
+
+**But there is a problem:**
+
+- VLAN ID field is 12 bits $\rightarrow$ max **4,096 VLANs**
+- A large cloud platform may have **tens of thousands** of tenants
+- VLANs also do not support **overlapping IP ranges** across tenants
+
+\vfill
+\footnotesize Source: IEEE 802.1Q-2022, "Bridges and Bridged Networks."
+
+## Layer 2: Overlay Networks
+
+- Solution to the VLAN limit: **overlay networks** (e.g., Virtual Extensible LAN, or VXLAN)
+  - Encapsulate tenant frames inside UDP packets over the physical network
+  - 24-bit ID $\rightarrow$ up to **16 million** isolated networks
+- Each tenant gets a fully isolated virtual network:
+  - Own IP address space, subnets, and routing
 
 \vfill
 
 \footnotesize
-Without isolation: broadcast storms, ARP spoofing, IP conflicts, resource starvation.
+Deep dive into VXLAN and overlay architecture in \textbf{Session 2}.
 
-<!-- nota: analogía — apartamentos en un edificio: misma estructura, cada uno es privado -->
+## Layer 3: Micro-Segmentation
 
-## VLANs in Virtual Environments
-
-- Same **802.1Q** concept from Block 3, now applied to virtual switches
-- Hypervisors assign VMs to specific VLANs via **vSwitch port groups**
-- Traffic tagged with VLAN IDs: tenants separated at L2
-
-\vfill
-
-**Limitation**: VLAN ID is 12 bits $\rightarrow$ max **4,096 VLANs**
-
-\vfill
-
-Problem: 4,096 VLANs is **not enough** for a large cloud with thousands of tenants.
-
-\footnotesize Source: IEEE 802.1Q-2022, "Bridges and Bridged Networks."
-
-## Micro-Segmentation
-
-- Beyond VLANs: **per-VM or per-workload firewall policies**
-- Goal: **least privilege**, each VM should only reach what it strictly needs
+- VLANs and overlays isolate **networks**; micro-segmentation isolates **individual VMs**
+- Goal: **least privilege**; each VM should only reach what it strictly needs
 - Key concept in modern **zero trust** security architectures
 
 \vfill
 
+Cloud platforms implement this with two mechanisms:
+
+- **Security Groups**: firewall rules attached to each VM instance
+- **Network ACLs**: firewall rules applied at the subnet level
+
+\vfill
+
 \footnotesize
-In Session 2 we will see how cloud providers implement this with \textbf{Security Groups} (per-instance) and \textbf{Network ACLs} (per-subnet).
+Deep dive into Security Groups and Network ACLs in \textbf{Session 2}.
+
+## Isolation: The Full Picture
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{blue!10} \textbf{Layer} & \textbf{Mechanism} & \textbf{Scope} \\
+\hline
+L2 & \textbf{VLANs} (802.1Q) & Separate traffic at the switch level (max 4K) \\
+\hline
+L2/L3 & \textbf{Overlays} (VXLAN) & Encapsulate tenant traffic (up to 16M networks) \\
+\hline
+L3/L4 & \textbf{Security Groups / ACLs} & Per-VM and per-subnet firewall rules \\
+\hline
+\end{tabular}
+\end{center}
+
+\vfill
+
+\footnotesize
+Each layer adds isolation on top of the previous one. Today we covered VLANs in depth; overlays and security groups are the focus of \textbf{Session 2}.
 
 ## Discussion: Network Isolation
 
 \begin{center}
-\Large\textit{You manage a data center with 5,000 tenants.\\Each tenant wants their own isolated network.\\Can you use VLANs alone? Why or why not?}
+\Large\textit{You manage a cloud platform with 5,000 tenants.\\Each tenant wants their own isolated network.\\Can you use VLANs alone? Why or why not?}
 \end{center}
 
 \vfill
@@ -933,19 +992,9 @@ In **Session 2** we build on today's foundation:
 - Virtualization is the technology; cloud is the **business model**
 - NIST definition and **5 essential characteristics**
 - Service models: **IaaS / PaaS / SaaS**
-- **VPC** architecture: subnets, route tables, gateways
+- **Virtual network** architecture: subnets, route tables, gateways
 - Cloud security: **Security Groups + Network ACLs**
 - Governance, **data sovereignty**, GDPR
-
-## Discussion
-
-\begin{center}
-\Large\textit{A company runs 200 VMs on 10 physical servers.\\Each team wants an isolated network.\\What virtual networking components do you need\\and how would you connect them?}
-\end{center}
-
-\vfill
-
-Hints: think about vNICs, vSwitches, VLANs, and routing between subnets.
 
 ## References
 
