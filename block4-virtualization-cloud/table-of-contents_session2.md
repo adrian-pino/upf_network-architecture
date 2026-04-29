@@ -52,5 +52,5 @@
 
 ### Session Summary
 - Key Takeaways
-- Discussion: cloud network design
+- Discussion
 - References
