@@ -39,8 +39,7 @@
   - Excepción: footnotes inline (`\footnotesize Source: ...`) no requieren expansión de acrónimos (son citas, no contenido docente).
   - Excepción: los "Learning objectives" al inicio de la presentación son un preview/roadmap; los acrónimos se expanden en el contenido principal, no en los objetivos.
   - Excepción: acrónimos universales que cualquier estudiante de 2o conoce (CPU, RAM, IP, OS, USB, HTTP, TCP, UDP, DNS, MAC, Wi-Fi).
-  - Excepción: acrónimos ya definidos en Blocks anteriores y que los alumnos ya manejan (VLAN, NAT, NAPT, ARP, STP, CIDR, VLSM, OSPF, BGP, DHCP, L2, L3, L4).
-  - Si un acrónimo fue definido en un Block anterior pero NO está en la lista de excepciones, redefinirlo igualmente en el Block actual (cada presentación debe ser autocontenida).
+  - Excepción: acrónimos ya definidos en Blocks anteriores (los alumnos ya los conocen, no hace falta redefinirlos). Incluye: VLAN, NAT, NAPT, ARP, STP, CIDR, VLSM, OSPF, BGP, DHCP, L2, L3, L4, NIC, vNIC, VM, VMs, VXLAN, ACL, SDN, NFV, IaaS, PaaS, SaaS, NIST, VPC, API.
 
 ## Formato de salida
 - Genera archivos Markdown
