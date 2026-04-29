@@ -33,7 +33,7 @@ header-includes:
 
 1. Understand cloud computing's definition and essential characteristics
 2. Distinguish IaaS (Infrastructure as a Service), PaaS (Platform as a Service), and SaaS (Software as a Service) service models
-3. Design a basic cloud network with VPCs (Virtual Private Clouds), subnets, and security controls
+3. Design a basic cloud virtual network with subnets and security controls
 
 ## Recap -- What We Virtualized (Session 1)
 
@@ -376,7 +376,7 @@ We need a technology that scales beyond 4K networks and works across L3 boundari
 \vfill
 
 \footnotesize
-This is the foundation of cloud networking. Next: how providers build \textbf{VPCs} on top of overlays.
+This is the foundation of cloud networking. Next: how providers build \textbf{virtual networks} on top of overlays.
 
 Source: IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
 
@@ -392,10 +392,11 @@ Hints: think about overhead (extra headers), MTU implications, and troubleshooti
 
 # Cloud Network Architecture
 
-## Virtual Private Cloud (VPC)
+## Virtual Networks in the Cloud
 
-- A **VPC** is your own **isolated virtual network** inside a cloud provider
-- Think of it as your private data center in the cloud
+- Every cloud provider lets you create your own **isolated virtual network**
+  - AWS: Virtual Private Cloud (VPC); Azure: Virtual Network (VNet); GCP: VPC Network
+- Think of it as your **private data center network** in the cloud
 - You define:
   - **Address space** (e.g., `10.0.0.0/16`)
   - **Subnets** (subdivisions of the address space)
@@ -403,15 +404,15 @@ Hints: think about overhead (extra headers), MTU implications, and troubleshooti
 
 \vfill
 
-<!-- nota: el VPC usa los overlays VXLAN de la sesión anterior por debajo — conectar con 4.4 -->
+<!-- nota: el virtual network usa los overlays VXLAN de la sección anterior por debajo — conectar con overlays -->
 
-Key: the VPC is built on top of the **overlay network** concepts from Session 1.
+Key: virtual networks are built on top of the **overlay network** concepts we just covered.
 
 \vfill
 \footnotesize
-Source: AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
+Source: AWS, "Amazon VPC User Guide"; Azure, "Virtual Network Documentation"; GCP, "VPC Documentation."
 
-## VPC Architecture
+## Virtual Network Architecture
 
 \begin{center}
 \begin{tikzpicture}[
@@ -421,7 +422,7 @@ Source: AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
     >=Stealth
 ]
 % VPC box
-\node[vpc, fit={(-4.5,-1.5)(4.5,2.5)}, label=above:{\small\textbf{VPC: 10.0.0.0/16}}] (vpc) {};
+\node[vpc, fit={(-4.5,-1.5)(4.5,2.5)}, label=above:{\small\textbf{Virtual Network: 10.0.0.0/16}}] (vpc) {};
 
 % Public subnet
 \node[subnet, fill=yellow!10] (pub) at (-2,0.5) {};
@@ -477,7 +478,7 @@ Source: AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
 \hline
 \rowcolor{blue!10} \textbf{Destination} & \textbf{Target} & \textbf{Subnet type} \\
 \hline
-\texttt{10.0.0.0/16} & local (within VPC) & Both \\
+\texttt{10.0.0.0/16} & local (within virtual network) & Both \\
 \hline
 \texttt{0.0.0.0/0} & Internet Gateway & Public \\
 \hline
@@ -486,7 +487,7 @@ Source: AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
 \end{tabular}
 \end{center}
 
-- **Local route**: traffic within the VPC stays inside (always present)
+- **Local route**: traffic within the virtual network stays inside (always present)
 - **Default route** (`0.0.0.0/0`): where to send everything else
 - Public subnets $\rightarrow$ IGW; Private subnets $\rightarrow$ NAT GW
 
@@ -503,7 +504,7 @@ Direction & Bidirectional & Outbound only \\
 \hline
 Use case & Public-facing services & Private instances need updates \\
 \hline
-Assigned to & VPC (one per VPC) & Public subnet \\
+Assigned to & Virtual network (one per network) & Public subnet \\
 \hline
 Instance needs & Public IP & Only private IP \\
 \hline
@@ -604,7 +605,7 @@ Default & Deny all inbound & Allow all \\
 ## Discussion: Cloud Networking
 
 \begin{center}
-\Large\textit{You deploy a web application in a VPC.\\The web server needs to be public, but the database\\must not be reachable from the Internet. How?}
+\Large\textit{You deploy a web application in your cloud virtual network.\\The web server needs to be public, but the database\\must not be reachable from the Internet. How?}
 \end{center}
 
 \vfill
@@ -679,7 +680,7 @@ Source: AWS, "Shared Responsibility Model," aws.amazon.com/compliance/shared-res
 2. Five NIST characteristics define true cloud computing
 3. **IaaS / PaaS / SaaS** differ in who manages what
 4. **VXLAN** overlays scale isolation to 16M networks (vs 4K VLANs)
-5. A **VPC** is your isolated cloud network, built on top of overlays
+5. A **virtual network** is your isolated cloud network, built on top of overlays
 6. **Security groups** (instance) + **ACLs** (subnet) = defense in depth
 7. **Data sovereignty** and GDPR affect where and how you store data
 
