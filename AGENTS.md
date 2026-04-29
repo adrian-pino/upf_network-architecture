@@ -39,7 +39,7 @@
   - Excepción: footnotes inline (`\footnotesize Source: ...`) no requieren expansión de acrónimos (son citas, no contenido docente).
   - Excepción: los "Learning objectives" al inicio de la presentación son un preview/roadmap; los acrónimos se expanden en el contenido principal, no en los objetivos.
   - Excepción: acrónimos universales que cualquier estudiante de 2o conoce (CPU, RAM, IP, OS, USB, HTTP, TCP, UDP, DNS, MAC, Wi-Fi).
-  - Excepción: acrónimos ya definidos en Blocks anteriores (los alumnos ya los conocen, no hace falta redefinirlos). Incluye: VLAN, NAT, NAPT, ARP, STP, CIDR, VLSM, OSPF, BGP, DHCP, L2, L3, L4, NIC, vNIC, VM, VMs, VXLAN, ACL, SDN, NFV, IaaS, PaaS, SaaS, NIST, VPC, API.
+  - Excepción: acrónimos ya definidos en Blocks anteriores (los alumnos ya los conocen, no hace falta redefinirlos). Ver tabla en la sección "Acrónimos definidos" al final de este archivo.
 
 ## Formato de salida
 - Genera archivos Markdown
@@ -104,3 +104,51 @@
 - **Block 1**: Fundamentos de redes
 - **Block 2**: Capa de aplicación y transporte
 - **Block 3**: Capa de red y enlace (Ethernet, VLANs 802.1Q, ARP, STP, subnetting CIDR/VLSM, OSPF, BGP, DHCP, NAT/NAPT)
+
+## Acrónimos definidos (registro centralizado)
+
+Consultar esta lista antes de usar un acrónimo. Si ya fue definido en un Block anterior, no hace falta redefinirlo. Si es nuevo, expandirlo en su primer uso y añadirlo aquí.
+
+| Acrónimo | Expansión | Definido en |
+|----------|-----------|-------------|
+| VLAN | Virtual LAN | Block 3 |
+| NAT | Network Address Translation | Block 3 |
+| NAPT | Network Address Port Translation | Block 3 |
+| ARP | Address Resolution Protocol | Block 3 |
+| STP | Spanning Tree Protocol | Block 3 |
+| CIDR | Classless Inter-Domain Routing | Block 3 |
+| VLSM | Variable-Length Subnet Mask | Block 3 |
+| OSPF | Open Shortest Path First | Block 3 |
+| BGP | Border Gateway Protocol | Block 3 |
+| DHCP | Dynamic Host Configuration Protocol | Block 3 |
+| VMs | Virtual Machines | B4 Session 1 |
+| NIC | Network Interface Card | B4 Session 1 |
+| vNIC | virtual NIC | B4 Session 1 |
+| VMM | Virtual Machine Monitor | B4 Session 1 |
+| KVM | Kernel-based VM | B4 Session 1 |
+| CI/CD | Continuous Integration / Continuous Deployment | B4 Session 1 |
+| OVS | Open vSwitch | B4 Session 1 |
+| SDN | Software-Defined Networking | B4 Session 1 |
+| ACL | Access Control List | B4 Session 1 |
+| VXLAN | Virtual Extensible LAN | B4 Session 1 |
+| IaaS | Infrastructure as a Service | B4 Session 2 |
+| PaaS | Platform as a Service | B4 Session 2 |
+| SaaS | Software as a Service | B4 Session 2 |
+| VPC | Virtual Private Cloud | B4 Session 2 |
+| NIST | National Institute of Standards and Technology | B4 Session 2 |
+| API | Application Programming Interface | B4 Session 2 |
+| EC2 | Elastic Compute Cloud | B4 Session 2 |
+| IAM | Identity and Access Management | B4 Session 2 |
+| GDPR | General Data Protection Regulation | B4 Session 2 |
+| VNI | VXLAN Network Identifier | B4 Session 2 |
+| VTEP | VXLAN Tunnel Endpoint | B4 Session 2 |
+| NFV | Network Functions Virtualization | B5 Session 1 |
+| VNF | Virtual Network Function | B5 Session 1 |
+| REST | Representational State Transfer | B5 Session 1 |
+| gRPC | gRPC Remote Procedure Call | B5 Session 1 |
+| ONOS | Open Network Operating System | B5 Session 1 |
+| IDS/IPS | Intrusion Detection / Prevention System | B5 Session 1 |
+| IaC | Infrastructure as Code | B5 Session 1 |
+| FaaS | Function as a Service | B5 Session 1 |
+| MEC | Multi-access Edge Computing | B5 Session 1 |
+| OCI | Open Container Initiative | B5 Session 1 |
