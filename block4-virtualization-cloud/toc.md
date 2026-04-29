@@ -50,7 +50,7 @@
   - In practice: containers often run inside VMs for defense-in-depth
   - When to use which: different OS → VM; many similar services → containers
 
-### 4.3 Virtual Network Infrastructure
+### 4.3 Virtual Networking
 - Virtual NICs (vNICs)
   - Software-emulated network interface card
   - Each VM gets one or more vNICs (behaves like a real NIC to the guest)
@@ -73,7 +73,19 @@
   - Packet flow: VM → vNIC → vSwitch → vRouter → physical NIC → external network
   - NAT in virtual environments: same concept as Block 3, now managed by the hypervisor
 
-### 4.4 Network Isolation and Multi-Tenancy
+### 4.4 Cloud & Container Platforms
+- Cloud management platforms (VMs)
+  - OpenStack (open-source, widely used in private clouds)
+  - VMware vSphere (enterprise leader, proprietary)
+  - Proxmox VE (open-source, lightweight alternative)
+- Public cloud providers as alternative (pay-per-use, no hardware to manage)
+  - AWS, Microsoft Azure, Google Cloud Platform
+- Container orchestration platforms
+  - Docker: standard container runtime; package and run containers
+  - Kubernetes (K8s): de facto standard for orchestration at scale
+  - OpenShift: enterprise K8s distribution by Red Hat
+
+### 4.5 Network Isolation and Multi-Tenancy
 - Multi-tenant architectures
   - Multiple independent users (tenants) share the same physical infrastructure
   - Examples: cloud providers, enterprise data centers, university IT

@@ -178,15 +178,22 @@ Hints: consolidation, fewer physical machines, higher utilization, isolation bet
 ## What Is Virtualization?
 
 - **Virtualization** makes it possible for a single computer to act like many
-- A software layer called **hypervisor** divides the physical resources (CPU, RAM, disk, NIC) into isolated **virtual machines**
+- A software layer called **hypervisor** divides the physical resources (CPU, RAM, disk, NIC) into isolated **virtual machines (VMs)**
 - Each VM gets its own share and believes it owns dedicated hardware
 
 \vfill
 
 \begin{center}
-\footnotesize
-\textit{One physical machine, many virtual ones:\\each believes it has the hardware all to itself.}
+\Large
+\textit{Why virtualize?}
 \end{center}
+
+\vspace{0.2cm}
+
+- **Resource efficiency**: consolidate workloads instead of one app per server
+- **Cost savings**: fewer servers, less power, cooling, and space
+- **Flexibility**: create or destroy environments in minutes
+- **Isolation**: VMs are independent; failures do not propagate
 
 ## Virtual Machines (VMs)
 
@@ -209,16 +216,26 @@ Key properties:
 \begin{center}
 \begin{tikzpicture}[
     box/.style={draw, thick, rounded corners, minimum width=3cm, minimum height=0.8cm, font=\small},
+    vmbox/.style={draw, thick, rounded corners, minimum width=2.5cm, minimum height=2.2cm},
     >=Stealth
 ]
 \node[box, fill=gray!20, minimum width=7.8cm] (hw) at (0,0) {Physical Hardware (Host)};
 \node[box, fill=blue!15, minimum width=7.8cm] (hyp) at (0,1.2) {Hypervisor / Host OS};
-\node[box, fill=green!15, minimum width=2.5cm] (g1) at (-2.6,2.4) {Guest OS 1};
-\node[box, fill=green!15, minimum width=2.5cm] (g2) at (0,2.4) {Guest OS 2};
-\node[box, fill=green!15, minimum width=2.5cm] (g3) at (2.6,2.4) {Guest OS 3};
-\node[box, fill=red!15, minimum width=2.5cm] (a1) at (-2.6,3.6) {App A};
-\node[box, fill=teal!15, minimum width=2.5cm] (a2) at (0,3.6) {App B};
-\node[box, fill=olive!15, minimum width=2.5cm] (a3) at (2.6,3.6) {App C};
+% VM 1
+\node[vmbox, fill=green!15] (vm1) at (-2.6,3) {};
+\node[font=\small] at (-2.6,2.2) {VM 1};
+\node[box, fill=green!30, minimum width=2cm, minimum height=0.6cm, font=\scriptsize] at (-2.6,2.8) {Guest OS 1};
+\node[box, fill=red!15, minimum width=2cm, minimum height=0.6cm, font=\scriptsize] at (-2.6,3.6) {App 1};
+% VM 2
+\node[vmbox, fill=purple!15] (vm2) at (0,3) {};
+\node[font=\small] at (0,2.2) {VM 2};
+\node[box, fill=purple!25, minimum width=2cm, minimum height=0.6cm, font=\scriptsize] at (0,2.8) {Guest OS 2};
+\node[box, fill=teal!15, minimum width=2cm, minimum height=0.6cm, font=\scriptsize] at (0,3.6) {App 2};
+% VM 3
+\node[vmbox, fill=orange!15] (vm3) at (2.6,3) {};
+\node[font=\small] at (2.6,2.2) {VM 3};
+\node[box, fill=orange!25, minimum width=2cm, minimum height=0.6cm, font=\scriptsize] at (2.6,2.8) {Guest OS 3};
+\node[box, fill=olive!15, minimum width=2cm, minimum height=0.6cm, font=\scriptsize] at (2.6,3.6) {App 3};
 \end{tikzpicture}
 \end{center}
 
@@ -255,41 +272,37 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
 
 \begin{center}
 \begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=2.8cm, minimum height=0.7cm, font=\scriptsize},
+    box/.style={draw, thick, rounded corners, minimum width=2.5cm, minimum height=0.7cm, font=\scriptsize},
+    vmbox/.style={draw, thick, rounded corners, minimum width=2.7cm, minimum height=1.8cm, font=\scriptsize},
     >=Stealth
 ]
 % Type 1
-\node[font=\small\bfseries] at (-3.5,4.5) {Type 1 (Bare-metal)};
+\node[font=\small\bfseries] at (-3.5,4.2) {Type 1 (Bare-metal)};
 \node[box, fill=gray!20, minimum width=5.8cm] (hw1) at (-3.5,0) {Hardware};
 \node[box, fill=blue!25, minimum width=5.8cm] (hyp1) at (-3.5,1) {Hypervisor};
-\node[box, fill=green!15] (vm1a) at (-4.8,2) {VM 1};
-\node[box, fill=purple!15] (vm1b) at (-2.2,2) {VM 2};
-\node[box, fill=red!15] (a1a) at (-4.8,3) {App};
-\node[box, fill=teal!15] (a1b) at (-2.2,3) {App};
+\node[vmbox, fill=green!15] (vm1a) at (-5,2.5) {};
+\node[font=\scriptsize] at (-5,2.1) {VM 1};
+\node[box, fill=red!15, minimum width=2.1cm] (a1a) at (-5,2.9) {App};
+\node[vmbox, fill=purple!15] (vm1b) at (-2,2.5) {};
+\node[font=\scriptsize] at (-2,2.1) {VM 2};
+\node[box, fill=red!15, minimum width=2.1cm] (a1b) at (-2,2.9) {App};
 
 % Type 2
-\node[font=\small\bfseries] at (3.5,4.5) {Type 2 (Hosted)};
+\node[font=\small\bfseries] at (3.5,5.2) {Type 2 (Hosted)};
 \node[box, fill=gray!20, minimum width=5.8cm] (hw2) at (3.5,0) {Hardware};
 \node[box, fill=yellow!15, minimum width=5.8cm] (os2) at (3.5,1) {Host OS};
 \node[box, fill=blue!25, minimum width=5.8cm] (hyp2) at (3.5,2) {Hypervisor};
-\node[box, fill=green!15] (vm2a) at (2.2,3) {VM 1};
-\node[box, fill=purple!15] (vm2b) at (4.8,3) {VM 2};
-\node[box, fill=red!15] (a2a) at (2.2,4) {App};
-\node[box, fill=teal!15] (a2b) at (4.8,4) {App};
+\node[vmbox, fill=green!15] (vm2a) at (2,3.5) {};
+\node[font=\scriptsize] at (2,3.1) {VM 1};
+\node[box, fill=red!15, minimum width=2.1cm] (a2a) at (2,3.9) {App};
+\node[vmbox, fill=purple!15] (vm2b) at (5,3.5) {};
+\node[font=\scriptsize] at (5,3.1) {VM 2};
+\node[box, fill=red!15, minimum width=2.1cm] (a2b) at (5,3.9) {App};
 \end{tikzpicture}
 \end{center}
 
-- Type 1: hypervisor **replaces** the OS $\rightarrow$ less overhead, used in production
-- Type 2: hypervisor runs **as an application** $\rightarrow$ easier to set up, used for dev/testing
-
-## VMs vs Containers: Visual Comparison
-
-\begin{center}
-\includegraphics[width=0.75\textwidth]{img/vm-vs-container.png}
-\end{center}
-
-\vfill
-\footnotesize Source: Aqueduct Technologies, "Containers and Virtual Machines," aqueducttech.com.
+- Type 1: hypervisor runs **directly on hardware** (no host OS) $\rightarrow$ less overhead, used in production
+- Type 2: hypervisor runs **on top of a host OS** $\rightarrow$ easier to set up, used for dev/testing
 
 ## VMs vs Containers: Overview
 
@@ -299,7 +312,8 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
 **Virtual Machines**
 
 - Include a **full guest OS** per instance
-- Size: **GBs** (full OS image)
+  - A typical OS: 1--5 GB just for the OS itself
+- Size: **GBs** (OS + app + dependencies)
 - Boot time: **minutes**
 - Strong isolation (hardware level)
 - Can run **different operating systems**
@@ -322,104 +336,37 @@ Examples & VMware ESXi, KVM, Hyper-V & VirtualBox, VMware Workstation \\
 \footnotesize
 This is just an overview. We will do a deep dive into container internals and networking in \textbf{Block 5}.
 
-Source: Red Hat, \textit{Containers vs VMs}, redhat.com.
+## VMs vs Containers: Visual Comparison
+
+\begin{center}
+\includegraphics[width=0.6\textwidth]{img/vm-vs-container.png}
+\end{center}
+
+\footnotesize
+**Bins/Libs** = binaries and libraries: the dependencies each app needs to run (e.g., Python, OpenSSL, libc).
+
+\vfill
+\footnotesize Source: Aqueduct Technologies, "Containers and Virtual Machines," aqueducttech.com.
 
 ## When to Use VMs vs Containers
 
-- **Use VMs when:**
-  - You need **different operating systems** (Linux + Windows on the same host)
-  - Strong **security isolation** is critical (e.g., different tenants)
-  - Legacy applications that require a specific OS environment
+- **Use VMs when** the app requires it:
+  - Needs a **different OS** than the host (e.g., Windows app on a Linux host)
+  - Requires **strong tenant isolation** (e.g., multi-tenant cloud)
+  - **Legacy software** tied to a specific OS version
 
-- **Use containers when:**
-  - Running **many instances** of similar applications
-  - **Fast startup** and scaling matters
-  - **Microservices** architecture (each service in its own container)
+- **Use containers when** the app allows it:
+  - Cloud-native or **microservices** applications
+  - Need for **fast scaling** (seconds, not minutes)
+  - **CI/CD pipelines**: build, test, deploy in identical environments
 
-- **In practice**: most organizations use **both** together
-  - Containers run inside VMs for defense in depth
+- **The trend**: most new applications are designed for containers
+  - VMs remain essential for legacy workloads and strong isolation
+  - Common pattern: containers run **inside VMs** (best of both worlds)
 
 \vfill
 \footnotesize
 Microservices and container networking: \textbf{Block 5}.
-
-## Cloud Management Platforms (VMs)
-
-:::::::::::::: {.columns}
-::: {.column width="60%"}
-
-- VMs need a **management layer** to orchestrate resources
-- These platforms handle: provisioning, scheduling, networking, storage
-
-\vspace{0.3cm}
-
-**Key platforms:**
-
-- **OpenStack** (open-source, widely used in private clouds)
-- **VMware vSphere** (enterprise leader, proprietary)
-- **Proxmox VE** (open-source, lightweight alternative)
-- **Microsoft Hyper-V** (integrated with Windows Server)
-
-:::
-::: {.column width="40%"}
-
-\begin{center}
-\includegraphics[width=2.5cm]{img/openstack-logo.png}
-
-\vspace{0.3cm}
-
-\includegraphics[width=2.5cm]{img/vmware-logo.png}
-
-\vspace{0.3cm}
-
-\includegraphics[width=2.5cm]{img/proxmox-logo.png}
-\end{center}
-
-:::
-::::::::::::::
-
-\vfill
-\footnotesize Source: OpenStack Foundation, openstack.org; VMware, vmware.com; Proxmox Server Solutions, proxmox.com.
-
-## Container Orchestration Platforms
-
-:::::::::::::: {.columns}
-::: {.column width="55%"}
-
-- Containers need **orchestration** to manage hundreds or thousands of instances
-- Key tasks: scheduling, scaling, networking, self-healing
-
-\vspace{0.3cm}
-
-**Docker**: package and run containers
-
-- Standard container runtime
-- `Dockerfile` $\rightarrow$ image $\rightarrow$ container
-
-\vspace{0.2cm}
-
-**Kubernetes (K8s)**: orchestrate containers at scale
-
-- Automatic scaling and load balancing
-- Self-healing (restarts failed containers)
-- De facto industry standard
-
-:::
-::: {.column width="45%"}
-
-\begin{center}
-\includegraphics[width=2.5cm]{img/docker-logo.png}
-
-\vspace{0.5cm}
-
-\includegraphics[width=2.5cm]{img/kubernetes-logo.png}
-\end{center}
-
-:::
-::::::::::::::
-
-\vfill
-\footnotesize Source: Docker, Inc., docker.com; Kubernetes Project (CNCF), kubernetes.io.
 
 ## Discussion: Virtualization
 
@@ -433,7 +380,7 @@ Hints: boot time, resource overhead, isolation needs, how fast you need to scale
 
 <!-- nota: no hay una respuesta única correcta — la clave es que razonen sobre los trade-offs -->
 
-# Virtual Network Infrastructure
+# Virtual Networking
 
 ## From Physical to Virtual Networks
 
@@ -814,7 +761,7 @@ In Session 2 we will see how cloud providers offer NAT as a \textbf{managed serv
 4. vRouter may apply **NAT** (replace private IP with host IP)
 5. Frame exits through **physical NIC** to the external network
 
-## Discussion: Virtual Networks
+## Discussion: Virtual Networking
 
 \begin{center}
 \Large\textit{Two VMs on the same host want to communicate.\\Does their traffic ever leave the physical machine?\\What if they are on different subnets?}
@@ -825,6 +772,91 @@ In Session 2 we will see how cloud providers offer NAT as a \textbf{managed serv
 Hints: vSwitch handles same-subnet traffic locally; vRouter needed for different subnets; traffic may still stay inside the host.
 
 <!-- nota: esta pregunta refuerza la diferencia entre L2 (vSwitch) y L3 (vRouter), y que el tráfico intra-host no pasa por la red física -->
+
+# Cloud & Container Platforms
+
+## Putting It All Together
+
+- We have seen the **building blocks**: vSwitches, vRouters, vNICs, VLANs
+- These components do not run in isolation; they are managed by **platforms**
+- Platforms orchestrate VMs or containers and configure virtual networking under the hood
+
+\vspace{0.3cm}
+
+Two categories:
+
+- **VM management platforms**: create and manage virtual machines at scale
+- **Container orchestration platforms**: deploy and scale containerized applications
+
+## Cloud Management Platforms (VMs)
+
+- VMs need a **management layer** to orchestrate resources
+- These platforms let you build and manage your **own (private) cloud**
+
+\vspace{0.1cm}
+
+\renewcommand{\arraystretch}{1.2}
+\scriptsize
+\begin{tabular}{|l|l|c|}
+\hline
+\rowcolor{blue!10} \textbf{Platform} & \textbf{Description} & \textbf{Logo} \\
+\hline
+OpenStack & Open-source, widely used in private clouds & \includegraphics[height=0.45cm]{img/openstack-logo.png} \\
+\hline
+VMware vSphere & Enterprise leader, proprietary & \includegraphics[height=0.35cm]{img/vmware-logo.png} \\
+\hline
+Proxmox VE & Open-source, lightweight alternative & \includegraphics[height=0.35cm]{img/proxmox-logo.png} \\
+\hline
+\end{tabular}
+
+\vspace{0.2cm}
+
+As an alternative: **public cloud providers** (pay-per-use, no hardware to manage)
+
+\vspace{0.1cm}
+
+\begin{tabular}{|l|c|}
+\hline
+\rowcolor{blue!10} \textbf{Provider} & \textbf{Logo} \\
+\hline
+Amazon Web Services (AWS) & \includegraphics[height=0.3cm]{img/aws-logo.png} \\
+\hline
+Microsoft Azure & \includegraphics[height=0.35cm]{img/azure-logo.png} \\
+\hline
+Google Cloud Platform (GCP) & \includegraphics[height=0.25cm]{img/gcp-logo.png} \\
+\hline
+\end{tabular}
+
+## Container Orchestration Platforms
+
+- Containers need **orchestration** to manage hundreds or thousands of instances
+- Key tasks: scheduling, scaling, networking, self-healing
+
+\vspace{0.1cm}
+
+\renewcommand{\arraystretch}{1.2}
+\scriptsize
+\begin{tabular}{|l|l|c|}
+\hline
+\rowcolor{blue!10} \textbf{Platform} & \textbf{Description} & \textbf{Logo} \\
+\hline
+Docker & Standard container runtime; package and run containers & \includegraphics[height=0.35cm]{img/docker-logo.png} \\
+\hline
+Kubernetes (K8s) & De facto standard for orchestration at scale & \includegraphics[height=0.45cm]{img/kubernetes-logo.png} \\
+\hline
+OpenShift & Enterprise K8s distribution by Red Hat & \includegraphics[height=0.4cm]{img/openshift-logo.png} \\
+\hline
+\end{tabular}
+
+## Discussion: Platforms
+
+\begin{center}
+\Large\textit{A company runs 50 legacy Windows applications\\and 200 microservices. Which platform(s)\\would you recommend and why?}
+\end{center}
+
+\vfill
+
+Hints: VMs for legacy Windows apps (different OS); containers for microservices (fast scaling); possibly both on the same infrastructure.
 
 # Network Isolation and Multi-Tenancy
 
