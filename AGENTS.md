@@ -4,7 +4,8 @@
 - Course: Arquitectura de Xarxes
 - University: Universitat Pompeu Fabra (UPF)
 - Students: heterogeneous mix, from 2nd-year Telecom / Data Science to 4th-year students from neighbouring degrees (elective)
-- Primary language: Spanish (technical terms may appear in English or Catalan)
+- Primary spoken language in class: Spanish (technical terms may appear in English or Catalan)
+- **Slide content language: English** (see Language section below)
 
 ## Pedagogical considerations
 - Adapt the level: do not assume advanced networking knowledge, since some students come from neighbouring degrees

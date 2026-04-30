@@ -1,6 +1,6 @@
 ---
-title: "Block 4 -- Session 2"
-subtitle: "Cloud Computing \\& Cloud Architectures"
+title: "Block 4 -- Cloud Computing"
+subtitle: "S2: Cloud Computing \\& Cloud Architectures"
 author: "Arquitectura de Xarxes"
 institute: "Universitat Pompeu Fabra"
 theme: "Madrid"
@@ -43,7 +43,7 @@ header-includes:
     box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.7cm, font=\scriptsize, align=center},
     >=Stealth
 ]
-\node[box, fill=green!15] (vm) at (0,0) {VM};
+\node[box, fill=green!15] (vm) at (0,0) {VM /\\Container};
 \node[box, fill=green!10] (vnic) at (2.5,0) {Virtual\\NIC};
 \node[box, fill=blue!15] (vsw) at (5,0) {Virtual\\Switch};
 \node[box, fill=yellow!20] (vr) at (7.5,0) {Virtual\\Router};
@@ -76,7 +76,7 @@ header-includes:
 \hline
 \rowcolor{blue!10} \textbf{Virtualization} & \textbf{Cloud Computing} \\
 \hline
-Run multiple VMs on one host & Offer compute as a \textbf{service} \\
+Run multiple VMs/containers on one host & Offer compute as a \textbf{service} \\
 \hline
 Internal IT optimization & External/internal consumption \\
 \hline
@@ -138,7 +138,7 @@ Measured service & Pay only for what you use (CPU-hours, GB stored) \\
 \vfill
 
 - **All five** must be present to qualify as "cloud computing"
-- If you need to call someone to get a VM $\rightarrow$ it is not cloud
+
 
 \vfill
 \footnotesize
