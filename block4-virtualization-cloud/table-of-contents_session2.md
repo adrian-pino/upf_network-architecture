@@ -4,7 +4,7 @@
 - What is the Cloud and how is it formed?
 - How do networks work in the cloud?
 
-**Narrative thread:** CloudBite, a 3-person startup building a food-delivery app from zero infrastructure. Each section answers their next question.
+**Narrative thread:** CloudBite, a 3-person startup building a food-delivery app from zero infrastructure. Each section answers our next question.
 
 ---
 
