@@ -22,7 +22,7 @@
 
 ## Session structure
 1. Title + motivating question or real-world scenario
-2. Learning objectives (2-3 maximum)
+2. Learning objectives (3-4 maximum)
 3. Main content divided into thematic blocks (`#` sections)
    - At the end of each section, include a **discussion slide** with an open question to encourage classroom debate
    - Format: centred question in `\Large\textit{...}`, with hints below
@@ -76,7 +76,7 @@
     - \setbeamerfont{footnote}{size=\tiny}
     - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
     - \logo{\includegraphics[height=0.6cm]{img/upf-logo.png}}
-    - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}\\[0.3cm]\scriptsize Adrián Pino \texttt{<adrian.pino@upf.edu>}}
+    - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}}
   ```
 - Note: `[table]{xcolor}` needed for `\rowcolor`; `decorations.pathreplacing` for TikZ braces; `shapes.symbols` for cloud shapes
 - Tables with full borders (`|l|l|`, `\hline` between each row), `\rowcolor{blue!10}` in header, `\renewcommand{\arraystretch}{1.3}` for padding. Do NOT use `booktabs` (`\toprule`/`\midrule`/`\bottomrule`)
@@ -149,6 +149,7 @@ Check this list before using an acronym. If it was already defined in a previous
 | VXLAN | Virtual Extensible LAN | B4 Session 1 |
 | IaaS | Infrastructure as a Service | B4 Session 2 |
 | PaaS | Platform as a Service | B4 Session 2 |
+| CaaS | Container as a Service | B4 Session 2 |
 | SaaS | Software as a Service | B4 Session 2 |
 | VPC | Virtual Private Cloud | B4 Session 2 |
 | NIST | National Institute of Standards and Technology | B4 Session 2 |

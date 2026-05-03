@@ -1,6 +1,6 @@
 ---
 title: "Block 4 -- Cloud Computing"
-subtitle: "S2: Cloud Computing \\& Cloud Architectures"
+subtitle: "S2: Cloud Computing \\& Cloud Architecture"
 author: "Arquitectura de Xarxes"
 institute: "Universitat Pompeu Fabra"
 theme: "Madrid"
@@ -16,7 +16,7 @@ header-includes:
   - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit, decorations.pathreplacing}
   - \setbeamerfont{footnote}{size=\tiny}
   - \logo{\includegraphics[height=0.6cm]{img/upf-logo.png}}
-  - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}\\[0.3cm]\scriptsize Adrián Pino \texttt{<adrian.pino@upf.edu>}}
+  - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}}
   - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
 ---
 
@@ -34,7 +34,8 @@ header-includes:
 
 1. Understand cloud computing's definition and essential characteristics
 2. Distinguish IaaS (Infrastructure as a Service), PaaS (Platform as a Service), and SaaS (Software as a Service)
-3. Design a cloud virtual network with subnets, security controls, and network services
+3. Understand core cloud architecture patterns: regions, availability zones, and virtual networks
+4. Design a cloud virtual network with subnets, security controls, and network services
 
 ## Recap -- What We Virtualized (Session 1)
 
@@ -110,6 +111,15 @@ Hints: think about CapEx vs OpEx, scaling speed, and who manages what.
 \end{quote}
 
 \vfill
+
+- **Ubiquitous**: anywhere, any device
+- **On-demand**: no tickets, provision instantly
+- **Shared pool**: many tenants, same hardware
+- **Configurable**: choose CPU, RAM, storage, network
+- **Rapidly provisioned**: up and running in seconds
+- **Minimal management**: provider handles the hardware
+
+\vfill
 \footnotesize
 Source: NIST SP 800-145 (2011). Still the standard definition used industry-wide.
 
@@ -139,11 +149,6 @@ Measured service & Pay only for what you use (CPU-hours, GB stored) \\
 
 - **All five** must be present to qualify as "cloud computing"
 
-
-\vfill
-\footnotesize
-Source: NIST SP 800-145, Mell & Grance, 2011.
-
 ## Cloud Service Models -- The Stack
 
 \begin{center}
@@ -161,12 +166,13 @@ Source: NIST SP 800-145, Mell & Grance, 2011.
 \draw[decorate, decoration={brace, amplitude=8pt}, thick, red] (5.5,3.4) -- (5.5,-1.9) node[midway, right=10pt, font=\small, text=red] {SaaS};
 \draw[decorate, decoration={brace, amplitude=8pt}, thick, orange] (6.8,1.6) -- (6.8,-1.9) node[midway, right=10pt, font=\small, text=orange] {PaaS};
 \draw[decorate, decoration={brace, amplitude=8pt}, thick, blue] (8.1,-0.2) -- (8.1,-1.9) node[midway, right=10pt, font=\small, text=blue] {IaaS};
+\draw[decorate, decoration={brace, amplitude=8pt}, thick, teal] (9.4,1.6) -- (9.4,-1.9) node[midway, right=10pt, font=\small, text=teal] {CaaS};
 \end{tikzpicture}
 \end{center}
 
 <!-- nota: ir de abajo a arriba, explicando qué gestiona el proveedor vs el cliente en cada modelo -->
 
-## IaaS, PaaS, SaaS -- In Practice
+## IaaS, PaaS, SaaS, CaaS -- In Practice
 
 \small
 
@@ -184,6 +190,13 @@ Source: NIST SP 800-145, Mell & Grance, 2011.
 
 \vspace{0.2cm}
 
+**CaaS** (Container as a Service) (e.g. AWS EKS, Azure AKS, Google GKE):
+
+- Provider gives you a managed container orchestration platform (Kubernetes)
+- "I have containers. Just run and scale them, I do not care about the cluster"
+
+\vspace{0.2cm}
+
 **SaaS** (e.g. Google Workspace, Microsoft 365, Slack, Zoom):
 
 - Provider gives you a complete application. You manage your data only
@@ -192,34 +205,13 @@ Source: NIST SP 800-145, Mell & Grance, 2011.
 ## Service Models -- Who Manages What?
 
 \begin{center}
-\footnotesize
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{|l|c|c|c|}
-\hline
-\rowcolor{blue!10} \textbf{Component} & \textbf{IaaS} & \textbf{PaaS} & \textbf{SaaS} \\
-\hline
-Applications & You & You & \cellcolor{blue!15}Provider \\
-\hline
-Data & You & You & You \\
-\hline
-Runtime / Middleware & You & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
-\hline
-Operating System & You & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
-\hline
-Virtualization & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
-\hline
-Hardware & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
-\hline
-\end{tabular}
+\includegraphics[width=0.85\textwidth]{img/iaas-paas-saas-caas-flowchart.png}
 \end{center}
-
-- IaaS $\rightarrow$ SaaS: **less control, less responsibility**
-- Major providers (AWS, Azure, GCP) offer all three models
 
 ## Discussion: Cloud Fundamentals
 
 \begin{center}
-\Large\textit{A university wants to offer a web-based tool\\for students to submit assignments.\\Should they choose IaaS, PaaS, or SaaS? Why?}
+\Large\textit{A university wants to offer a web-based tool\\for students to submit assignments.\\Should they choose IaaS, PaaS, CaaS, or SaaS? Why?}
 \end{center}
 
 \vfill
@@ -344,9 +336,7 @@ Hints: team size, upfront cost, time to market, scaling needs, control over infr
 
 Key: under the hood, cloud providers use **overlay networks** (covered in Block 5) to isolate tenants at scale.
 
-\vfill
-\footnotesize
-Source: AWS, "Amazon VPC User Guide"; Azure, "Virtual Network Documentation"; GCP, "VPC Documentation."
+<!-- nota: el virtual network usa overlays VXLAN por debajo — se cubrirán en Block 5 -->
 
 ## Virtual Network Architecture
 
@@ -700,7 +690,7 @@ Hints: load balancer for the frontend, reverse proxy for routing, VPN for office
 
 1. Virtualization is the **technology**; cloud is the **business model**
 2. Five NIST characteristics define true cloud computing
-3. **IaaS / PaaS / SaaS** differ in who manages what
+3. **IaaS / PaaS / CaaS / SaaS** differ in who manages what
 4. Cloud and container **platforms** deliver these models at scale
 5. A **virtual network** is your isolated cloud network (CIDR, subnets, route tables)
 6. **Security groups** (instance) + **ACLs** (subnet) = defense in depth
