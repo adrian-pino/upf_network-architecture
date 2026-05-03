@@ -12,6 +12,7 @@
 - When introducing a technical concept, add a brief definition or analogy
 - Prioritize intuition over mathematical formality
 - Include real-world examples that connect with the student's experience
+- **Concept introduction style**: when a slide introduces a networking concept or service (e.g. load balancer, proxy, reverse proxy, VPN), open with 1-2 plain-language sentences explaining *what it is* and *why it exists*, before listing bullet points. Do not jump straight into features without context. Example: *"A reverse proxy sits in front of backend servers and mediates all inbound traffic. Clients never communicate directly with the backend."*
 
 ## Bullet point format
 - Aim for 5-7 bullets per slide (fewer on diagram-heavy slides; up to 8 if items are short)
