@@ -23,7 +23,7 @@ In this lab, we explore **containerization** using Docker -- one of the core tec
 
 In the theory sessions, we compared Virtual Machines (VMs) and containers: both provide isolation, but containers share the host operating system kernel and are significantly more lightweight, faster to start, and easier to distribute. This lab puts that theory into practice.
 
-We will use **Nginx** as our example application. Nginx is a widely-used open-source web server -- you have interacted with it every time you visited a website served from a Linux machine. It is a good choice for this lab: it requires no programming knowledge, its behaviour is easy to observe (it serves web pages and writes access logs), and it is ubiquitous in real deployments.
+We will use **Nginx** as our example application throughout this lab.
 
 **By the end of this lab, you will be able to:**
 
@@ -49,6 +49,8 @@ We will use **Nginx** as our example application. Nginx is a widely-used open-so
 ---
 
 \newpage
+
+**Before starting:** review the Docker intro slide deck shared in the course materials. It covers the key concepts (images, containers, layers, networks, volumes) that you will need throughout this lab.
 
 # Lab Work
 
@@ -119,7 +121,11 @@ docker images
 ```
 
 \begin{questionbox}
-\textbf{Q1:} What is the size of the Nginx image? What factors do you think influence the size of a Docker image? Is a larger image preferable or a smaller one? Justify your answer.
+\textbf{Q1:} What is Nginx? What is it used for in practice? Have you interacted with it before without knowing?
+\end{questionbox}
+
+\begin{questionbox}
+\textbf{Q2:} What is the size of the Nginx image? What factors do you think influence the size of a Docker image? Is a larger image preferable or a smaller one? Justify your answer.
 \end{questionbox}
 
 ## Step 4 -- Write a Dockerfile for a custom Nginx image
@@ -173,7 +179,7 @@ cat Dockerfile
 ```
 
 \begin{questionbox}
-\textbf{Q2:} What does each line of your Dockerfile do? If the build fails, describe what you found wrong and how you fixed it.
+\textbf{Q3:} What does each line of your Dockerfile do? If the build fails, describe what you found wrong and how you fixed it.
 \end{questionbox}
 
 ## Step 5 -- Build the image
@@ -203,7 +209,7 @@ docker images
 ```
 
 \begin{questionbox}
-\textbf{Q3:} You now see both \texttt{nginx} (the official image from step 3) and \texttt{my-nginx} (your custom image). Why is \texttt{my-nginx} not significantly larger, even though you added a file to it? What are Docker image layers?
+\textbf{Q4:} You now see both \texttt{nginx} (the official image from step 3) and \texttt{my-nginx} (your custom image). Why is \texttt{my-nginx} not significantly larger, even though you added a file to it? What are Docker image layers?
 \end{questionbox}
 
 ## Step 6 -- Create a dedicated network
@@ -220,11 +226,11 @@ docker network inspect none
 ```
 
 \begin{questionbox}
-\textbf{Q4--Q6:}
+\textbf{Q5--Q7:}
 \begin{itemize}
-  \item[Q4.] What is the purpose of each of the three default networks (\texttt{bridge}, \texttt{host}, \texttt{none})?
-  \item[Q5.] When you run a container without specifying \texttt{--net}, which network does Docker use by default?
-  \item[Q6.] What limitation does the default \texttt{bridge} network have compared to a user-defined network?
+  \item[Q5.] What is the purpose of each of the three default networks (\texttt{bridge}, \texttt{host}, \texttt{none})?
+  \item[Q6.] When you run a container without specifying \texttt{--net}, which network does Docker use by default?
+  \item[Q7.] What limitation does the default \texttt{bridge} network have compared to a user-defined network?
 \end{itemize}
 \end{questionbox}
 
@@ -300,11 +306,11 @@ curl http://localhost:8080
 ```
 
 \begin{questionbox}
-\textbf{Q7:} Both commands reach the same container. Explain why. What role does the \texttt{--publish 8080:80} flag play?
+\textbf{Q8:} Both commands reach the same container. Explain why. What role does the \texttt{--publish 8080:80} flag play?
 \end{questionbox}
 
 \begin{questionbox}
-\textbf{Q8:} Draw a simple diagram showing the relationship between your laptop, the VM, and the Docker container. Show how a request from your laptop reaches the Nginx process inside the container. Include the relevant port numbers.
+\textbf{Q9:} Draw a simple diagram showing the relationship between your laptop, the VM, and the Docker container. Show how a request from your laptop reaches the Nginx process inside the container. Include the relevant port numbers.
 \end{questionbox}
 
 Now enter the container and inspect its network configuration from the inside:
@@ -327,11 +333,11 @@ exit
 Then run `ip a` again on the host.
 
 \begin{questionbox}
-\textbf{Q9--Q11:}
+\textbf{Q10--Q12:}
 \begin{itemize}
-  \item[Q9.] What do the flags \texttt{-i} and \texttt{-t} mean in \texttt{docker exec -it}?
-  \item[Q10.] Why is the network interface output different inside the container compared to the host?
-  \item[Q11.] Can the host and the container be considered separate network entities? Justify your answer.
+  \item[Q10.] What do the flags \texttt{-i} and \texttt{-t} mean in \texttt{docker exec -it}?
+  \item[Q11.] Why is the network interface output different inside the container compared to the host?
+  \item[Q12.] Can the host and the container be considered separate network entities? Justify your answer.
 \end{itemize}
 \end{questionbox}
 
@@ -348,7 +354,7 @@ docker exec webserver ls
 ```
 
 \begin{questionbox}
-\textbf{Q12:} You created a directory inside the running container. What do you think happens to that directory when the container is stopped and a new one is started from the same image? Why?
+\textbf{Q13:} You created a directory inside the running container. What do you think happens to that directory when the container is stopped and a new one is started from the same image? Why?
 \end{questionbox}
 
 ## Step 10 -- Fetch and follow container logs
@@ -371,7 +377,7 @@ curl http://localhost:8080
 ```
 
 \begin{questionbox}
-\textbf{Q13:} Add a screenshot of the live log output. What information does each log line contain?
+\textbf{Q14:} Add a screenshot of the live log output. What information does each log line contain?
 \end{questionbox}
 
 ## Step 11 -- Log persistence problem
@@ -408,7 +414,7 @@ docker logs webserver
 ```
 
 \begin{questionbox}
-\textbf{Q14:} What happened to the logs from the previous container? Is this a problem in a real-world scenario? Describe a concrete case where losing logs would have serious consequences.
+\textbf{Q15:} What happened to the logs from the previous container? Is this a problem in a real-world scenario? Describe a concrete case where losing logs would have serious consequences.
 \end{questionbox}
 
 ## Step 12 -- Persist logs with a volume mount
@@ -452,11 +458,11 @@ cat /tmp/nginx-logs/access.log
 ```
 
 \begin{questionbox}
-\textbf{Q15--Q17:}
+\textbf{Q16--Q18:}
 \begin{itemize}
-  \item[Q15.] What does \texttt{access.log} contain?
-  \item[Q16.] Stop the container and start it again. Are the previous log entries still there? Why?
-  \item[Q17.] What problem does the volume mount solve? What would happen without it?
+  \item[Q16.] What does \texttt{access.log} contain?
+  \item[Q17.] Stop the container and start it again. Are the previous log entries still there? Why?
+  \item[Q18.] What problem does the volume mount solve? What would happen without it?
 \end{itemize}
 \end{questionbox}
 
@@ -488,12 +494,12 @@ docker exec webserver curl http://webserver2:80
 ```
 
 \begin{questionbox}
-\textbf{Q18--Q21:}
+\textbf{Q19--Q22:}
 \begin{itemize}
-  \item[Q18.] Does communication by IP work? Why?
-  \item[Q19.] Does communication by container name work? Why? Would this work on the default \texttt{bridge} network?
-  \item[Q20.] Stop \texttt{webserver2}. What happens when you try to reach it from \texttt{webserver}?
-  \item[Q21.] In a production environment, what mechanism would you use to avoid hardcoding container IPs?
+  \item[Q19.] Does communication by IP work? Why?
+  \item[Q20.] Does communication by container name work? Why? Would this work on the default \texttt{bridge} network?
+  \item[Q21.] Stop \texttt{webserver2}. What happens when you try to reach it from \texttt{webserver}?
+  \item[Q22.] In a production environment, what mechanism would you use to avoid hardcoding container IPs?
 \end{itemize}
 \end{questionbox}
 
@@ -535,7 +541,7 @@ curl http://localhost:8081
 ```
 
 \begin{questionbox}
-\textbf{Q22:} You changed the content served by \texttt{webserver2} without rebuilding the image. What does this tell you about the relationship between images and containers? What is the conceptual difference between a Docker \textit{image} and a Docker \textit{container}?
+\textbf{Q23:} You changed the content served by \texttt{webserver2} without rebuilding the image. What does this tell you about the relationship between images and containers? What is the conceptual difference between a Docker \textit{image} and a Docker \textit{container}?
 \end{questionbox}
 
 ## Step 15 -- Publish your image to Docker Hub
@@ -571,7 +577,7 @@ docker push <your-username>/my-nginx:latest
 Verify the image is visible at `https://hub.docker.com/repositories/<your-username>`. Add a screenshot to your report.
 
 \begin{questionbox}
-\textbf{Q23:} The image is public by default, meaning anyone can download and run it. What are the security implications of this? In what cases would you use a private registry instead?
+\textbf{Q24:} The image is public by default, meaning anyone can download and run it. What are the security implications of this? In what cases would you use a private registry instead?
 \end{questionbox}
 
 ## Step 16 -- Multi-container application with Docker Compose
@@ -620,16 +626,16 @@ docker compose ps
 ```
 
 \begin{questionbox}
-\textbf{Q24--Q26:}
+\textbf{Q25--Q27:}
 \begin{itemize}
-  \item[Q24.] Can \texttt{web} reach \texttt{web2} by service name (e.g. \texttt{docker exec ... curl http://web2})? Why?
-  \item[Q25.] Run \texttt{docker compose down}. What happens to the containers, the network, and the volume mount?
-  \item[Q26.] What is the main advantage of \texttt{docker-compose.yml} compared to running individual \texttt{docker run} commands?
+  \item[Q25.] Can \texttt{web} reach \texttt{web2} by service name (e.g. \texttt{docker exec ... curl http://web2})? Why?
+  \item[Q26.] Run \texttt{docker compose down}. What happens to the containers, the network, and the volume mount?
+  \item[Q27.] What is the main advantage of \texttt{docker-compose.yml} compared to running individual \texttt{docker run} commands?
 \end{itemize}
 \end{questionbox}
 
 \begin{questionbox}
-\textbf{Q27 (Optional):} So far we have used \texttt{curl} to test the web server. SSH supports port forwarding, which allows you to tunnel a port from the VM to your laptop so you can open the page in your own browser. Research how to do this and try it. What command did you use? Add a screenshot of the page open in your browser. What is the conceptual similarity between SSH port forwarding and Docker's \texttt{--publish} flag?
+\textbf{Q28 (Optional):} So far we have used \texttt{curl} to test the web server. SSH supports port forwarding, which allows you to tunnel a port from the VM to your laptop so you can open the page in your own browser. Research how to do this and try it. What command did you use? Add a screenshot of the page open in your browser. What is the conceptual similarity between SSH port forwarding and Docker's \texttt{--publish} flag?
 \end{questionbox}
 
 ## Step 17 (Optional) -- Clean up
