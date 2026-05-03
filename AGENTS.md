@@ -120,6 +120,7 @@
 ## Self-maintenance rule
 - **After every session that modifies slides or project structure**, review this file (AGENTS.md) and evaluate whether any section needs updating: new acronyms, new conventions learned, corrected rules, or structural changes. Apply updates immediately rather than deferring them.
 - **After modifying the content of any presentation**, check whether the corresponding `table-of-contents_sessionN.md` file needs updating. Each block directory contains one toc file per session (e.g., `table-of-contents_session1.md`, `table-of-contents_session2.md`). These files are not used for compilation but serve as a structural reference.
+- **Before compiling any presentation**, review the "Key Takeaways" slide and verify it accurately reflects the current content of the presentation. Update it if needed before compiling.
 
 ## Defined acronyms (centralised registry)
 

@@ -735,7 +735,7 @@ Hints: think about the number of users, availability requirements, and what happ
 4. Cloud and container **platforms** deliver these models at scale
 5. A **virtual network** is your isolated cloud network (CIDR, subnets, route tables)
 6. **Security groups** (instance) + **ACLs** (subnet) = defense in depth
-7. **Load balancers**, **reverse/forward proxies**, and **VPNs** are essential cloud network services
+7. **Load balancers**, **proxies**, **reverse proxies**, and **VPNs** are essential cloud network services
 
 ## References
 
