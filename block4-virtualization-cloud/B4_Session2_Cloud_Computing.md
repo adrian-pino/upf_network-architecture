@@ -618,6 +618,9 @@ These services run as **managed offerings**: no servers to install or maintain.
 \vfill
 \footnotesize Note: Proxy, Reverse Proxy, and VPN will be covered in depth in Block 6. Here we introduce them briefly.
 
+\vspace{0.1cm}
+\footnotesize \textbf{Private cloud:} these services are \textbf{not} provided automatically; you must deploy and manage them yourself (e.g. HAProxy for load balancing, OpenVPN for VPN).
+
 ## Load Balancer
 
 - Distributes incoming traffic across **multiple instances** (VMs or containers)
