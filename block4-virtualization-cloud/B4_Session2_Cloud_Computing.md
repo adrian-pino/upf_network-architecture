@@ -555,8 +555,7 @@ Hints: think about public vs private subnets, security groups, and NAT gateways.
 
 ## Cloud Network Services -- Overview
 
-Beyond virtual networks and security controls, public cloud providers offer managed network services that simplify common infrastructure tasks.
-
+Beyond virtual networks and security controls, public cloud providers offer managed network services that simplify common infrastructure tasks, such as:
 \vspace{0.3cm}
 
 - **Load Balancer (LB)**
@@ -624,15 +623,15 @@ Without a proxy, every instance in your network reaches the Internet directly: n
 \end{center}
 
 - **Access control**: block certain websites or domains
+  - Security: block known malicious domains
+  - Company policy: restrict access to non-work-related content
 - **Caching**: store frequently accessed content, reduce bandwidth
 - **Logging**: monitor what employees or VMs access
 - Examples: Squid, corporate firewalls with proxy mode
 
 ## Reverse Proxy
 
-Without a reverse proxy, clients connect directly to your backend servers: exposing their addresses and requiring each to handle TLS. A reverse proxy sits in front of servers and mediates all inbound traffic.
-
-- Clients never communicate directly with the backend
+A reverse proxy sits in front of backend servers and mediates all inbound traffic. Clients never communicate directly with the backend.
 
 \begin{center}
 \begin{tikzpicture}[
@@ -650,10 +649,8 @@ Without a reverse proxy, clients connect directly to your backend servers: expos
 \end{tikzpicture}
 \end{center}
 
-- **TLS termination**: handles HTTPS encryption, backends receive plain HTTP
-- **URL routing**: `/api/*` $\rightarrow$ API server, `/*` $\rightarrow$ web app
-- **Caching**: stores responses to reduce backend load
-- Examples: NGINX, HAProxy, AWS CloudFront, Azure Front Door
+\vfill
+\footnotesize Will be covered in depth in Block 6.
 
 ## Reverse Proxy vs Proxy
 
@@ -687,6 +684,32 @@ Think of it this way:
 - A **VPN (Virtual Private Network)** creates a **secure, encrypted tunnel** over the public Internet
 - Connects remote networks or users as if they were on the same private network
 
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, minimum width=1.8cm, minimum height=0.8cm, font=\scriptsize, align=center},
+    >=Stealth
+]
+% User
+\node[box, fill=green!15] (user) at (0,0) {User /\\Office};
+
+% Internet cloud
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2cm, minimum height=1.2cm, font=\scriptsize] (inet) at (5,0) {Internet};
+
+% Cloud VPN endpoint
+\node[box, fill=blue!15] (vpn) at (10,0) {Cloud\\Network};
+
+% Encrypted tunnel
+\draw[<->, thick, blue, double] (user) -- node[above, font=\tiny, text=blue] {Encrypted VPN tunnel} (inet);
+\draw[<->, thick, blue, double] (inet) -- (vpn);
+
+% Eavesdropper blocked
+\node[box, fill=red!10] (evil) at (5,-2.2) {Attacker};
+\draw[thick, red] (5,-0.8) -- (5,-1.6);
+\node[font=\Large, text=red] at (5,-1.2) {\texttimes};
+
+\end{tikzpicture}
+\end{center}
+
 \vfill
 
 <!-- nota: VPNs will be covered in depth in Block 6 -->
@@ -714,28 +737,17 @@ Hints: think about the number of users, availability requirements, and what happ
 6. **Security groups** (instance) + **ACLs** (subnet) = defense in depth
 7. **Load balancers**, **reverse/forward proxies**, and **VPNs** are essential cloud network services
 
-## Discussion
-
-\begin{center}
-\Large\textit{You are designing a cloud network for a company\\with public web servers and private databases.\\Which components would you use and why?}
-\end{center}
-
-\vfill
-
-Think about: public vs private subnets, security groups, NAT gateways, load balancers, VPN.
-
 ## References
 
 \footnotesize
 
 1. NIST SP 800-145, Mell & Grance, "The NIST Definition of Cloud Computing," 2011.
-2. NIST SP 800-144, "Guidelines on Security and Privacy in Public Cloud Computing," 2011.
-3. AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
-4. Microsoft Azure, "Azure Virtual Network Documentation," docs.microsoft.com.
-5. Google Cloud, "VPC Documentation," cloud.google.com/vpc/docs.
-6. CSA, "Security Guidance for Critical Areas of Focus in Cloud Computing v5," 2022.
-7. Erl, Puttini & Mahmood, \textit{Cloud Computing: Concepts, Technology \& Architecture}, Prentice Hall, 2013.
-8. Kurose & Ross, \textit{Computer Networking: A Top-Down Approach}, 8th ed., Pearson, 2021.
-9. AWS, "Elastic Load Balancing Documentation," docs.aws.amazon.com.
-10. NGINX, Inc., "What Is a Reverse Proxy?," nginx.com/resources.
-11. AWS, "AWS VPN Documentation," docs.aws.amazon.com.
+2. AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
+3. Microsoft Azure, "Azure Virtual Network Documentation," docs.microsoft.com.
+4. Google Cloud, "VPC Documentation," cloud.google.com/vpc/docs.
+5. CSA, "Security Guidance for Critical Areas of Focus in Cloud Computing v5," 2022.
+6. Erl, Puttini & Mahmood, \textit{Cloud Computing: Concepts, Technology \& Architecture}, Prentice Hall, 2013.
+7. Kurose & Ross, \textit{Computer Networking: A Top-Down Approach}, 8th ed., Pearson, 2021.
+8. AWS, "Elastic Load Balancing Documentation," docs.aws.amazon.com.
+9. NGINX, Inc., "What Is a Reverse Proxy?," nginx.com/resources.
+10. AWS, "AWS VPN Documentation," docs.aws.amazon.com.
