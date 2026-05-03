@@ -38,7 +38,7 @@ We will use **Nginx** as our example application. Nginx is a widely-used open-so
 - Include the names and NIAs of all group members on the cover page.
 - Name the file: `AX_lab3_NIA1_NIA2_NIA3.pdf`
 - Deadline: before the next lab session starts.
-- **Academic integrity:** write your answers in your own words. We use AI tools ourselves and spot AI-generated text immediately. If we detect it, the grade is 0 -- no exceptions.
+- **Academic integrity:** write your answers in your own words. AI-generated text is easy to spot. If we detect it, the grade is 0.
 
 ---
 
