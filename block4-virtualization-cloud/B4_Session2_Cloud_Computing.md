@@ -416,6 +416,9 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 ## Route Tables
 
 - Each subnet is associated with a **route table**
+
+\vspace{0.2cm}
+
 - Route table = set of rules determining where traffic goes
 
 \begin{center}
@@ -435,7 +438,13 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 \end{center}
 
 - **Local route**: traffic within the virtual network stays inside (always present)
+
+\vspace{0.2cm}
+
 - **Default route** (`0.0.0.0/0`): where to send everything else
+
+\vspace{0.2cm}
+
 - Public subnets $\rightarrow$ IGW; Private subnets $\rightarrow$ NAT GW
 
 ## Internet Gateway vs NAT Gateway
