@@ -32,9 +32,11 @@ header-includes:
 
 **Learning objectives:**
 
+:::incremental
 1. Explain SDN architecture and why it matters
 2. Understand NFV and how it replaces hardware appliances
 3. Describe container networking and microservices communication
+:::
 
 ## Traditional Network Management
 

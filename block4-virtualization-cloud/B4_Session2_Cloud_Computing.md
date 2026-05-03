@@ -3,11 +3,9 @@ title: "Block 4 -- Cloud Computing"
 subtitle: "S2: Cloud Computing \\& Cloud Architectures"
 author: "Arquitectura de Xarxes"
 institute: "Universitat Pompeu Fabra"
-theme: "Madrid"
-colortheme: "dolphin"
-fonttheme: "structurebold"
+date: "2025-2026"
+theme: "upf"
 aspectratio: 169
-navigation: horizontal
 toc: true
 header-includes:
   - \usepackage{booktabs}
@@ -15,9 +13,7 @@ header-includes:
   - \usepackage{tikz}
   - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit, decorations.pathreplacing}
   - \setbeamerfont{footnote}{size=\tiny}
-  - \logo{\includegraphics[height=0.6cm]{img/upf-logo.png}}
-  - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}\\[0.3cm]\scriptsize Adrián Pino \texttt{<adrian.pino@upf.edu>}}
-  - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
+  - \titlegraphic{Adrián Pino \texttt{<adrian.pino@upf.edu>}}
 ---
 
 # From Virtualization to Cloud
@@ -36,7 +32,24 @@ header-includes:
 2. Distinguish IaaS (Infrastructure as a Service), PaaS (Platform as a Service), and SaaS (Software as a Service)
 3. Design a cloud virtual network with subnets, security controls, and network services
 
-## Recap -- What We Virtualized (Session 1)
+## Meet the Scenario: A Startup from Zero
+
+\begin{block}{Running example for this session}
+\textbf{CloudBite} is a 3-person startup that just received seed funding. They need to deploy a food-delivery web app for thousands of users \textbf{by next month}. They have laptops, code, and zero infrastructure.
+\end{block}
+
+\vspace{0.3cm}
+
+Every section answers the next question CloudBite faces:
+
+1. "We know about VMs. Why not just buy servers?" $\rightarrow$ \textbf{From Virtualization to Cloud}
+2. "What exactly is cloud computing?" $\rightarrow$ \textbf{Fundamentals}
+3. "Which platform do we use?" $\rightarrow$ \textbf{Platforms}
+4. "We picked AWS. Now we need a network." $\rightarrow$ \textbf{Cloud Network Architecture}
+5. "We need HTTPS, traffic distribution, and office access." $\rightarrow$ \textbf{Network Services}
+6. "Is the cloud always the right choice?" $\rightarrow$ \textbf{The Cloud Trade-Off}
+
+## Recap: What We Virtualized (Session 1)
 
 \begin{center}
 \begin{tikzpicture}[
@@ -93,44 +106,76 @@ Key difference: **automation and self-service** (no phone calls, no tickets, no 
 
 ## Discussion: From Virtualization to Cloud
 
-\begin{center}
-\Large\textit{Your company already runs VMs on its own servers.\\Why would you move to the cloud instead of\\keeping everything in-house?}
-\end{center}
+:::::::::::::: {.columns}
+::: {.column width="55%"}
 
-\vfill
+\vspace{0.8cm}
+\Large\textit{Your company already runs VMs on its own servers. Why would you move to the cloud instead of keeping everything in-house?}
 
-Hints: think about CapEx vs OpEx, scaling speed, and who manages what.
+:::
+::: {.column width="40%"}
+
+\textbf{Think about:}
+
+\small
+- Capital expenditure vs operational expenditure
+- How fast can you scale today?
+- Who patches the hardware at 3 am?
+- What happens when a disk fails?
+
+:::
+::::::::::::::
 
 # Fundamentals of Cloud Computing
 
-## Cloud Computing -- Definition (NIST)
+## CloudBite Asks: "What Exactly Is Cloud Computing?"
 
-\begin{quote}
-\textit{A model for enabling ubiquitous, convenient, \textbf{on-demand network access} to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort.}
-\end{quote}
+<!-- nota: transition slide — connects scenario to section content -->
+
+- The founders are convinced: buying servers is not an option
+- But "the cloud" is a vague term; every vendor defines it differently
+- Before choosing a provider, CloudBite needs to understand **what cloud computing actually means** and **what service model fits their needs**
 
 \vfill
-\footnotesize
-Source: NIST SP 800-145 (2011). Still the standard definition used industry-wide.
+
+\begin{center}
+\textit{Let us start with the industry-standard definition.}
+\end{center}
+
+## Cloud Computing: Definition (NIST)
+
+\begin{block}{NIST SP 800-145 (2011)}
+\textit{"A model for enabling ubiquitous, convenient, \textbf{on-demand network access} to a \textbf{shared pool} of configurable computing resources that can be rapidly provisioned and released with \textbf{minimal management effort}."}
+\end{block}
+
+\vspace{0.3cm}
+
+Three phrases to remember:
+
+- **On-demand**: you get resources immediately, no human approval needed
+- **Shared pool**: underlying hardware is shared across many customers (multi-tenancy)
+- **Minimal effort**: you click a button (or call an API); the provider handles the rest
+
+\footnote{NIST SP 800-145, Mell \& Grance, 2011. Still the standard definition used industry-wide.}
 
 ## Five Essential Characteristics
 
 \begin{center}
 \small
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{|l|l|}
+\begin{tabular}{|l|l|l|}
 \hline
-\rowcolor{blue!10} \textbf{Characteristic} & \textbf{What it means} \\
+\rowcolor{blue!10} \textbf{Characteristic} & \textbf{What it means} & \textbf{Real-world example} \\
 \hline
-On-demand self-service & Provision resources via portal/API, no human interaction \\
+On-demand self-service & Provision via portal or Application Programming Interface (API), no human & AWS console: launch VM in 30 s \\
 \hline
-Broad network access & Available from any device over the network \\
+Broad network access & Available from any device over the network & Access S3 from laptop, phone, VM \\
 \hline
-Resource pooling & Shared infrastructure, multi-tenant \\
+Resource pooling & Shared infrastructure, multi-tenant & Same physical server, different tenants \\
 \hline
-Rapid elasticity & Scale up/down automatically (e.g. Black Friday $\rightarrow$ 10$\times$) \\
+Rapid elasticity & Scale up/down automatically & Black Friday: $10\times$ more instances \\
 \hline
-Measured service & Pay only for what you use (CPU-hours, GB stored) \\
+Measured service & Pay only for what you use & Billed per CPU-hour, GB stored \\
 \hline
 \end{tabular}
 \end{center}
@@ -139,12 +184,9 @@ Measured service & Pay only for what you use (CPU-hours, GB stored) \\
 
 - **All five** must be present to qualify as "cloud computing"
 
+\footnote{NIST SP 800-145, Mell \& Grance, 2011.}
 
-\vfill
-\footnotesize
-Source: NIST SP 800-145, Mell & Grance, 2011.
-
-## Cloud Service Models -- The Stack
+## Cloud Service Models: The Stack
 
 \begin{center}
 \begin{tikzpicture}[
@@ -166,9 +208,11 @@ Source: NIST SP 800-145, Mell & Grance, 2011.
 
 <!-- nota: ir de abajo a arriba, explicando qué gestiona el proveedor vs el cliente en cada modelo -->
 
-## IaaS, PaaS, SaaS -- In Practice
+## IaaS, PaaS, SaaS: In Practice
 
 \small
+
+. . .
 
 **IaaS** (e.g. AWS EC2, Azure VMs, Google Compute Engine):
 
@@ -177,6 +221,8 @@ Source: NIST SP 800-145, Mell & Grance, 2011.
 
 \vspace{0.2cm}
 
+. . .
+
 **PaaS** (e.g. Google App Engine, AWS Elastic Beanstalk, Heroku):
 
 - Provider gives you runtime + tools. You only manage your code and data
@@ -184,12 +230,14 @@ Source: NIST SP 800-145, Mell & Grance, 2011.
 
 \vspace{0.2cm}
 
+. . .
+
 **SaaS** (e.g. Google Workspace, Microsoft 365, Slack, Zoom):
 
 - Provider gives you a complete application. You manage your data only
 - "I need email for 500 employees. I do not want to run a mail server"
 
-## Service Models -- Who Manages What?
+## Service Models: Who Manages What?
 
 \begin{center}
 \footnotesize
@@ -218,40 +266,91 @@ Hardware & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolo
 
 ## Discussion: Cloud Fundamentals
 
-\begin{center}
-\Large\textit{A university wants to offer a web-based tool\\for students to submit assignments.\\Should they choose IaaS, PaaS, or SaaS? Why?}
-\end{center}
+:::::::::::::: {.columns}
+::: {.column width="48%"}
 
-\vfill
+\begin{block}{Case A: University}
+\small A large university wants a web tool for students to submit assignments. The IT department has 10 staff. Student data must stay within EU jurisdiction. Budget is fixed yearly.
+\end{block}
 
-Hints: consider the IT team size, maintenance burden, and how much control they need.
+\small
+\textbf{Which model? Why?}
+- Control over data location needed
+- Existing IT team can manage servers
+- Ready-made products exist (Canvas, Moodle)
+- No need to scale suddenly
+
+:::
+::: {.column width="48%"}
+
+\begin{block}{Case B: CloudBite}
+\small CloudBite (3 engineers) needs to run a web app, store orders, and send email notifications. They must ship in 4 weeks and cannot afford to manage servers.
+\end{block}
+
+\small
+\textbf{Which model? Why?}
+- No ops bandwidth: avoid IaaS if possible
+- Web app: PaaS (just deploy the code)
+- Email: SaaS (Mailchimp, SendGrid)
+- Database: PaaS managed DB, or IaaS if they need fine-grained control
+
+:::
+::::::::::::::
 
 # Cloud & Container Platforms
 
+## CloudBite Asks: "Which Platform Do We Use?"
+
+<!-- nota: transition slide — connects scenario to section content -->
+
+- CloudBite decided on **IaaS**: they want full control over the stack (they are engineers, after all)
+- Now they must choose: run their own infrastructure (private cloud) or rent from a provider (public cloud)?
+- They also hear about **Kubernetes** everywhere; should they use containers?
+
+\vfill
+
+\begin{center}
+\textit{Let us look at the platforms available.}
+\end{center}
+
 ## Putting It All Together
 
-- In Session 1 we saw the **building blocks**: Virtual Switches, Virtual Routers, Virtual NICs, VLANs
-- These components do not run in isolation; they are managed by **platforms**
-- Platforms orchestrate **VMs** or **containers** and configure virtual networking under the hood
+:::::::::::::: {.columns}
+::: {.column width="48%"}
 
-\vspace{0.3cm}
+**Building blocks (Session 1)**
 
-Two categories:
+- Virtual NIC
+- Virtual Switch (bridge)
+- Virtual Router
+- VLAN / overlay (VXLAN)
+- Hypervisor / container runtime
 
-- **Cloud platforms**: manage infrastructure at scale
-  - Compute, storage, networking, and **VMs**
-- **Container orchestration platforms**: deploy and scale **containerized** applications
+These components are configured and wired together by platforms.
 
-## Cloud Platforms
+:::
+::: {.column width="48%"}
 
-\scriptsize
+**Platforms that manage them**
 
-- **Self-managed / Private Cloud**: you own or rent the servers, install and manage the virtualization software yourself. Full control, but requires dedicated staff and expertise.
+- **Cloud platforms**: orchestrate VMs, storage, networking at scale (IaaS)
+  - OpenStack, VMware vSphere, AWS, Azure, GCP
+- **Container orchestration**: deploy and scale containerized apps
+  - Docker, Kubernetes (K8s), OpenShift
 
-\vspace{0.1cm}
+:::
+::::::::::::::
+
+## Private Cloud Platforms
+
+- **Self-managed**: you own or rent the servers, install and manage the virtualization software yourself
+- Full control over hardware and data; requires dedicated staff and expertise
+- Typical use: regulated industries (banking, healthcare), large enterprises with existing data centers
+
+\vspace{0.2cm}
 
 \renewcommand{\arraystretch}{1.2}
-\scriptsize
+\small
 \begin{tabular}{|l|l|c|}
 \hline
 \rowcolor{blue!10} \textbf{Platform} & \textbf{Description} & \textbf{Logo} \\
@@ -260,33 +359,31 @@ OpenStack & Open-source, widely used in private clouds & \includegraphics[height
 \hline
 VMware vSphere & Enterprise leader, proprietary & \includegraphics[height=0.32cm]{img/vmware-logo.png} \\
 \hline
-Proxmox VE & Open-source, lightweight alternative & \includegraphics[height=0.32cm]{img/proxmox-logo.png} \\
+Proxmox VE & Open-source, gaining traction since recent VMware price rises & \includegraphics[height=0.32cm]{img/proxmox-logo.png} \\
 \hline
 \end{tabular}
 
+## Public Cloud Platforms
+
+- **Managed / Public**: rent capacity on demand, pay-as-you-go
+- Provider handles hardware, networking, cooling, security, and updates
+- Maps directly to the IaaS model: provider manages compute, storage, and networking
+
 \vspace{0.2cm}
 
-\scriptsize
-
-- **Managed / Public Cloud**: rent capacity on demand, pay-as-you-go. Provider handles hardware, networking, cooling, security, and updates.
-
-\vspace{0.1cm}
-
+\renewcommand{\arraystretch}{1.2}
+\small
 \begin{tabular}{|l|l|c|}
 \hline
 \rowcolor{blue!10} \textbf{Provider} & \textbf{Description} & \textbf{Logo} \\
 \hline
-Amazon Web Services & Market leader since 2006 & \includegraphics[height=0.3cm]{img/aws-logo.png} \\
+Amazon Web Services (AWS) & Market leader since 2006 & \includegraphics[height=0.3cm]{img/aws-logo.png} \\
 \hline
 Microsoft Azure & Strong enterprise integration & \includegraphics[height=0.32cm]{img/azure-logo.png} \\
 \hline
-Google Cloud Platform & Data and AI focus & \includegraphics[height=0.25cm]{img/gcp-logo.png} \\
+Google Cloud Platform (GCP) & Data and AI focus & \includegraphics[height=0.25cm]{img/gcp-logo.png} \\
 \hline
 \end{tabular}
-
-\vfill
-\footnotesize
-These map directly to the IaaS model we just covered: the provider (or you) manages compute, storage, and networking.
 
 ## Container Orchestration Platforms
 
@@ -305,7 +402,7 @@ These map directly to the IaaS model we just covered: the provider (or you) mana
 Docker & Container runtime; works well on a single host & \includegraphics[height=0.4cm]{img/docker-logo.png} \\
 & Managing hundreds of containers across hosts? Unmanageable & \\
 \hline
-Kubernetes (K8s) & Created to solve this: scheduling, scaling, networking, self-healing & \includegraphics[height=0.5cm]{img/kubernetes-logo.png} \\
+Kubernetes (K8s) & Created to solve containers running at scale : scheduling, scaling, networking, self-healing & \includegraphics[height=0.5cm]{img/kubernetes-logo.png} \\
 \hline
 OpenShift & Enterprise K8s by Red Hat; adds security, CI/CD, UI & \includegraphics[height=0.45cm]{img/openshift-logo.png} \\
 \hline
@@ -318,15 +415,42 @@ OpenShift & Enterprise K8s by Red Hat; adds security, CI/CD, UI & \includegraphi
 
 ## Discussion: Platforms
 
-\begin{center}
-\Large\textit{A startup with 5 engineers needs to deploy\\a web application that may go from 100 to 100,000 users.\\Would you build a private cloud or use a public one? Why?}
-\end{center}
+:::::::::::::: {.columns}
+::: {.column width="55%"}
+
+\vspace{0.8cm}
+\Large\textit{A startup with 5 engineers needs to deploy a web application that may go from 100 to 100,000 users. Would you build a private cloud or use a public one? Why?}
+
+:::
+::: {.column width="40%"}
+
+\textbf{Think about:}
+
+\small
+- Upfront cost and time to market
+- Who manages infrastructure at night?
+- Can 5 engineers run a data center?
+- What if traffic spikes overnight?
+
+:::
+::::::::::::::
+
+# Cloud Network Architecture
+
+## CloudBite Asks: "We Picked AWS. Now What?"
+
+<!-- nota: transition slide — connects scenario to section content -->
+
+- CloudBite chose **AWS** (public cloud, IaaS): no upfront cost, instant global reach
+- First task: create an **isolated network** for their application
+- They need a **public subnet** for the web frontend and a **private subnet** for the database
+- How do subnets, route tables, gateways, and firewalls work in the cloud?
 
 \vfill
 
-Hints: team size, upfront cost, time to market, scaling needs, control over infrastructure.
-
-# Cloud Network Architecture
+\begin{center}
+\textit{Time to build CloudBite's virtual network from scratch.}
+\end{center}
 
 ## Virtual Networks in the Cloud
 
@@ -344,9 +468,7 @@ Hints: team size, upfront cost, time to market, scaling needs, control over infr
 
 Key: under the hood, cloud providers use **overlay networks** (covered in Block 5) to isolate tenants at scale.
 
-\vfill
-\footnotesize
-Source: AWS, "Amazon VPC User Guide"; Azure, "Virtual Network Documentation"; GCP, "VPC Documentation."
+\footnote{AWS, "Amazon VPC User Guide"; Azure, "Virtual Network Documentation"; GCP, "VPC Documentation."}
 
 ## Virtual Network Architecture
 
@@ -386,7 +508,7 @@ Source: AWS, "Amazon VPC User Guide"; Azure, "Virtual Network Documentation"; GC
 \end{tikzpicture}
 \end{center}
 
-## Subnets -- Public vs Private
+## Subnets: Public vs Private
 
 **Public subnet:**
 
@@ -448,7 +570,7 @@ Source: AWS, "Amazon VPC User Guide"; Azure, "Virtual Network Documentation"; GC
 \footnotesize
 Same \textbf{NAT concept from Block 3}, now as a managed cloud service.
 
-## Security Groups -- Instance-Level Firewall
+## Security Groups: Instance-Level Firewall
 
 - **Security group** = virtual firewall attached to an instance
 - Rules specify allowed **inbound** and **outbound** traffic
@@ -474,11 +596,9 @@ Outbound & All & All & \texttt{0.0.0.0/0} \\
 
 <!-- nota: por defecto todo denegado inbound, todo permitido outbound -->
 
-\vfill
-\footnotesize
-Source: AWS, "Security Groups for Your VPC," docs.aws.amazon.com.
+\footnote{AWS, "Security Groups for Your VPC," docs.aws.amazon.com.}
 
-## Network ACLs (Access Control Lists) -- Subnet-Level Firewall
+## Network ACLs (Access Control Lists): Subnet-Level Firewall
 
 - **Network ACL** = firewall at the **subnet** level
 - Rules evaluated in **order** (numbered, first match wins)
@@ -500,9 +620,7 @@ Source: AWS, "Security Groups for Your VPC," docs.aws.amazon.com.
 \end{tabular}
 \end{center}
 
-\vfill
-\footnotesize
-Source: AWS, "Network ACLs," docs.aws.amazon.com.
+\footnote{AWS, "Network ACLs," docs.aws.amazon.com.}
 
 ## Security Groups vs Network ACLs
 
@@ -533,17 +651,48 @@ Default & Deny all inbound & Allow all \\
 - Security Groups $\rightarrow$ fine-grained per-instance control
 - Network ACLs $\rightarrow$ broad subnet-level guardrails
 
+\begin{alertblock}{Common mistake}
+ACLs are \textbf{stateless}: if you allow inbound TCP port 80, you must \emph{also} explicitly allow outbound ephemeral ports (1024--65535) for the response. Forgetting this blocks return traffic.
+\end{alertblock}
+
 ## Discussion: Cloud Networking
 
-\begin{center}
-\Large\textit{You deploy a web application in your cloud virtual network.\\The web server needs to be public, but the database\\must not be reachable from the Internet. How?}
-\end{center}
+:::::::::::::: {.columns}
+::: {.column width="55%"}
+
+\vspace{0.8cm}
+\Large\textit{You deploy a web application in your cloud virtual network. The web server needs to be public, but the database must not be reachable from the Internet. How?}
+
+:::
+::: {.column width="40%"}
+
+\textbf{Think about:}
+
+\small
+- Public subnet for web server (needs Internet Gateway)
+- Private subnet for database (no direct route out)
+- Security group on DB: allow only from web server
+- NAT Gateway if DB needs outbound access (e.g. patches)
+
+:::
+::::::::::::::
+
+# Cloud Network Services
+
+## CloudBite Asks: "We Need HTTPS, Scaling, and Office Access"
+
+<!-- nota: transition slide — connects scenario to section content -->
+
+- CloudBite's app is live, but traffic is growing fast
+- A single web server cannot handle the load; they need **traffic distribution**
+- The API must be reachable via HTTPS, but the backends should stay hidden
+- The CTO also wants to access the cloud network from the office without exposing it to the Internet
 
 \vfill
 
-Hints: think about public vs private subnets, security groups, and NAT gateways.
-
-# Cloud Network Services
+\begin{center}
+\textit{Three services solve these problems: load balancers, proxies, and VPNs.}
+\end{center}
 
 ## Load Balancer
 
@@ -573,7 +722,7 @@ Hints: think about public vs private subnets, security groups, and NAT gateways.
 - **L7 (Application Layer)** Load Balancer: routes based on HTTP headers, URL path, cookies (smarter)
 - Cloud examples: AWS ALB/NLB, Azure Load Balancer, GCP Cloud Load Balancing
 
-\footnotesize Source: AWS, "Elastic Load Balancing Documentation," docs.aws.amazon.com.
+\footnote{AWS, "Elastic Load Balancing Documentation," docs.aws.amazon.com.}
 
 ## Reverse Proxy
 
@@ -659,7 +808,7 @@ Think of it this way:
 - **Forward proxy**: "I control what my users can access outside"
 - **Reverse proxy**: "I control how outside users reach my servers"
 
-## VPN -- Virtual Private Network
+## VPN: Virtual Private Network
 
 - A **VPN (Virtual Private Network)** creates a **secure, encrypted tunnel** over the public Internet
 - Connects remote networks or users as if they were on the same private network
@@ -686,35 +835,190 @@ Two main types:
 
 ## Discussion: Cloud Network Services
 
+:::::::::::::: {.columns}
+::: {.column width="55%"}
+
+\vspace{0.5cm}
+\Large\textit{A company has a public frontend, a private API, and a database. Employees also need to access the cloud from the office. Which services would you use?}
+
+:::
+::: {.column width="40%"}
+
+\textbf{Think about:}
+
+\small
+- Load balancer in front of frontend (public)
+- Reverse proxy to route `/api/*` to API server
+- Database in private subnet, no public IP
+- Site-to-site VPN for office access
+- Security groups + ACLs at each tier
+
+:::
+::::::::::::::
+
+# The Cloud Trade-Off
+
+## CloudBite, Five Years Later
+
+<!-- nota: transition slide — closes the narrative arc -->
+
+- CloudBite grew to 2 million users. AWS bill: **\$40,000/month** and rising
+- Egress fees alone: \$5,000/month (data leaving AWS to users)
+- The team now has 30 engineers; they *could* run their own servers
+- The CTO asks: "Should we leave the cloud?"
+
+\vfill
+
 \begin{center}
-\Large\textit{A company has a web application with a public frontend,\\a private API, and a database. They also need employees\\to access the cloud from the office.\\Which services would you use and where?}
+\textit{The cloud is not always the cheapest option. Let us explore why.}
+\end{center}
+
+## Case Study: Basecamp Leaves the Cloud
+
+- **Basecamp / 37signals** (creators of Ruby on Rails) ran on AWS for 15 years
+- In 2023, they **moved everything to their own hardware**: no new staff needed
+- Result: **\$10 million saved over five years** (50\%+ cost reduction)
+
+\vspace{0.3cm}
+
+Why it worked for them:
+
+- **Stable, predictable workload**: no sudden traffic spikes
+- **Large, experienced ops team**: already managing servers regardless
+- **No need for global presence**: most users in the same region
+- They built **Kamal**, an open-source deployment tool, to replace Kubernetes
+
+\vfill
+
+\begin{alertblock}{Key insight}
+Basecamp's exit worked because their workload was \textbf{predictable}. For a startup with unpredictable traffic, the cloud's elasticity remains essential.
+\end{alertblock}
+
+\footnote{37signals, "We left the cloud," basecamp.com/cloud-exit, 2023.}
+
+## Vendor Lock-In: The Hidden Cost
+
+- Cloud providers design services that are **easy to adopt, hard to leave**
+- Proprietary services create **architectural dependencies**:
+  - AWS Lambda, DynamoDB, SQS $\rightarrow$ no direct equivalent on Azure or GCP
+  - Rewriting the application can cost more than years of cloud bills
+
+\vspace{0.3cm}
+
+- **Data egress fees** make leaving expensive:
+  - AWS charges \$0.09/GB for outbound traffic
+  - Moving 50 TB out of AWS $\approx$ \$4,500 in fees alone
+  - Egress fees increased 20\% in 2023; inter-Availability-Zone (AZ) fees doubled in 2025
+
+\vspace{0.3cm}
+
+- **68\% of enterprises** exceeded their cloud budget due to unexpected data transfer costs (Flexera, 2024)
+
+\footnote{Flexera, "State of the Cloud Report," 2024; AWS pricing documentation, 2025.}
+
+## The Pricing Ratchet
+
+- Cloud providers attract customers with **low initial pricing and free tiers**
+- Once adoption deepens, prices increase:
+  - AWS EC2 instance families: significant price rises in 2025
+  - Azure: 5\%+ on subscriptions, 10\% on Premium SSDs (2025)
+  - Google Workspace: 20\%--34\% increase (March 2025)
+
+\vspace{0.3cm}
+
+- This pattern appears across industries:
+  - **Video streaming**: low subscription prices to gain users, then steady increases once the audience is locked in
+  - **Cloud computing**: same dynamic, but switching costs are higher because your entire architecture depends on the provider
+
+\vfill
+
+\begin{block}{The pattern}
+Low prices $\rightarrow$ adoption $\rightarrow$ dependency $\rightarrow$ price increases $\rightarrow$ switching is too expensive.
+\end{block}
+
+\footnote{InfotechLead, "AWS, Azure, and Google Cloud adjust billing models in 2025," 2025.}
+
+## So... Cloud or Not?
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{blue!10} & \textbf{Cloud (public)} & \textbf{On-premises / private} \\
+\hline
+Best when & Unpredictable traffic, small team & Stable workload, large ops team \\
+\hline
+Cost model & OpEx (pay-as-you-go) & CapEx (buy hardware upfront) \\
+\hline
+Scaling & Instant, global & Weeks to months (buy + install) \\
+\hline
+Risk & Vendor lock-in, price hikes & Hardware failures, staffing \\
+\hline
+Control & Limited (provider's rules) & Full (your hardware, your rules) \\
+\hline
+\end{tabular}
 \end{center}
 
 \vfill
 
-Hints: load balancer for the frontend, reverse proxy for routing, VPN for office access, private subnet for the database.
+- **Most real-world deployments are hybrid**: critical/stable workloads on-premises, burst/variable workloads in the cloud
+- There is no universal answer; **every case is a trade-off**
+
+## Discussion: The Cloud Trade-Off
+
+:::::::::::::: {.columns}
+::: {.column width="55%"}
+
+\vspace{0.5cm}
+\Large\textit{CloudBite (now 30 engineers, 2M users, stable traffic) pays \$40K/month on AWS. Should they leave the cloud, go hybrid, or stay? Why?}
+
+:::
+::: {.column width="40%"}
+
+\textbf{Think about:}
+
+\small
+- Is the workload predictable or bursty?
+- Does the team have ops expertise?
+- How much vendor-specific code exists (Lambda, DynamoDB)?
+- What would migration cost in time and money?
+- Could a hybrid approach capture the best of both?
+
+:::
+::::::::::::::
 
 # Session Summary
 
-## Key Takeaways
+## Key Takeaways: CloudBite's Journey
 
-1. Virtualization is the **technology**; cloud is the **business model**
-2. Five NIST characteristics define true cloud computing
-3. **IaaS / PaaS / SaaS** differ in who manages what
-4. Cloud and container **platforms** deliver these models at scale
-5. A **virtual network** is your isolated cloud network (CIDR, subnets, route tables)
-6. **Security groups** (instance) + **ACLs** (subnet) = defense in depth
-7. **Load balancers**, **reverse/forward proxies**, and **VPNs** are essential cloud network services
+:::::::::::::: {.columns}
+::: {.column width="48%"}
 
-## Discussion
+**What we built:**
 
-\begin{center}
-\Large\textit{You are designing a cloud network for a company\\with public web servers and private databases.\\Which components would you use and why?}
-\end{center}
+1. Virtualization $\rightarrow$ cloud: technology vs **business model**
+2. Five NIST characteristics define true cloud
+3. **IaaS / PaaS / SaaS**: who manages what
+4. Chose a **platform** (AWS, public cloud)
+5. Created a **virtual network** with public and private subnets
+6. Secured it with **security groups** + **ACLs**
+7. Added **load balancer**, **reverse proxy**, **VPN**
 
-\vfill
+:::
+::: {.column width="48%"}
 
-Think about: public vs private subnets, security groups, NAT gateways, load balancers, VPN.
+**What we learned:**
+
+8. The cloud is **not free**: costs grow with scale
+9. **Vendor lock-in** makes leaving expensive
+10. Prices increase once you depend on the provider
+11. On-premises works for **stable, predictable** workloads
+12. **Hybrid** is often the pragmatic answer
+13. **Every case is a trade-off**; there is no universal solution
+
+:::
+::::::::::::::
 
 ## References
 
