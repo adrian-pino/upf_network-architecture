@@ -15,7 +15,18 @@ header-includes:
 
 In this lab, we explore **containerization** using Docker -- one of the core technologies behind modern cloud infrastructure, used by AWS, Microsoft Azure, Google Cloud, and most production environments today.
 
-Unlike virtual machines (VMs), containers share the host operating system kernel and are significantly more lightweight. We will use **Nginx** (a widely-used open-source web server) as our example application. Nginx is a good choice: it is simple to understand (it serves web pages), requires no prior programming knowledge, and is ubiquitous in real deployments.
+In the theory sessions, we compared Virtual Machines (VMs) and containers: both provide isolation, but containers share the host operating system kernel and are significantly more lightweight, faster to start, and easier to distribute. This lab puts that theory into practice.
+
+We will use **Nginx** as our example application. Nginx is a widely-used open-source web server -- you have interacted with it every time you visited a website served from a Linux machine. It is a good choice for this lab: it requires no programming knowledge, its behaviour is easy to observe (it serves web pages and writes access logs), and it is ubiquitous in real deployments.
+
+**By the end of this lab, you will be able to:**
+
+- Build a custom Docker image from a Dockerfile
+- Run and manage containers on a dedicated network
+- Understand how container networking and port mapping work
+- Persist data across container restarts using volume mounts
+- Run multiple containers that communicate with each other
+- Publish an image to a public registry (Docker Hub)
 
 **Note:** use the same VM from previous sessions (one dedicated VM was assigned per group). Docker is already installed. Feel free to use your own Linux environment if you prefer.
 
@@ -23,10 +34,11 @@ Unlike virtual machines (VMs), containers share the host operating system kernel
 
 ## Submission instructions
 
-- Deliver a **PDF report** containing each question (Q1--Q22) followed by your answer and any relevant screenshots.
+- Deliver a **PDF report** containing each question (Q1--Q22) followed by your answer and any relevant screenshots. Questions Q23--Q25 are optional.
 - Include the names and NIAs of all group members on the cover page.
 - Name the file: `AX_lab3_NIA1_NIA2_NIA3.pdf`
 - Deadline: before the next lab session starts.
+- **Academic integrity:** write your answers in your own words. We use AI tools ourselves and spot AI-generated text immediately. If we detect it, the grade is 0 -- no exceptions.
 
 ---
 
