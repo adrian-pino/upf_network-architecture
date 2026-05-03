@@ -171,26 +171,21 @@ Measured service & Pay only for what you use (CPU-hours, GB stored) \\
 
 ## IaaS, PaaS, SaaS -- In Practice
 
-\small
-
-**IaaS** (e.g. AWS EC2, Azure VMs, Google Compute Engine):
-
-- Provider gives you VMs, storage, networks. You manage everything else
-- "I want a Linux server in Frankfurt, 4 CPUs, 16 GB RAM, right now"
+- **IaaS** (AWS EC2, Azure Virtual Machines, Google Compute Engine):
+    - Provider gives you VMs, storage, and networks; you manage everything above
+    - "Give me a Linux server in Frankfurt, 4 CPUs, 16 GB RAM, right now"
 
 \vspace{0.2cm}
 
-**PaaS** (e.g. Google App Engine, AWS Elastic Beanstalk, Heroku):
-
-- Provider gives you runtime + tools. You only manage your code and data
-- "I wrote a Python web app. Just run it, I do not care about servers"
+- **PaaS** (Google App Engine, AWS Elastic Beanstalk, Azure App Service):
+    - Provider gives you the runtime and deployment pipeline; you push code and data
+    - "I wrote a Python web app; just run it, I do not care about servers"
 
 \vspace{0.2cm}
 
-**SaaS** (e.g. Google Workspace, Microsoft 365, Slack, Zoom):
-
-- Provider gives you a complete application. You manage your data only
-- "I need email for 500 employees. I do not want to run a mail server"
+- **SaaS** (Google Workspace, Microsoft 365, Salesforce, Zoom):
+    - Provider gives you a complete, ready-to-use application; you manage your data only
+    - "I need email for 500 employees; I do not want to run a mail server"
 
 ## Service Models -- Who Manages What?
 
