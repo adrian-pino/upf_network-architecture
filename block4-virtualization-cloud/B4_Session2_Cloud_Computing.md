@@ -1069,7 +1069,7 @@ ACLs are \textbf{stateless}: if you allow inbound TCP port 80, you must \emph{al
 ::: {.column width="55%"}
 
 \vspace{0.8cm}
-\Large\textit{You deploy a web application in your cloud virtual network. The web server needs to be public, but the database must not be reachable from the Internet. How?}
+\Large\textit{We just deployed CloudBite on AWS. Our web server must be reachable from users, but the database must not be exposed to the Internet. How do we set this up?}
 
 :::
 ::: {.column width="40%"}
@@ -1077,10 +1077,10 @@ ACLs are \textbf{stateless}: if you allow inbound TCP port 80, you must \emph{al
 \textbf{Think about:}
 
 \small
-- Public subnet for web server (needs Internet Gateway)
-- Private subnet for database (no direct route out)
-- Security group on DB: allow only from web server
-- NAT Gateway if DB needs outbound access (e.g. patches)
+- Our web server needs a public subnet with an Internet Gateway route
+- Our database goes in a private subnet: no direct route to the Internet
+- Security group on the DB: allow traffic only from our web server
+- NAT Gateway if the DB needs outbound access (e.g. pulling updates)
 
 :::
 ::::::::::::::
