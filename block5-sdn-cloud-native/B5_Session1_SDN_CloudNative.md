@@ -1,6 +1,6 @@
 ---
-title: "Block 5 -- Session 1"
-subtitle: "Software-Defined \\& Cloud-Native Networking"
+title: "Block 5 -- SDN \\& Cloud-Native Networking"
+subtitle: "S1: SDN, NFV, Overlays \\& Network Automation"
 author: "Arquitectura de Xarxes"
 institute: "Universitat Pompeu Fabra"
 theme: "Madrid"
@@ -32,9 +32,11 @@ header-includes:
 
 **Learning objectives:**
 
-1. Explain SDN architecture and why it matters
+1. Explain SDN architecture and why centralized control matters
 2. Understand NFV and how it replaces hardware appliances
-3. Describe container networking and microservices communication
+3. Describe overlay networks (VXLAN) and why they scale beyond VLANs
+4. Understand how containers communicate over bridge and overlay networks
+5. Explain Infrastructure as Code and why it enables network automation
 
 ## Traditional Network Management
 
@@ -387,55 +389,14 @@ Hints: think about overhead (extra headers), MTU implications, and troubleshooti
 
 # Container Networking
 
-## Containers -- Deep Dive (Expanding Block 4 Overview)
+## Container Networking: Starting Point
 
-- In Block 4 we compared VMs vs containers at a high level
-- Now: **how containers actually work**
-- Containers share the **host kernel** (unlike VMs with full guest OS)
-- Isolation via Linux kernel features:
-  - **Namespaces**: isolate process trees, network stack, filesystem
-  - **cgroups**: limit CPU, memory, I/O per container
-- **Docker**: most popular container platform
-  - Packages app + dependencies into a **container image**
-  - Image runs as a **container**: lightweight, portable, reproducible
+- In Block 4 and Lab 3 we covered what containers are and how Docker works
+- Here we focus on the **networking layer**: how containers connect to each other and to the outside world
+- Every container gets its own **network namespace**: isolated IP stack, interfaces, routing table
+- The container runtime (Docker) wires containers together using **virtual bridges** and **veth pairs**
 
-\footnotesize Docker, Inc., "Docker Overview," docs.docker.com; OCI, "Open Container Initiative," opencontainers.org.
-
-## VM vs Container -- Revisited
-
-\begin{center}
-\begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize},
-    >=Stealth
-]
-% VMs
-\node[font=\small\bfseries] at (-3.5,3.5) {Virtual Machines};
-\node[box, fill=gray!20] (hw1) at (-3.5,0) {Hardware};
-\node[box, fill=blue!15] (hyp) at (-3.5,0.7) {Hypervisor};
-\node[box, fill=green!15] (os1) at (-4.8,1.4) {OS};
-\node[box, fill=green!15] (os2) at (-3.5,1.4) {OS};
-\node[box, fill=green!15] (os3) at (-2.2,1.4) {OS};
-\node[box, fill=orange!15] (a1) at (-4.8,2.1) {App};
-\node[box, fill=orange!15] (a2) at (-3.5,2.1) {App};
-\node[box, fill=orange!15] (a3) at (-2.2,2.1) {App};
-
-% Containers
-\node[font=\small\bfseries] at (3.5,3.5) {Containers};
-\node[box, fill=gray!20] (hw2) at (3.5,0) {Hardware};
-\node[box, fill=yellow!15] (hos) at (3.5,0.7) {Host OS};
-\node[box, fill=blue!15] (eng) at (3.5,1.4) {Container Engine};
-\node[box, fill=orange!15] (c1) at (2.2,2.1) {App};
-\node[box, fill=orange!15] (c2) at (3.5,2.1) {App};
-\node[box, fill=orange!15] (c3) at (4.8,2.1) {App};
-
-\node[font=\scriptsize, text=gray] at (-3.5,2.9) {3 OS instances (GBs, minutes)};
-\node[font=\scriptsize, text=gray] at (3.5,2.9) {Shared kernel (MBs, seconds)};
-\end{tikzpicture}
-\end{center}
-
-- VMs: **minutes** to start, **GBs** in size, 3 full OS running
-- Containers: **milliseconds** to start, **MBs** in size, shared kernel
-- In practice: containers often run **inside** VMs for extra isolation
+<!-- note: students have seen namespaces/cgroups/Docker in Lab3_Docker_Intro -- no need to repeat here -->
 
 ## Container Network Models
 
@@ -601,41 +562,7 @@ resource "aws_security_group" "web" {
 - Hint: code review, staging environments, automated testing
 - How is this similar to software development best practices?
 
-# Emerging Trends
-
-## Serverless Computing (FaaS)
-
-- **Serverless** (Function as a Service, FaaS):
-  - Deploy individual **functions**, not entire servers
-  - Triggered by **events** (HTTP request, file upload, timer)
-  - Provider manages **all infrastructure**: zero server management
-  - Pay only for **execution time** (measured in milliseconds)
-
-- Examples: **AWS Lambda**, **Azure Functions**, **Google Cloud Functions**
-
-\vfill
-
-Trade-offs: less control, potential vendor lock-in, cold start latency.
-
-\footnotesize AWS, "AWS Lambda Documentation," docs.aws.amazon.com/lambda.
-
-## Edge Computing
-
-- **Edge computing**: process data **close to where it is generated**
-- Instead of sending everything to a central cloud $\rightarrow$ process at the edge
-- Benefits:
-  - **Lower latency** (critical for IoT, autonomous vehicles, AR/VR, gaming)
-  - **Less bandwidth** (filter and aggregate data locally)
-  - **Better privacy** (data stays closer to the source)
-
-\vfill
-
-Cloud and edge are **complementary**, not competing:
-
-- Edge: real-time, latency-sensitive tasks
-- Cloud: heavy computation, long-term storage, analytics
-
-\footnotesize ETSI, "Multi-access Edge Computing (MEC)," etsi.org/technologies/multi-access-edge-computing.
+# Session Summary
 
 ## The Full Picture -- Where Everything Fits
 
@@ -672,29 +599,24 @@ Each layer builds on the previous one. This is the **evolution of networking**.
 4. ONOS Project, onosproject.org.
 5. ETSI, "Network Functions Virtualisation," White Paper, 2012.
 6. ETSI GS NFV 002, "NFV Architectural Framework," v1.2.1, 2014.
-7. Docker, Inc., "Docker Overview and Networking," docs.docker.com.
-8. OCI, "Open Container Initiative Runtime and Image Specifications," opencontainers.org.
-9. Morris, *Infrastructure as Code*, 2nd ed., O'Reilly, 2021.
-10. HashiCorp, "Terraform Documentation," terraform.io/docs.
-11. AWS, "AWS Lambda Documentation," docs.aws.amazon.com/lambda.
-12. ETSI, "Multi-access Edge Computing (MEC)," etsi.org/technologies/multi-access-edge-computing.
-13. Goransson & Black, *Software Defined Networks*, 2nd ed., Morgan Kaufmann, 2017.
-14. Kurose & Ross, *Computer Networking: A Top-Down Approach*, 8th ed., Pearson, 2021.
-15. IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
-16. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
-
-# Session Summary
+7. Docker, Inc., "Docker Networking Documentation," docs.docker.com/network.
+8. Morris, *Infrastructure as Code*, 2nd ed., O'Reilly, 2021.
+9. HashiCorp, "Terraform Documentation," terraform.io/docs.
+10. Goransson & Black, *Software Defined Networks*, 2nd ed., Morgan Kaufmann, 2017.
+11. Kurose & Ross, *Computer Networking: A Top-Down Approach*, 8th ed., Pearson, 2021.
+12. IETF RFC 7348, "Virtual eXtensible Local Area Network (VXLAN)," 2014.
+13. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
 
 ## Key Takeaways
 
 1. Traditional networks are **manual, rigid, and do not scale**
-2. **SDN** separates control from data plane $\rightarrow$ centralized, programmable
-3. **NFV** replaces hardware appliances with software $\rightarrow$ flexible, cheap
-4. SDN + NFV are **complementary**: SDN steers, NFV processes
-5. **VXLAN** overlays scale isolation to 16M networks (vs 4K VLANs)
-6. **Containers** are lightweight (shared kernel), networked via bridges/overlays
-7. **Microservices** = many containers communicating over the network
-8. **IaC** automates infrastructure $\rightarrow$ reproducible, fast, auditable
+2. **SDN** separates control from data plane: centralized, programmable, API-driven
+3. **NFV** replaces hardware appliances with software: flexible, fast to deploy, cheap
+4. SDN and NFV are **complementary**: SDN steers traffic, NFV processes it
+5. **VXLAN** overlays scale isolation to 16 million networks (vs 4,096 VLANs)
+6. Containers use **bridge networks** on a single host and **overlay networks** across hosts
+7. **Microservices** = many containers communicating over the network, requiring service discovery and resilience
+8. **IaC** automates infrastructure: reproducible, version-controlled, auditable
 
 ## Discussion
 
