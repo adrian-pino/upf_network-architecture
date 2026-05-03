@@ -381,6 +381,7 @@ Hints: team size, upfront cost, time to market, scaling needs, control over infr
 
 ## Virtual Networks in the Cloud
 
+:::incremental
 - Every cloud provider lets you create your own **isolated virtual network**
   - AWS: Virtual Private Cloud (VPC)
   - Azure: Virtual Network (VNet)
@@ -396,40 +397,45 @@ Hints: team size, upfront cost, time to market, scaling needs, control over infr
   - **Address space** (e.g., `10.0.0.0/16`)
   - **Subnets** (subdivisions of the address space)
   - **Routing rules** and **security policies**
+:::
 
 \vfill
 
 <!-- nota: el virtual network usa overlays VXLAN por debajo — se cubrirán en Block 5 -->
 
+. . .
+
 Key: under the hood, cloud providers use **overlay networks** (covered in Block 5) to isolate tenants at scale.
+
+\footnote{AWS, "Amazon VPC User Guide"; Azure, "Virtual Network Documentation"; GCP, "VPC Documentation."}
 
 ## Virtual Network Architecture
 
 \begin{center}
 \begin{tikzpicture}[
-    vpc/.style={draw, thick, dashed, blue, rounded corners, inner sep=10pt},
-    subnet/.style={draw, thick, rounded corners, minimum width=3cm, minimum height=1.5cm, font=\small},
-    inst/.style={draw, thick, fill=green!15, rounded corners, minimum width=1cm, minimum height=0.5cm, font=\scriptsize},
+    vpc/.style={draw, thick, dashed, blue, rounded corners, inner sep=6pt},
+    subnet/.style={draw, thick, rounded corners, minimum width=2.2cm, minimum height=0.9cm, font=\scriptsize},
+    inst/.style={draw, thick, fill=green!15, rounded corners, minimum width=0.8cm, minimum height=0.35cm, font=\tiny},
     >=Stealth
 ]
 % VPC box
-\node[vpc, fit={(-4.5,-1.5)(4.5,2.5)}, label=above:{\small\textbf{Virtual Network: 10.0.0.0/16}}] (vpc) {};
+\node[vpc, fit={(-3.2,-0.8)(3.2,1.6)}, label=above:{\scriptsize\textbf{Virtual Network: 10.0.0.0/16}}] (vpc) {};
 
 % Public subnet
-\node[subnet, fill=yellow!10] (pub) at (-2,0.5) {};
-\node[font=\scriptsize\bfseries] at (-2,1.5) {Public Subnet};
-\node[font=\tiny] at (-2,1.1) {10.0.1.0/24};
-\node[inst] (web) at (-2,0.3) {VM: Web Server};
+\node[subnet, fill=yellow!10] (pub) at (-1.4,0.3) {};
+\node[font=\tiny\bfseries] at (-1.4,0.9) {Public Subnet};
+\node[font=\tiny] at (-1.4,0.6) {10.0.1.0/24};
+\node[inst] (web) at (-1.4,0.15) {VM: Web};
 
 % Private subnet
-\node[subnet, fill=gray!10] (priv) at (2,0.5) {};
-\node[font=\scriptsize\bfseries] at (2,1.5) {Private Subnet};
-\node[font=\tiny] at (2,1.1) {10.0.2.0/24};
-\node[inst] (db) at (2,0.3) {VM: Database};
+\node[subnet, fill=gray!10] (priv) at (1.4,0.3) {};
+\node[font=\tiny\bfseries] at (1.4,0.9) {Private Subnet};
+\node[font=\tiny] at (1.4,0.6) {10.0.2.0/24};
+\node[inst] (db) at (1.4,0.15) {VM: DB};
 
 % Internet gateway
-\node[draw, thick, fill=orange!20, rounded corners, font=\scriptsize] (igw) at (-2,-2.5) {Internet GW};
-\node[font=\scriptsize] (inet) at (-2,-4.2) {Internet};
+\node[draw, thick, fill=orange!20, rounded corners, font=\tiny] (igw) at (-1.4,-1.35) {Internet Gateway};
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=9, minimum width=1.2cm, minimum height=0.5cm, font=\tiny] (inet) at (-1.4,-2.45) {Internet};
 
 \draw[<->, thick] (web) -- (igw);
 \draw[<->, thick] (igw) -- (inet);
@@ -437,134 +443,270 @@ Key: under the hood, cloud providers use **overlay networks** (covered in Block 
 \end{tikzpicture}
 \end{center}
 
-## Subnets -- Public vs Private
+## Subnets: Public vs Private
 
-Cloud providers distinguish between subnets reachable from the Internet and isolated ones: not all workloads should be exposed. Web servers need public access, while databases and backends must stay hidden. Subnets enforce this boundary at the network level.
+:::::::::::::: {.columns}
+::: {.column width="55%"}
+
+\scriptsize
+Cloud providers distinguish between subnets reachable from the Internet and isolated ones. Web servers need public access; databases and backends must stay hidden.
 
 \vspace{0.2cm}
 
+:::incremental
 **Public subnet:**
 
-- Has a route to an **Internet Gateway**
-- Instances can have **public IP addresses**
-- Use for: web servers, load balancers, bastion hosts
+- Route to an **Internet Gateway**
+- Instances can have **public IPs**
+- Use: web servers, load balancers
 
 **Private subnet:**
 
-- **No route** to the Internet; isolated by design
-- Instances only have **private IPs**
-- Use for: databases, internal services, backends
+- **No route** to the Internet
+- Only **private IPs**
+- Use: databases, backends
+:::
+
+:::
+::: {.column width="42%"}
+
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, minimum width=2cm, minimum height=0.5cm, font=\scriptsize, align=center},
+  subnet/.style={draw, dashed, rounded corners, inner sep=6pt}
+]
+\node[cloud, cloud puffs=9, draw, fill=cyan!10, minimum width=1.6cm, minimum height=0.7cm, font=\tiny] (inet) {Internet};
+\node[box, fill=orange!15, below=0.4cm of inet] (igw) {Internet Gateway};
+
+\node[box, fill=green!15, below=0.6cm of igw] (web) {Web Server};
+\node[subnet, fit=(web), label=right:{\tiny Public}] (pub) {};
+
+\node[box, fill=purple!15, below=0.5cm of pub] (db) {Database};
+\node[subnet, fit=(db), label=right:{\tiny Private}, fill=red!3] (priv) {};
+
+\draw[<->, thick] (inet) -- (igw);
+\draw[<->, thick] (igw) -- (web);
+\draw[->, thick] (web) -- (db);
+\draw[->, thick, red, dashed] (igw.east) .. controls +(1.5,-0.5) and +(1.5,0.5) .. node[right, font=\tiny, text=red] {no route} (db.east);
+\end{tikzpicture}
+\end{center}
+
+:::
+::::::::::::::
 
 ## Route Tables
 
-Every virtual network has an implicit virtual router managed by the provider. Route tables tell that router where to forward traffic.
+:::::::::::::: {.columns}
+::: {.column width="55%"}
 
-- Each subnet is associated with a **route table**
-- Route table = set of rules determining where traffic goes
+\scriptsize Every virtual network has an implicit **virtual router** managed by the provider. Route tables tell it where to forward traffic.
 
-\begin{center}
-\small
-\renewcommand{\arraystretch}{1.3}
+\vspace{0.1cm}
+
+\scriptsize
 \begin{tabular}{|l|l|l|}
 \hline
-\rowcolor{blue!10} \textbf{Destination} & \textbf{Target / Next Hop} & \textbf{Subnet type} \\
+\rowcolor{blue!10} \textbf{Destination} & \textbf{Next Hop} & \textbf{Subnet} \\
 \hline
-\texttt{10.0.0.0/16} & local (within virtual network) & Public + Private \\
+\texttt{10.0.0.0/16} & local & Public + Private \\
 \hline
 \texttt{0.0.0.0/0} & Internet Gateway & Public only \\
 \hline
 \end{tabular}
+
+\vspace{0.2cm}
+
+:::incremental
+- **Local route**: traffic stays inside the virtual network
+- **Default route** (`0.0.0.0/0`): public subnets exit via the Internet Gateway
+- Private subnets have no default route
+:::
+
+:::
+::: {.column width="42%"}
+
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, minimum width=1.8cm, minimum height=0.5cm, font=\scriptsize, align=center}
+]
+\node[cloud, cloud puffs=9, draw, fill=cyan!10, minimum width=1.6cm, minimum height=0.7cm, font=\tiny] (inet) at (0,3) {Internet};
+\node[box, fill=orange!15] (igw) at (0,2) {Internet Gateway};
+\node[box, fill=yellow!20, diamond, aspect=2, minimum width=2.2cm] (rt) at (0,0.6) {Router};
+\node[box, fill=green!15] (pub) at (-1.4,-1) {Public\\subnet};
+\node[box, fill=purple!15] (priv) at (1.4,-1) {Private\\subnet};
+
+\draw[<->, thick] (inet) -- (igw);
+\draw[<->, thick] (igw) -- (rt);
+\draw[<->, thick] (rt) -- (pub);
+\draw[<->, thick] (rt) -- (priv);
+\draw[->, dashed, red] (priv.east) .. controls +(1.2,1) .. node[right, font=\tiny, text=red] {no} (igw.east);
+\end{tikzpicture}
 \end{center}
 
-- **Local route**: traffic within the virtual network stays inside (always present)
-- **Default route** (`0.0.0.0/0`): public subnets exit via the Internet Gateway
-- Private subnets have no default route; they are isolated by design
+:::
+::::::::::::::
 
 ## Internet Gateway
 
-In a cloud virtual network, instances are isolated by default. The Internet Gateway is the controlled entry and exit point between a virtual network and the Internet.
+:::::::::::::: {.columns}
+::: {.column width="42%"}
+
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, minimum width=1.8cm, minimum height=0.5cm, font=\scriptsize, align=center}
+]
+\node[cloud, cloud puffs=9, draw, fill=cyan!10, minimum width=1.8cm, minimum height=0.8cm, font=\tiny] (inet) at (0,2.5) {Internet};
+\node[box, fill=orange!15, minimum width=2.4cm] (igw) at (0,1.2) {Internet Gateway};
+\node[draw, dashed, rounded corners, minimum width=3.6cm, minimum height=2cm] (vpc) at (0,-0.4) {};
+\node[font=\tiny] at (-1.3,0.4) {VPC};
+\node[box, fill=green!15] (pub) at (0,0) {Public IP};
+\node[box, fill=purple!15] (priv) at (0,-1.1) {Private only};
+
+\draw[<->, thick] (inet) -- (igw);
+\draw[<->, thick] (igw) -- (pub);
+\draw[->, thick, blue, dashed] (priv.west) .. controls +(-1.3,0.5) .. node[left, font=\tiny, text=blue, align=center] {NAT Gateway\\(optional)} (igw.west);
+\end{tikzpicture}
+\end{center}
+
+:::
+::: {.column width="55%"}
+
+\scriptsize In a cloud virtual network, instances are **isolated by default**. The Internet Gateway is the controlled entry and exit point.
 
 \vspace{0.2cm}
 
+:::incremental
 - **Outbound only**: instance can reach the Internet, but is not reachable from outside
   - No public IP needed; the provider performs NAT transparently
 - **Bidirectional**: instance is also reachable from the Internet
-  - Requires a **public IP** assigned to the instance
-  - Use for: web servers, load balancers, anything public-facing
+  - Requires a **public IP**
+  - Use: web servers, load balancers
+:::
 
-\vfill
+\vspace{0.1cm}
 
-\footnotesize Note: a NAT Gateway can optionally be added for private instances that need outbound Internet access (e.g. downloading updates), without exposing them inbound.
+. . .
 
-## Security Groups -- Instance-Level Firewall
+\footnotesize Note: a NAT Gateway can be added for private instances that need outbound Internet access (e.g. updates), without exposing them inbound.
 
-Once traffic reaches an instance, you still need to control what it can send and receive. Security groups act as a per-instance firewall.
+:::
+::::::::::::::
 
-\vspace{0.2cm}
+## Security Groups: Instance-Level Firewall
 
-- **Security group** = virtual firewall attached to an instance
-- Rules specify allowed **inbound** and **outbound** traffic
+:::::::::::::: {.columns}
+::: {.column width="55%"}
+
+\scriptsize Once traffic reaches an instance, you still need to control what it can send and receive.
+
+\vspace{0.1cm}
+
+- **Security group** = virtual firewall on an instance
+- Specifies allowed **inbound/outbound** traffic
 - **Stateful**: allow inbound $\rightarrow$ response automatically allowed
 
-\begin{center}
-\small
-\renewcommand{\arraystretch}{1.3}
+\vspace{0.2cm}
+
+\scriptsize
 \begin{tabular}{|l|l|l|l|}
 \hline
-\rowcolor{blue!10} \textbf{Direction} & \textbf{Protocol} & \textbf{Port} & \textbf{Source/Dest} \\
+\rowcolor{blue!10} \textbf{Dir.} & \textbf{Proto} & \textbf{Port} & \textbf{Src/Dst} \\
 \hline
-Inbound & TCP & 80 & \texttt{0.0.0.0/0} \\
+In & TCP & 80 & \texttt{0.0.0.0/0} \\
 \hline
-Inbound & TCP & 443 & \texttt{0.0.0.0/0} \\
+In & TCP & 443 & \texttt{0.0.0.0/0} \\
 \hline
-Inbound & TCP & 22 & \texttt{10.0.0.0/16} \\
+In & TCP & 22 & \texttt{10.0.0.0/16} \\
 \hline
-Outbound & All & All & \texttt{0.0.0.0/0} \\
+Out & All & All & \texttt{0.0.0.0/0} \\
 \hline
 \end{tabular}
+
+:::
+::: {.column width="42%"}
+
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, minimum width=2cm, minimum height=0.55cm, font=\scriptsize, align=center}
+]
+\node[font=\scriptsize] (client) at (0,0) {Internet};
+\node[draw, thick, rounded corners, fill=red!15, minimum width=1.2cm, minimum height=2.6cm, align=center, font=\tiny] (sg) at (2.4,0) {S\\G};
+\node[box, fill=green!15] (vm) at (4.6,0) {Web VM};
+
+\draw[->, thick, green!50!black] (client) -- node[above, font=\tiny] {:80} (sg.west|-vm);
+\draw[->, thick, green!50!black] (sg.east|-vm) -- (vm);
+\draw[->, thick, red, dashed] (-0.2,-1) -- node[above, font=\tiny, text=red] {:3306} (1.8,-1);
+\draw[red, thick] (1.8,-1.2) -- (2.0,-0.8);
+\draw[red, thick] (1.8,-0.8) -- (2.0,-1.2);
+\node[font=\tiny] at (2.4,-1.6) {filtered};
+\end{tikzpicture}
 \end{center}
 
-<!-- nota: por defecto todo denegado inbound, todo permitido outbound -->
+\footnotesize By default: all inbound denied, all outbound allowed.
 
-\vfill
-\footnotesize
-Source: AWS, "Security Groups for Your VPC," docs.aws.amazon.com.
+:::
+::::::::::::::
 
-## Network ACLs (Access Control Lists) -- Subnet-Level Firewall
+\footnote{AWS, "Security Groups for Your VPC," docs.aws.amazon.com.}
 
-Security groups protect individual instances. Network ACLs add an additional layer of control at the subnet boundary, before traffic even reaches any instance.
+## Network ACLs (Access Control Lists): Subnet-Level Firewall
 
-\vspace{0.2cm}
+:::::::::::::: {.columns}
+::: {.column width="55%"}
+
+\scriptsize Network ACLs add a layer of control at the **subnet boundary**, before traffic reaches any instance.
+
+\vspace{0.1cm}
 
 - **Network ACL** = firewall at the **subnet** level
 - Rules evaluated in **order** (numbered, first match wins)
-- **Stateless**: must explicitly allow both inbound AND outbound
+- **Stateless**: must explicitly allow inbound AND outbound
 
-\begin{center}
-\small
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{|l|l|l|l|l|}
+\vspace{0.2cm}
+
+\scriptsize
+\begin{tabular}{|c|l|l|l|l|}
 \hline
-\rowcolor{blue!10} \textbf{Rule \#} & \textbf{Direction} & \textbf{Protocol} & \textbf{Port} & \textbf{Action} \\
+\rowcolor{blue!10} \textbf{\#} & \textbf{Dir.} & \textbf{Proto} & \textbf{Port} & \textbf{Action} \\
 \hline
-100 & Inbound & TCP & 80 & ALLOW \\
+100 & In & TCP & 80 & ALLOW \\
 \hline
-200 & Inbound & TCP & 443 & ALLOW \\
+200 & In & TCP & 443 & ALLOW \\
 \hline
-* & Inbound & All & All & DENY \\
+* & In & All & All & DENY \\
 \hline
 \end{tabular}
+
+:::
+::: {.column width="42%"}
+
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, minimum width=1.6cm, minimum height=0.5cm, font=\scriptsize, align=center}
+]
+\node[font=\scriptsize] (client) at (0,0) {Internet};
+\node[draw, thick, dashed, rounded corners, fill=blue!10, minimum width=3cm, minimum height=2.2cm] (subnet) at (4,0) {};
+\node[font=\tiny] at (4,1) {Subnet};
+\node[box, fill=green!15] (vm1) at (4,0.2) {VM 1};
+\node[box, fill=green!15] (vm2) at (4,-0.6) {VM 2};
+\node[draw, thick, fill=red!15, minimum width=0.4cm, minimum height=2.2cm, font=\tiny, align=center] (acl) at (2.3,0) {N\\A\\C\\L};
+
+\draw[->, thick, green!50!black] (client) -- node[above, font=\tiny] {:80} (acl);
+\draw[->, thick, red, dashed] (0,-1.5) -- node[above, font=\tiny, text=red] {:22} (2.1,-1.5);
+\end{tikzpicture}
 \end{center}
 
-\vfill
-\footnotesize
-Source: AWS, "Network ACLs," docs.aws.amazon.com.
+\footnotesize Filter applies to **all** instances in the subnet.
+
+:::
+::::::::::::::
+
+\footnote{AWS, "Network ACLs," docs.aws.amazon.com.}
 
 ## Security Groups vs Network ACLs
 
 \begin{center}
 \small
-\renewcommand{\arraystretch}{1.3}
 \begin{tabular}{|l|l|l|}
 \hline
 \rowcolor{blue!10} & \textbf{Security Groups} & \textbf{Network ACLs} \\
@@ -588,6 +730,10 @@ Default & Deny all inbound & Allow all \\
 
 - Security Groups $\rightarrow$ fine-grained per-instance control
 - Network ACLs $\rightarrow$ broad subnet-level guardrails
+
+\begin{alertblock}{Common mistake}
+ACLs are \textbf{stateless}: if you allow inbound TCP port 80, you must \emph{also} explicitly allow outbound ephemeral ports (1024-65535) for the response. Forgetting this blocks return traffic.
+\end{alertblock}
 
 ## Discussion: Cloud Networking
 

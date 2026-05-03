@@ -28,13 +28,13 @@
 
 ### Cloud Network Architecture
 - Virtual Networks in the Cloud (CIDR, subnets, routing, security; forward ref to B5 overlays)
-- Virtual Network Architecture (TikZ: VPC with public/private subnets, IGW, NAT GW)
-- Subnets — Public vs Private
+- Virtual Network Architecture (TikZ: VPC with public/private subnets and Internet Gateway)
+- Subnets: Public vs Private (2-column slide with subnet boundary diagram)
 - Route Tables
-- Internet Gateway vs NAT Gateway
-- Security Groups — Instance-Level Firewall
-- Network ACLs (Access Control Lists) — Subnet-Level Firewall
-- Security Groups vs Network ACLs
+- Internet Gateway (with optional NAT Gateway note)
+- Security Groups: Instance-Level Firewall (instance filter diagram)
+- Network ACLs (Access Control Lists): Subnet-Level Firewall (subnet filter diagram)
+- Security Groups vs Network ACLs (comparison table + stateless ACL warning)
 - Discussion: cloud networking
 
 ### Cloud Network Services
