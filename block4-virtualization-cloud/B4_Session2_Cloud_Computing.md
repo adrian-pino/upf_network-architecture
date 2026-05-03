@@ -3,9 +3,11 @@ title: "Block 4 -- Cloud Computing"
 subtitle: "S2: Cloud Computing \\& Cloud Architecture"
 author: "Arquitectura de Xarxes"
 institute: "Universitat Pompeu Fabra"
-date: ""
-theme: "upf"
+theme: "Madrid"
+colortheme: "dolphin"
+fonttheme: "structurebold"
 aspectratio: 169
+navigation: horizontal
 toc: true
 header-includes:
   - \usepackage{booktabs}
@@ -13,9 +15,8 @@ header-includes:
   - \usepackage{tikz}
   - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit, decorations.pathreplacing}
   - \setbeamerfont{footnote}{size=\tiny}
-  - \setbeamerfont{subtitle}{size=\large}
   - \logo{\includegraphics[height=0.6cm]{img/upf-logo.png}}
-  - \titlegraphic{\includegraphics[height=0.5cm]{img/upf-logo.png}}
+  - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}}
   - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
 ---
 
