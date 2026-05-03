@@ -1,8 +1,4 @@
 ---
-title: "Lab 3 -- Virtualization with Containers (Docker)"
-subtitle: "Arquitectura de Xarxes -- 2025-2026 3rd quarter"
-author: "Universitat Pompeu Fabra"
-date: ""
 geometry: margin=2.5cm
 fontsize: 11pt
 colorlinks: true
@@ -10,6 +6,16 @@ urlcolor: blue
 header-includes:
   - \input{lab3-containers/preamble.tex}
 ---
+
+```{=latex}
+\begin{center}
+  {\Large\textbf{Lab 3 -- Virtualization with Containers (Docker)}}\\[0.4cm]
+  {\large Arquitectura de Xarxes -- 2025-2026 3rd quarter}\\[0.4cm]
+  \includegraphics[height=1.5cm]{lab3-containers/img/upf-logo.png}\\[0.3cm]
+  {\normalsize Universitat Pompeu Fabra}
+\end{center}
+\vspace{0.5cm}
+```
 
 # Introduction
 
@@ -623,7 +629,7 @@ docker compose ps
 \end{questionbox}
 
 \begin{questionbox}
-\textbf{Q27 (Optional):} So far we have used \texttt{curl} to test the web server. SSH supports port forwarding, which allows you to tunnel a port from the VM to your laptop so you can open the page in your own browser. Research how to do this and try it. What command did you use? What is the conceptual similarity between SSH port forwarding and Docker's \texttt{--publish} flag?
+\textbf{Q27 (Optional):} So far we have used \texttt{curl} to test the web server. SSH supports port forwarding, which allows you to tunnel a port from the VM to your laptop so you can open the page in your own browser. Research how to do this and try it. What command did you use? Add a screenshot of the page open in your browser. What is the conceptual similarity between SSH port forwarding and Docker's \texttt{--publish} flag?
 \end{questionbox}
 
 ## Step 17 (Optional) -- Clean up
