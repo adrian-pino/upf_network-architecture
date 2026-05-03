@@ -1,6 +1,6 @@
 ---
-title: "Block 4 -- Cloud Computing"
-subtitle: "S2: Cloud Computing \\& Cloud Architecture"
+title: "Block 4 -- Network Virtualization \\& Cloud Computing"
+subtitle: "S2: Cloud Computing"
 author: "Arquitectura de Xarxes"
 institute: "Universitat Pompeu Fabra"
 theme: "Madrid"

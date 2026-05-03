@@ -1,6 +1,6 @@
 ---
-title: "Block 4 -- Network Virtualization"
-subtitle: "S1: Data Centers, VMs, Containers \\& Virtual Networking"
+title: "Block 4 -- Network Virtualization \\& Cloud Computing"
+subtitle: "S1: Network Virtualization"
 author: "Arquitectura de Xarxes"
 institute: "Universitat Pompeu Fabra"
 theme: "Madrid"
