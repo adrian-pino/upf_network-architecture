@@ -1,6 +1,6 @@
 ---
 title: "Block 5 -- SDN \\& Cloud-Native Networking"
-subtitle: "S1: SDN, NFV, Overlays \\& Network Automation"
+subtitle: "SDN, NFV, Overlays \\& Network Automation"
 author: "Arquitectura de Xarxes"
 institute: "Universitat Pompeu Fabra"
 theme: "Madrid"
