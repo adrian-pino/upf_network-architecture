@@ -23,7 +23,7 @@ Unlike virtual machines (VMs), containers share the host operating system kernel
 
 ## Submission instructions
 
-- Deliver a report in **PDF format** documenting the steps you followed and the results you obtained.
+- Deliver a **PDF report** containing each question (Q1--Q22) followed by your answer and any relevant screenshots.
 - Include the names and NIAs of all group members on the cover page.
 - Name the file: `AX_lab3_NIA1_NIA2_NIA3.pdf`
 - Deadline: before the next lab session starts.
