@@ -1,6 +1,6 @@
 ---
 title: "Block 4 -- Cloud Computing"
-subtitle: "S2: Cloud Computing \\& Cloud Architectures"
+subtitle: "S2: Cloud Computing \\& Cloud Architecture"
 author: "Arquitectura de Xarxes"
 institute: "Universitat Pompeu Fabra"
 date: "2025-2026"
@@ -13,7 +13,9 @@ header-includes:
   - \usepackage{tikz}
   - \usetikzlibrary{positioning, arrows.meta, calc, shapes.geometric, shapes.symbols, fit, decorations.pathreplacing}
   - \setbeamerfont{footnote}{size=\tiny}
-  - \titlegraphic{Adrián Pino \texttt{<adrian.pino@upf.edu>}}
+  - \logo{\includegraphics[height=0.6cm]{img/upf-logo.png}}
+  - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}}
+  - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
 ---
 
 # From Virtualization to Cloud
@@ -29,8 +31,9 @@ header-includes:
 **Learning objectives:**
 
 1. Understand cloud computing's definition and essential characteristics
-2. Distinguish IaaS (Infrastructure as a Service), PaaS (Platform as a Service), and SaaS (Software as a Service)
-3. Design a cloud virtual network with subnets, security controls, and network services
+2. Distinguish IaaS (Infrastructure as a Service), PaaS (Platform as a Service), and SaaS (Software as a Service) and identify key cloud platforms
+3. Design a cloud virtual network with subnets, route tables, and security controls
+4. Identify essential cloud network services: load balancers, proxies, and VPNs
 
 ## Meet the Scenario: A Startup from Zero
 
@@ -136,6 +139,13 @@ Key difference: **automation and self-service** (no phone calls, no tickets, no 
 - But "the cloud" is a vague term; every vendor defines it differently
 - Before choosing a provider, CloudBite needs to understand **what cloud computing actually means** and **what service model fits their needs**
 
+- **Ubiquitous**: anywhere, any device
+- **On-demand**: no tickets, provision instantly
+- **Shared pool**: many tenants, same hardware
+- **Configurable**: choose CPU, RAM, storage, network
+- **Rapidly provisioned**: up and running in seconds
+- **Minimal management**: provider handles the hardware
+
 \vfill
 
 \begin{center}
@@ -184,9 +194,7 @@ Measured service & Pay only for what you use & Billed per CPU-hour, GB stored \\
 
 - **All five** must be present to qualify as "cloud computing"
 
-\footnote{NIST SP 800-145, Mell \& Grance, 2011.}
-
-## Cloud Service Models: The Stack
+## Cloud Service Models -- The Stack
 
 \begin{center}
 \begin{tikzpicture}[
@@ -240,7 +248,7 @@ Measured service & Pay only for what you use & Billed per CPU-hour, GB stored \\
 ## Service Models: Who Manages What?
 
 \begin{center}
-\footnotesize
+\small
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{|l|c|c|c|}
 \hline
@@ -257,6 +265,8 @@ Operating System & You & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provid
 Virtualization & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
 \hline
 Hardware & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
+\hline
+Network Services (LB, Proxy, VPN) & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
 \hline
 \end{tabular}
 \end{center}
@@ -318,15 +328,34 @@ Hardware & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolo
 :::::::::::::: {.columns}
 ::: {.column width="48%"}
 
-**Building blocks (Session 1)**
+**What we have seen (Session 1)**
 
-- Virtual NIC
-- Virtual Switch (bridge)
-- Virtual Router
-- VLAN / overlay (VXLAN)
-- Hypervisor / container runtime
+- Virtual Switches and Virtual Routers
+- Virtual NICs and VLANs
+- Hypervisors (KVM, VMware) and containers
 
-These components are configured and wired together by platforms.
+\vspace{0.2cm}
+
+These are the **building blocks** of any virtual network; they do not run in isolation.
+
+:::
+::: {.column width="48%"}
+
+**Platforms manage these building blocks**
+
+- Provision and connect VMs or containers automatically
+- Handle networking, storage, and scaling under the hood
+- Hide hardware complexity from the developer
+
+\vspace{0.2cm}
+
+Two families:
+
+- **Cloud platforms** (AWS, Azure, GCP, OpenStack): full infrastructure stack
+- **Container orchestration** (Kubernetes): deploy and scale containerized workloads
+
+:::
+::::::::::::::
 
 :::
 ::: {.column width="48%"}
@@ -384,6 +413,41 @@ Microsoft Azure & Strong enterprise integration & \includegraphics[height=0.32cm
 Google Cloud Platform (GCP) & Data and AI focus & \includegraphics[height=0.25cm]{img/gcp-logo.png} \\
 \hline
 \end{tabular}
+
+\vfill
+\footnotesize
+These map directly to the IaaS model we just covered: the provider (or you) manages compute, storage, and networking.
+
+## Public Cloud vs Private Cloud: What You Manage
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|}
+\hline
+\rowcolor{blue!10} \textbf{Component} & \textbf{Public Cloud} & \textbf{Private Cloud} \\
+\hline
+Applications & You & You \\
+\hline
+Data & You & You \\
+\hline
+Runtime / Middleware & You (IaaS) / Provider (PaaS) & You \\
+\hline
+Operating System & You (IaaS) / Provider (PaaS) & You \\
+\hline
+Virtualization & \cellcolor{blue!15}Provider & You \\
+\hline
+Hardware & \cellcolor{blue!15}Provider & You \\
+\hline
+Networking & \cellcolor{blue!15}Provider & You \\
+\hline
+Cooling / Power & \cellcolor{blue!15}Provider & You \\
+\hline
+\end{tabular}
+\end{center}
+
+\vfill
+\footnotesize Public cloud trades control for simplicity; private cloud gives full control at the cost of operational overhead.
 
 ## Container Orchestration Platforms
 
@@ -455,8 +519,16 @@ OpenShift & Enterprise K8s by Red Hat; adds security, CI/CD, UI & \includegraphi
 ## Virtual Networks in the Cloud
 
 - Every cloud provider lets you create your own **isolated virtual network**
-  - AWS: Virtual Private Cloud (VPC); Azure: Virtual Network (VNet); GCP: VPC Network
+  - AWS: Virtual Private Cloud (VPC)
+  - Azure: Virtual Network (VNet)
+  - GCP: VPC Network
+
+\vspace{0.2cm}
+
 - Think of it as your **private data center network** in the cloud
+
+\vspace{0.2cm}
+
 - You define:
   - **Address space** (e.g., `10.0.0.0/16`)
   - **Subnets** (subdivisions of the address space)
@@ -486,45 +558,45 @@ Key: under the hood, cloud providers use **overlay networks** (covered in Block 
 \node[subnet, fill=yellow!10] (pub) at (-2,0.5) {};
 \node[font=\scriptsize\bfseries] at (-2,1.5) {Public Subnet};
 \node[font=\tiny] at (-2,1.1) {10.0.1.0/24};
-\node[inst] (web) at (-2,0.3) {Web Server};
+\node[inst] (web) at (-2,0.3) {VM: Web Server};
 
 % Private subnet
 \node[subnet, fill=gray!10] (priv) at (2,0.5) {};
 \node[font=\scriptsize\bfseries] at (2,1.5) {Private Subnet};
 \node[font=\tiny] at (2,1.1) {10.0.2.0/24};
-\node[inst] (db) at (2,0.3) {Database};
+\node[inst] (db) at (2,0.3) {VM: Database};
 
 % Internet gateway
 \node[draw, thick, fill=orange!20, rounded corners, font=\scriptsize] (igw) at (-2,-2.5) {Internet GW};
-\node[font=\scriptsize] (inet) at (-2,-3.5) {Internet};
+\node[font=\scriptsize] (inet) at (-2,-4.2) {Internet};
 
-% NAT gateway
-\node[draw, thick, fill=purple!15, rounded corners, font=\scriptsize] (nat) at (2,-2.5) {NAT GW};
-
-\draw[->, thick] (web) -- (igw);
-\draw[->, thick] (igw) -- (inet);
-\draw[->, thick, dashed] (db) -- (nat);
-\draw[->, thick, dashed] (nat) -- (igw);
+\draw[<->, thick] (web) -- (igw);
+\draw[<->, thick] (igw) -- (inet);
+\draw[<->, thick, dashed] (web) -- (db);
 \end{tikzpicture}
 \end{center}
 
 ## Subnets: Public vs Private
 
+Cloud providers distinguish between subnets reachable from the Internet and isolated ones: not all workloads should be exposed. Web servers need public access, while databases and backends must stay hidden. Subnets enforce this boundary at the network level.
+
+\vspace{0.2cm}
+
 **Public subnet:**
 
 - Has a route to an **Internet Gateway**
 - Instances can have **public IP addresses**
-- Accessible from the Internet (if security rules allow)
 - Use for: web servers, load balancers, bastion hosts
 
 **Private subnet:**
 
-- **No direct route** to the Internet
+- **No route** to the Internet; isolated by design
 - Instances only have **private IPs**
-- Can access Internet outbound via **NAT Gateway**
-- Use for: databases, internal services, application backends
+- Use for: databases, internal services, backends
 
 ## Route Tables
+
+Every virtual network has an implicit virtual router managed by the provider. Route tables tell that router where to forward traffic.
 
 - Each subnet is associated with a **route table**
 - Route table = set of rules determining where traffic goes
@@ -534,43 +606,40 @@ Key: under the hood, cloud providers use **overlay networks** (covered in Block 
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{|l|l|l|}
 \hline
-\rowcolor{blue!10} \textbf{Destination} & \textbf{Target} & \textbf{Subnet type} \\
+\rowcolor{blue!10} \textbf{Destination} & \textbf{Target / Next Hop} & \textbf{Subnet type} \\
 \hline
-\texttt{10.0.0.0/16} & local (within virtual network) & Both \\
+\texttt{10.0.0.0/16} & local (within virtual network) & Public + Private \\
 \hline
-\texttt{0.0.0.0/0} & Internet Gateway & Public \\
-\hline
-\texttt{0.0.0.0/0} & NAT Gateway & Private \\
+\texttt{0.0.0.0/0} & Internet Gateway & Public only \\
 \hline
 \end{tabular}
 \end{center}
 
 - **Local route**: traffic within the virtual network stays inside (always present)
-- **Default route** (`0.0.0.0/0`): where to send everything else
-- Public subnets $\rightarrow$ IGW; Private subnets $\rightarrow$ NAT GW
+- **Default route** (`0.0.0.0/0`): public subnets exit via the Internet Gateway
+- Private subnets have no default route; they are isolated by design
 
-## Internet Gateway vs NAT Gateway
+## Internet Gateway
 
-**Internet Gateway** (the front door):
+In a cloud virtual network, instances are isolated by default. The Internet Gateway is the controlled entry and exit point between a virtual network and the Internet.
 
-- **Bidirectional**: the world can reach your instance, and it can reach the world
-- Instance needs a **public IP**
-- Use for: web servers, load balancers, anything public-facing
+\vspace{0.2cm}
 
-\vspace{0.3cm}
-
-**NAT Gateway** (the fire exit):
-
-- **One-way**: your instance can reach the Internet (e.g., download updates, call APIs), but nobody outside can reach it directly
-- Instance keeps a **private IP** only
-- Use for: databases, backends that need to download patches but must stay hidden
+- **Outbound only**: instance can reach the Internet, but is not reachable from outside
+  - No public IP needed; the provider performs NAT transparently
+- **Bidirectional**: instance is also reachable from the Internet
+  - Requires a **public IP** assigned to the instance
+  - Use for: web servers, load balancers, anything public-facing
 
 \vfill
 
-\footnotesize
-Same \textbf{NAT concept from Block 3}, now as a managed cloud service.
+\footnotesize Note: a NAT Gateway can optionally be added for private instances that need outbound Internet access (e.g. downloading updates), without exposing them inbound.
 
 ## Security Groups: Instance-Level Firewall
+
+Once traffic reaches an instance, you still need to control what it can send and receive. Security groups act as a per-instance firewall.
+
+\vspace{0.2cm}
 
 - **Security group** = virtual firewall attached to an instance
 - Rules specify allowed **inbound** and **outbound** traffic
@@ -599,6 +668,10 @@ Outbound & All & All & \texttt{0.0.0.0/0} \\
 \footnote{AWS, "Security Groups for Your VPC," docs.aws.amazon.com.}
 
 ## Network ACLs (Access Control Lists): Subnet-Level Firewall
+
+Security groups protect individual instances. Network ACLs add an additional layer of control at the subnet boundary, before traffic even reaches any instance.
+
+\vspace{0.2cm}
 
 - **Network ACL** = firewall at the **subnet** level
 - Rules evaluated in **order** (numbered, first match wins)
@@ -694,6 +767,26 @@ ACLs are \textbf{stateless}: if you allow inbound TCP port 80, you must \emph{al
 \textit{Three services solve these problems: load balancers, proxies, and VPNs.}
 \end{center}
 
+## Cloud Network Services: Overview
+
+Beyond virtual networks and security controls, public cloud providers offer managed network services that simplify common infrastructure tasks, such as:
+\vspace{0.3cm}
+
+1. **Load Balancer (LB)**
+2. **Proxy**
+3. **Reverse Proxy**
+4. **VPN (Virtual Private Network)**
+
+\vspace{0.3cm}
+
+These services run as **managed offerings**: no servers to install or maintain.
+
+\vfill
+\footnotesize Note: Proxy, Reverse Proxy, and VPN will be covered in depth in Block 6. Here we introduce them briefly.
+
+\vspace{0.1cm}
+\footnotesize \textbf{Private cloud:} these services are \textbf{not} provided automatically; you must deploy and manage them yourself (e.g. HAProxy for load balancing, OpenVPN for VPN).
+
 ## Load Balancer
 
 - Distributes incoming traffic across **multiple instances** (VMs or containers)
@@ -724,10 +817,38 @@ ACLs are \textbf{stateless}: if you allow inbound TCP port 80, you must \emph{al
 
 \footnote{AWS, "Elastic Load Balancing Documentation," docs.aws.amazon.com.}
 
+## Proxy
+
+Without a proxy, every instance in your network reaches the Internet directly: no visibility, no control. A proxy sits in front of clients and mediates all outbound traffic.
+
+- Clients send requests to the proxy, which forwards them to the Internet
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, minimum width=1.8cm, minimum height=0.6cm, font=\scriptsize},
+    >=Stealth
+]
+\node[box, fill=green!15] (c1) at (0,0.7) {Client 1};
+\node[box, fill=green!15] (c2) at (0,-0.7) {Client 2};
+\node[box, fill=yellow!20] (proxy) at (3.5,0) {Proxy};
+\node[font=\scriptsize] (inet) at (7,0) {Internet};
+
+\draw[->, thick] (c1) -- (proxy);
+\draw[->, thick] (c2) -- (proxy);
+\draw[->, thick] (proxy) -- (inet);
+\end{tikzpicture}
+\end{center}
+
+- **Access control**: block certain websites or domains
+  - Security: block known malicious domains
+  - Company policy: restrict access to non-work-related content
+- **Caching**: store frequently accessed content, reduce bandwidth
+- **Logging**: monitor what employees or VMs access
+- Examples: Squid, corporate firewalls with proxy mode
+
 ## Reverse Proxy
 
-- Sits **in front of** backend servers, receives all client requests
-- Clients never communicate directly with the backend
+A reverse proxy sits in front of backend servers and mediates all inbound traffic. Clients never communicate directly with the backend.
 
 \begin{center}
 \begin{tikzpicture}[
@@ -745,68 +866,13 @@ ACLs are \textbf{stateless}: if you allow inbound TCP port 80, you must \emph{al
 \end{tikzpicture}
 \end{center}
 
-Key functions:
-
-- **TLS (Transport Layer Security) termination**: handles HTTPS encryption, backends receive plain HTTP
-- **URL routing**: `/api/*` $\rightarrow$ API server, `/*` $\rightarrow$ web app
-- **Caching**: stores responses to reduce backend load
+- **TLS termination**: handles HTTPS, backends receive plain HTTP
+- **URL routing**: directs requests to the right backend service
+- **Hides backend servers**: clients only see the proxy's address
 - Examples: NGINX, HAProxy, AWS CloudFront, Azure Front Door
 
-## Forward Proxy
-
-- Sits **in front of clients**, controls their **outbound** traffic
-- Clients send requests to the proxy, which forwards them to the Internet
-
-\begin{center}
-\begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=1.8cm, minimum height=0.6cm, font=\scriptsize},
-    >=Stealth
-]
-\node[box, fill=green!15] (c1) at (0,0.7) {Client 1};
-\node[box, fill=green!15] (c2) at (0,-0.7) {Client 2};
-\node[box, fill=yellow!20] (proxy) at (3.5,0) {Forward Proxy};
-\node[font=\scriptsize] (inet) at (7,0) {Internet};
-
-\draw[->, thick] (c1) -- (proxy);
-\draw[->, thick] (c2) -- (proxy);
-\draw[->, thick] (proxy) -- (inet);
-\end{tikzpicture}
-\end{center}
-
-Key functions:
-
-- **Access control**: block certain websites or domains
-- **Caching**: store frequently accessed content, reduce bandwidth
-- **Anonymity**: external servers see the proxy's IP, not the client's
-- **Logging**: monitor what employees or VMs access
-- Examples: Squid, corporate firewalls with proxy mode
-
-## Reverse Proxy vs Forward Proxy
-
-\begin{center}
-\small
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{|l|l|l|}
-\hline
-\rowcolor{blue!10} & \textbf{Forward Proxy} & \textbf{Reverse Proxy} \\
-\hline
-Protects & Clients (outbound) & Servers (inbound) \\
-\hline
-Position & In front of clients & In front of servers \\
-\hline
-Who knows? & Server sees proxy, not client & Client sees proxy, not server \\
-\hline
-Use case & Control outbound access & TLS termination, routing, caching \\
-\hline
-\end{tabular}
-\end{center}
-
 \vfill
-
-Think of it this way:
-
-- **Forward proxy**: "I control what my users can access outside"
-- **Reverse proxy**: "I control how outside users reach my servers"
+\footnotesize Will be covered in depth in Block 6.
 
 ## VPN: Virtual Private Network
 
@@ -815,15 +881,27 @@ Think of it this way:
 
 \begin{center}
 \begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=2.2cm, minimum height=0.8cm, font=\scriptsize, align=center},
+    box/.style={draw, thick, rounded corners, minimum width=1.8cm, minimum height=0.8cm, font=\scriptsize, align=center},
     >=Stealth
 ]
-\node[box, fill=green!15] (office) at (0,0) {Corporate\\Office};
-\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.5cm, minimum height=1.2cm, font=\scriptsize] (inet) at (5,0) {Internet};
-\node[box, fill=blue!15] (vpc) at (10,0) {Cloud Virtual\\Network};
+% User
+\node[box, fill=green!15] (user) at (0,0) {User /\\Office};
 
-\draw[thick, dashed, red] (office) -- node[above, font=\tiny] {Encrypted VPN tunnel} (inet);
-\draw[thick, dashed, red] (inet) -- (vpc);
+% Internet cloud
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2cm, minimum height=1.2cm, font=\scriptsize] (inet) at (5,0) {Internet};
+
+% Cloud VPN endpoint
+\node[box, fill=blue!15] (vpn) at (10,0) {Cloud\\Network};
+
+% Encrypted tunnel
+\draw[<->, thick, blue, double] (user) -- node[above, font=\tiny, text=blue] {Encrypted VPN tunnel} (inet);
+\draw[<->, thick, blue, double] (inet) -- (vpn);
+
+% Eavesdropper blocked
+\node[box, fill=red!10] (evil) at (5,-2.2) {Attacker};
+\draw[thick, red] (5,-0.8) -- (5,-1.6);
+\node[font=\Large, text=red] at (5,-1.2) {\texttimes};
+
 \end{tikzpicture}
 \end{center}
 
@@ -1025,13 +1103,12 @@ Control & Limited (provider's rules) & Full (your hardware, your rules) \\
 \footnotesize
 
 1. NIST SP 800-145, Mell & Grance, "The NIST Definition of Cloud Computing," 2011.
-2. NIST SP 800-144, "Guidelines on Security and Privacy in Public Cloud Computing," 2011.
-3. AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
-4. Microsoft Azure, "Azure Virtual Network Documentation," docs.microsoft.com.
-5. Google Cloud, "VPC Documentation," cloud.google.com/vpc/docs.
-6. CSA, "Security Guidance for Critical Areas of Focus in Cloud Computing v5," 2022.
-7. Erl, Puttini & Mahmood, \textit{Cloud Computing: Concepts, Technology \& Architecture}, Prentice Hall, 2013.
-8. Kurose & Ross, \textit{Computer Networking: A Top-Down Approach}, 8th ed., Pearson, 2021.
-9. AWS, "Elastic Load Balancing Documentation," docs.aws.amazon.com.
-10. NGINX, Inc., "What Is a Reverse Proxy?," nginx.com/resources.
-11. AWS, "AWS VPN Documentation," docs.aws.amazon.com.
+2. AWS, "Amazon VPC User Guide," docs.aws.amazon.com.
+3. Microsoft Azure, "Azure Virtual Network Documentation," docs.microsoft.com.
+4. Google Cloud, "VPC Documentation," cloud.google.com/vpc/docs.
+5. CSA, "Security Guidance for Critical Areas of Focus in Cloud Computing v5," 2022.
+6. Erl, Puttini & Mahmood, \textit{Cloud Computing: Concepts, Technology \& Architecture}, Prentice Hall, 2013.
+7. Kurose & Ross, \textit{Computer Networking: A Top-Down Approach}, 8th ed., Pearson, 2021.
+8. AWS, "Elastic Load Balancing Documentation," docs.aws.amazon.com.
+9. NGINX, Inc., "What Is a Reverse Proxy?," nginx.com/resources.
+10. AWS, "AWS VPN Documentation," docs.aws.amazon.com.

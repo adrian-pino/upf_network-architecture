@@ -22,7 +22,7 @@
 
 ## Session structure
 1. Title + motivating question or real-world scenario
-2. Learning objectives (2-3 maximum)
+2. Learning objectives (3-4 maximum)
 3. Main content divided into thematic blocks (`#` sections)
    - At the end of each section, include a **discussion slide** with an open question to encourage classroom debate
    - Format: centred question in `\Large\textit{...}`, with hints below
@@ -76,7 +76,7 @@
     - \setbeamerfont{footnote}{size=\tiny}
     - \AtBeginSection[]{\begin{frame}{Outline}\tableofcontents[currentsection]\end{frame}}
     - \logo{\includegraphics[height=0.6cm]{img/upf-logo.png}}
-    - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}\\[0.3cm]\scriptsize Adrián Pino \texttt{<adrian.pino@upf.edu>}}
+    - \titlegraphic{\includegraphics[height=1.2cm]{img/upf-logo.png}}
   ```
 - Note: `[table]{xcolor}` needed for `\rowcolor`; `decorations.pathreplacing` for TikZ braces; `shapes.symbols` for cloud shapes
 - Tables with full borders (`|l|l|`, `\hline` between each row), `\rowcolor{blue!10}` in header, `\renewcommand{\arraystretch}{1.3}` for padding. Do NOT use `booktabs` (`\toprule`/`\midrule`/`\bottomrule`)
@@ -120,6 +120,7 @@
 ## Self-maintenance rule
 - **After every session that modifies slides or project structure**, review this file (AGENTS.md) and evaluate whether any section needs updating: new acronyms, new conventions learned, corrected rules, or structural changes. Apply updates immediately rather than deferring them.
 - **After modifying the content of any presentation**, check whether the corresponding `table-of-contents_sessionN.md` file needs updating. Each block directory contains one toc file per session (e.g., `table-of-contents_session1.md`, `table-of-contents_session2.md`). These files are not used for compilation but serve as a structural reference.
+- **Before compiling any presentation**, review the "Key Takeaways" slide and verify it accurately reflects the current content of the presentation. Update it if needed before compiling.
 
 ## Defined acronyms (centralised registry)
 
