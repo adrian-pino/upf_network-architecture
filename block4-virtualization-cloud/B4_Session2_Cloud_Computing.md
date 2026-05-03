@@ -395,7 +395,7 @@ Key: under the hood, cloud providers use **overlay networks** (covered in Block 
 
 ## Subnets -- Public vs Private
 
-Cloud providers distinguish between subnets reachable from the Internet and isolated ones: not all workloads should be exposed publicly. Databases, internal APIs, and backends must stay hidden, while web servers and load balancers need to be accessible. Subnets enforce this boundary at the network level.
+Cloud providers distinguish between subnets reachable from the Internet and isolated ones: not all workloads should be exposed. Web servers need public access, while databases and backends must stay hidden. Subnets enforce this boundary at the network level.
 
 \vspace{0.2cm}
 
