@@ -69,7 +69,7 @@ sudo docker -v
 \end{shellblock}
 ```
 
-**Note:** if Docker is not installed, follow the official documentation at `https://docs.docker.com/engine/install/`.
+**Note:** if Docker is not installed, follow the official installation guide at `docs.docker.com/engine/install`.
 
 ## Step 2 -- Run Docker without sudo
 
