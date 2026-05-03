@@ -381,15 +381,11 @@ Key: under the hood, cloud providers use **overlay networks** (covered in Block 
 
 % Internet gateway
 \node[draw, thick, fill=orange!20, rounded corners, font=\scriptsize] (igw) at (-2,-2.5) {Internet GW};
-\node[font=\scriptsize] (inet) at (-2,-3.5) {Internet};
+\node[font=\scriptsize] (inet) at (-2,-4.2) {Internet};
 
-% NAT gateway
-\node[draw, thick, fill=purple!15, rounded corners, font=\scriptsize] (nat) at (2,-2.5) {NAT GW};
-
-\draw[->, thick] (web) -- (igw);
-\draw[->, thick] (igw) -- (inet);
-\draw[->, thick, dashed] (db) -- (nat);
-\draw[->, thick, dashed] (nat) -- (igw);
+\draw[<->, thick] (web) -- (igw);
+\draw[<->, thick] (igw) -- (inet);
+\draw[<->, thick, dashed] (web) -- (db);
 \end{tikzpicture}
 \end{center}
 
@@ -403,22 +399,19 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 
 - Has a route to an **Internet Gateway**
 - Instances can have **public IP addresses**
-- Accessible from the Internet (if security rules allow)
 - Use for: web servers, load balancers, bastion hosts
 
 **Private subnet:**
 
-- **No direct route** to the Internet
+- **No route** to the Internet; isolated by design
 - Instances only have **private IPs**
-- Can access Internet outbound via **NAT Gateway**
-- Use for: databases, internal services, application backends
+- Use for: databases, internal services, backends
 
 ## Route Tables
 
+Every virtual network has an implicit virtual router managed by the provider. Route tables tell that router where to forward traffic.
+
 - Each subnet is associated with a **route table**
-
-\vspace{0.2cm}
-
 - Route table = set of rules determining where traffic goes
 
 \begin{center}
@@ -426,49 +419,40 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{|l|l|l|}
 \hline
-\rowcolor{blue!10} \textbf{Destination} & \textbf{Target} & \textbf{Subnet type} \\
+\rowcolor{blue!10} \textbf{Destination} & \textbf{Target / Next Hop} & \textbf{Subnet type} \\
 \hline
-\texttt{10.0.0.0/16} & local (within virtual network) & Both \\
+\texttt{10.0.0.0/16} & local (within virtual network) & Public + Private \\
 \hline
-\texttt{0.0.0.0/0} & Internet Gateway & Public \\
-\hline
-\texttt{0.0.0.0/0} & NAT Gateway & Private \\
+\texttt{0.0.0.0/0} & Internet Gateway & Public only \\
 \hline
 \end{tabular}
 \end{center}
 
 - **Local route**: traffic within the virtual network stays inside (always present)
+- **Default route** (`0.0.0.0/0`): public subnets exit via the Internet Gateway
+- Private subnets have no default route; they are isolated by design
+
+## Internet Gateway
+
+In a cloud virtual network, instances are isolated by default. The Internet Gateway is the controlled entry and exit point between a virtual network and the Internet.
 
 \vspace{0.2cm}
 
-- **Default route** (`0.0.0.0/0`): where to send everything else
-
-\vspace{0.2cm}
-
-- Public subnets $\rightarrow$ IGW; Private subnets $\rightarrow$ NAT GW
-
-## Internet Gateway vs NAT Gateway
-
-**Internet Gateway** (the front door):
-
-- **Bidirectional**: the world can reach your instance, and it can reach the world
-- Instance needs a **public IP**
-- Use for: web servers, load balancers, anything public-facing
-
-\vspace{0.3cm}
-
-**NAT Gateway** (the fire exit):
-
-- **One-way**: your instance can reach the Internet (e.g., download updates, call APIs), but nobody outside can reach it directly
-- Instance keeps a **private IP** only
-- Use for: databases, backends that need to download patches but must stay hidden
+- **Outbound only**: instance can reach the Internet, but is not reachable from outside
+  - No public IP needed; the provider performs NAT transparently
+- **Bidirectional**: instance is also reachable from the Internet
+  - Requires a **public IP** assigned to the instance
+  - Use for: web servers, load balancers, anything public-facing
 
 \vfill
 
-\footnotesize
-Same \textbf{NAT concept from Block 3}, now as a managed cloud service.
+\footnotesize Note: a NAT Gateway can optionally be added for private instances that need outbound Internet access (e.g. downloading updates), without exposing them inbound.
 
 ## Security Groups -- Instance-Level Firewall
+
+Once traffic reaches an instance, you still need to control what it can send and receive. Security groups act as a per-instance firewall.
+
+\vspace{0.2cm}
 
 - **Security group** = virtual firewall attached to an instance
 - Rules specify allowed **inbound** and **outbound** traffic
@@ -499,6 +483,10 @@ Outbound & All & All & \texttt{0.0.0.0/0} \\
 Source: AWS, "Security Groups for Your VPC," docs.aws.amazon.com.
 
 ## Network ACLs (Access Control Lists) -- Subnet-Level Firewall
+
+Security groups protect individual instances. Network ACLs add an additional layer of control at the subnet boundary, before traffic even reaches any instance.
+
+\vspace{0.2cm}
 
 - **Network ACL** = firewall at the **subnet** level
 - Rules evaluated in **order** (numbered, first match wins)
@@ -565,6 +553,24 @@ Hints: think about public vs private subnets, security groups, and NAT gateways.
 
 # Cloud Network Services
 
+## Cloud Network Services -- Overview
+
+Beyond virtual networks and security controls, public cloud providers offer managed network services that simplify common infrastructure tasks.
+
+\vspace{0.3cm}
+
+- **Load Balancer (LB)**
+- **Proxy**
+- **Reverse Proxy**
+- **VPN (Virtual Private Network)**
+
+\vspace{0.3cm}
+
+These services run as **managed offerings**: no servers to install or maintain.
+
+\vfill
+\footnotesize Note: Proxy, Reverse Proxy, and VPN will be covered in depth in Block 6. Here we introduce them briefly.
+
 ## Load Balancer
 
 - Distributes incoming traffic across **multiple instances** (VMs or containers)
@@ -595,9 +601,37 @@ Hints: think about public vs private subnets, security groups, and NAT gateways.
 
 \footnotesize Source: AWS, "Elastic Load Balancing Documentation," docs.aws.amazon.com.
 
+## Proxy
+
+Without a proxy, every instance in your network reaches the Internet directly: no visibility, no control. A proxy sits in front of clients and mediates all outbound traffic.
+
+- Clients send requests to the proxy, which forwards them to the Internet
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, minimum width=1.8cm, minimum height=0.6cm, font=\scriptsize},
+    >=Stealth
+]
+\node[box, fill=green!15] (c1) at (0,0.7) {Client 1};
+\node[box, fill=green!15] (c2) at (0,-0.7) {Client 2};
+\node[box, fill=yellow!20] (proxy) at (3.5,0) {Proxy};
+\node[font=\scriptsize] (inet) at (7,0) {Internet};
+
+\draw[->, thick] (c1) -- (proxy);
+\draw[->, thick] (c2) -- (proxy);
+\draw[->, thick] (proxy) -- (inet);
+\end{tikzpicture}
+\end{center}
+
+- **Access control**: block certain websites or domains
+- **Caching**: store frequently accessed content, reduce bandwidth
+- **Logging**: monitor what employees or VMs access
+- Examples: Squid, corporate firewalls with proxy mode
+
 ## Reverse Proxy
 
-- Sits **in front of** backend servers, receives all client requests
+Without a reverse proxy, clients connect directly to your backend servers: exposing their addresses and requiring each to handle TLS. A reverse proxy sits in front of servers and mediates all inbound traffic.
+
 - Clients never communicate directly with the backend
 
 \begin{center}
@@ -616,50 +650,19 @@ Hints: think about public vs private subnets, security groups, and NAT gateways.
 \end{tikzpicture}
 \end{center}
 
-Key functions:
-
-- **TLS (Transport Layer Security) termination**: handles HTTPS encryption, backends receive plain HTTP
+- **TLS termination**: handles HTTPS encryption, backends receive plain HTTP
 - **URL routing**: `/api/*` $\rightarrow$ API server, `/*` $\rightarrow$ web app
 - **Caching**: stores responses to reduce backend load
 - Examples: NGINX, HAProxy, AWS CloudFront, Azure Front Door
 
-## Forward Proxy
-
-- Sits **in front of clients**, controls their **outbound** traffic
-- Clients send requests to the proxy, which forwards them to the Internet
-
-\begin{center}
-\begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=1.8cm, minimum height=0.6cm, font=\scriptsize},
-    >=Stealth
-]
-\node[box, fill=green!15] (c1) at (0,0.7) {Client 1};
-\node[box, fill=green!15] (c2) at (0,-0.7) {Client 2};
-\node[box, fill=yellow!20] (proxy) at (3.5,0) {Forward Proxy};
-\node[font=\scriptsize] (inet) at (7,0) {Internet};
-
-\draw[->, thick] (c1) -- (proxy);
-\draw[->, thick] (c2) -- (proxy);
-\draw[->, thick] (proxy) -- (inet);
-\end{tikzpicture}
-\end{center}
-
-Key functions:
-
-- **Access control**: block certain websites or domains
-- **Caching**: store frequently accessed content, reduce bandwidth
-- **Anonymity**: external servers see the proxy's IP, not the client's
-- **Logging**: monitor what employees or VMs access
-- Examples: Squid, corporate firewalls with proxy mode
-
-## Reverse Proxy vs Forward Proxy
+## Reverse Proxy vs Proxy
 
 \begin{center}
 \small
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{|l|l|l|}
 \hline
-\rowcolor{blue!10} & \textbf{Forward Proxy} & \textbf{Reverse Proxy} \\
+\rowcolor{blue!10} & \textbf{Proxy} & \textbf{Reverse Proxy} \\
 \hline
 Protects & Clients (outbound) & Servers (inbound) \\
 \hline
@@ -676,7 +679,7 @@ Use case & Control outbound access & TLS termination, routing, caching \\
 
 Think of it this way:
 
-- **Forward proxy**: "I control what my users can access outside"
+- **Proxy**: "I control what my users can access outside"
 - **Reverse proxy**: "I control how outside users reach my servers"
 
 ## VPN -- Virtual Private Network
@@ -684,35 +687,20 @@ Think of it this way:
 - A **VPN (Virtual Private Network)** creates a **secure, encrypted tunnel** over the public Internet
 - Connects remote networks or users as if they were on the same private network
 
-\begin{center}
-\begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=2.2cm, minimum height=0.8cm, font=\scriptsize, align=center},
-    >=Stealth
-]
-\node[box, fill=green!15] (office) at (0,0) {Corporate\\Office};
-\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, cloud puff arc=120, minimum width=2.5cm, minimum height=1.2cm, font=\scriptsize] (inet) at (5,0) {Internet};
-\node[box, fill=blue!15] (vpc) at (10,0) {Cloud Virtual\\Network};
+\vfill
 
-\draw[thick, dashed, red] (office) -- node[above, font=\tiny] {Encrypted VPN tunnel} (inet);
-\draw[thick, dashed, red] (inet) -- (vpc);
-\end{tikzpicture}
-\end{center}
-
-Two main types:
-
-- **Site-to-site VPN**: connects two networks (e.g. office $\leftrightarrow$ cloud VPC)
-- **Client VPN**: individual user connects to a remote network (e.g. employee working from home)
-- Cloud examples: AWS VPN, Azure VPN Gateway, GCP Cloud VPN
+<!-- nota: VPNs will be covered in depth in Block 6 -->
+\footnotesize VPNs will be covered in depth in Block 6.
 
 ## Discussion: Cloud Network Services
 
 \begin{center}
-\Large\textit{A company has a web application with a public frontend,\\a private API, and a database. They also need employees\\to access the cloud from the office.\\Which services would you use and where?}
+\Large\textit{You are deploying a web application.\\When does it make sense to add a Load Balancer?\\When would you not need one?}
 \end{center}
 
 \vfill
 
-Hints: load balancer for the frontend, reverse proxy for routing, VPN for office access, private subnet for the database.
+Hints: think about the number of users, availability requirements, and what happens if your single instance goes down.
 
 # Session Summary
 
