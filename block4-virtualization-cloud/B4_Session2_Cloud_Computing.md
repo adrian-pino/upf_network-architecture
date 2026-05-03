@@ -230,17 +230,37 @@ Hints: consider the IT team size, maintenance burden, and how much control they 
 
 ## Putting It All Together
 
-- In Session 1 we saw the **building blocks**: Virtual Switches, Virtual Routers, Virtual NICs, VLANs
-- These components do not run in isolation; they are managed by **platforms**
-- Platforms orchestrate **VMs** or **containers** and configure virtual networking under the hood
+:::::::::::::: {.columns}
+::: {.column width="48%"}
 
-\vspace{0.3cm}
+**What we have seen (Session 1)**
 
-Two categories:
+- Virtual Switches and Virtual Routers
+- Virtual NICs and VLANs
+- Hypervisors (KVM, VMware) and containers
 
-- **Cloud platforms**: manage infrastructure at scale
-  - Compute, storage, networking, and **VMs**
-- **Container orchestration platforms**: deploy and scale **containerized** applications
+\vspace{0.2cm}
+
+These are the **building blocks** of any virtual network; they do not run in isolation.
+
+:::
+::: {.column width="48%"}
+
+**Platforms manage these building blocks**
+
+- Provision and connect VMs or containers automatically
+- Handle networking, storage, and scaling under the hood
+- Hide hardware complexity from the developer
+
+\vspace{0.2cm}
+
+Two families:
+
+- **Cloud platforms** (AWS, Azure, GCP, OpenStack): full infrastructure stack
+- **Container orchestration** (Kubernetes): deploy and scale containerized workloads
+
+:::
+::::::::::::::
 
 ## Cloud Platforms
 
