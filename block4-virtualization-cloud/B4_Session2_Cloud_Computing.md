@@ -110,8 +110,6 @@ Hints: think about CapEx vs OpEx, scaling speed, and who manages what.
 \textit{A model for enabling ubiquitous, convenient, \textbf{on-demand network access} to a shared pool of configurable computing resources that can be rapidly provisioned and released with minimal management effort.}
 \end{quote}
 
-\vfill
-
 - **Ubiquitous**: anywhere, any device
 - **On-demand**: no tickets, provision instantly
 - **Shared pool**: many tenants, same hardware
@@ -166,13 +164,12 @@ Measured service & Pay only for what you use (CPU-hours, GB stored) \\
 \draw[decorate, decoration={brace, amplitude=8pt}, thick, red] (5.5,3.4) -- (5.5,-1.9) node[midway, right=10pt, font=\small, text=red] {SaaS};
 \draw[decorate, decoration={brace, amplitude=8pt}, thick, orange] (6.8,1.6) -- (6.8,-1.9) node[midway, right=10pt, font=\small, text=orange] {PaaS};
 \draw[decorate, decoration={brace, amplitude=8pt}, thick, blue] (8.1,-0.2) -- (8.1,-1.9) node[midway, right=10pt, font=\small, text=blue] {IaaS};
-\draw[decorate, decoration={brace, amplitude=8pt}, thick, teal] (9.4,1.6) -- (9.4,-1.9) node[midway, right=10pt, font=\small, text=teal] {CaaS};
 \end{tikzpicture}
 \end{center}
 
 <!-- nota: ir de abajo a arriba, explicando qué gestiona el proveedor vs el cliente en cada modelo -->
 
-## IaaS, PaaS, SaaS, CaaS -- In Practice
+## IaaS, PaaS, SaaS -- In Practice
 
 \small
 
@@ -190,13 +187,6 @@ Measured service & Pay only for what you use (CPU-hours, GB stored) \\
 
 \vspace{0.2cm}
 
-**CaaS** (Container as a Service) (e.g. AWS EKS, Azure AKS, Google GKE):
-
-- Provider gives you a managed container orchestration platform (Kubernetes)
-- "I have containers. Just run and scale them, I do not care about the cluster"
-
-\vspace{0.2cm}
-
 **SaaS** (e.g. Google Workspace, Microsoft 365, Slack, Zoom):
 
 - Provider gives you a complete application. You manage your data only
@@ -205,13 +195,34 @@ Measured service & Pay only for what you use (CPU-hours, GB stored) \\
 ## Service Models -- Who Manages What?
 
 \begin{center}
-\includegraphics[width=0.85\textwidth]{img/iaas-paas-saas-caas-flowchart.png}
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\rowcolor{blue!10} \textbf{Component} & \textbf{IaaS} & \textbf{PaaS} & \textbf{SaaS} \\
+\hline
+Applications & You & You & \cellcolor{blue!15}Provider \\
+\hline
+Data & You & You & You \\
+\hline
+Runtime / Middleware & You & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
+\hline
+Operating System & You & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
+\hline
+Virtualization & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
+\hline
+Hardware & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
+\hline
+\end{tabular}
 \end{center}
+
+- IaaS $\rightarrow$ SaaS: **less control, less responsibility**
+- Major providers (AWS, Azure, GCP) offer all three models
 
 ## Discussion: Cloud Fundamentals
 
 \begin{center}
-\Large\textit{A university wants to offer a web-based tool\\for students to submit assignments.\\Should they choose IaaS, PaaS, CaaS, or SaaS? Why?}
+\Large\textit{A university wants to offer a web-based tool\\for students to submit assignments.\\Should they choose IaaS, PaaS, or SaaS? Why?}
 \end{center}
 
 \vfill
@@ -323,8 +334,16 @@ Hints: team size, upfront cost, time to market, scaling needs, control over infr
 ## Virtual Networks in the Cloud
 
 - Every cloud provider lets you create your own **isolated virtual network**
-  - AWS: Virtual Private Cloud (VPC); Azure: Virtual Network (VNet); GCP: VPC Network
+  - AWS: Virtual Private Cloud (VPC)
+  - Azure: Virtual Network (VNet)
+  - GCP: VPC Network
+
+\vspace{0.2cm}
+
 - Think of it as your **private data center network** in the cloud
+
+\vspace{0.2cm}
+
 - You define:
   - **Address space** (e.g., `10.0.0.0/16`)
   - **Subnets** (subdivisions of the address space)
@@ -335,8 +354,6 @@ Hints: team size, upfront cost, time to market, scaling needs, control over infr
 <!-- nota: el virtual network usa overlays VXLAN por debajo — se cubrirán en Block 5 -->
 
 Key: under the hood, cloud providers use **overlay networks** (covered in Block 5) to isolate tenants at scale.
-
-<!-- nota: el virtual network usa overlays VXLAN por debajo — se cubrirán en Block 5 -->
 
 ## Virtual Network Architecture
 
@@ -354,13 +371,13 @@ Key: under the hood, cloud providers use **overlay networks** (covered in Block 
 \node[subnet, fill=yellow!10] (pub) at (-2,0.5) {};
 \node[font=\scriptsize\bfseries] at (-2,1.5) {Public Subnet};
 \node[font=\tiny] at (-2,1.1) {10.0.1.0/24};
-\node[inst] (web) at (-2,0.3) {Web Server};
+\node[inst] (web) at (-2,0.3) {VM: Web Server};
 
 % Private subnet
 \node[subnet, fill=gray!10] (priv) at (2,0.5) {};
 \node[font=\scriptsize\bfseries] at (2,1.5) {Private Subnet};
 \node[font=\tiny] at (2,1.1) {10.0.2.0/24};
-\node[inst] (db) at (2,0.3) {Database};
+\node[inst] (db) at (2,0.3) {VM: Database};
 
 % Internet gateway
 \node[draw, thick, fill=orange!20, rounded corners, font=\scriptsize] (igw) at (-2,-2.5) {Internet GW};
@@ -377,6 +394,10 @@ Key: under the hood, cloud providers use **overlay networks** (covered in Block 
 \end{center}
 
 ## Subnets -- Public vs Private
+
+Cloud providers distinguish between subnets reachable from the Internet and isolated ones: not all workloads should be exposed publicly. Databases, internal APIs, and backends must stay hidden, while web servers and load balancers need to be accessible. Subnets enforce this boundary at the network level.
+
+\vspace{0.2cm}
 
 **Public subnet:**
 
@@ -690,7 +711,7 @@ Hints: load balancer for the frontend, reverse proxy for routing, VPN for office
 
 1. Virtualization is the **technology**; cloud is the **business model**
 2. Five NIST characteristics define true cloud computing
-3. **IaaS / PaaS / CaaS / SaaS** differ in who manages what
+3. **IaaS / PaaS / SaaS** differ in who manages what
 4. Cloud and container **platforms** deliver these models at scale
 5. A **virtual network** is your isolated cloud network (CIDR, subnets, route tables)
 6. **Security groups** (instance) + **ACLs** (subnet) = defense in depth

@@ -149,7 +149,6 @@ Check this list before using an acronym. If it was already defined in a previous
 | VXLAN | Virtual Extensible LAN | B4 Session 1 |
 | IaaS | Infrastructure as a Service | B4 Session 2 |
 | PaaS | Platform as a Service | B4 Session 2 |
-| CaaS | Container as a Service | B4 Session 2 |
 | SaaS | Software as a Service | B4 Session 2 |
 | VPC | Virtual Private Cloud | B4 Session 2 |
 | NIST | National Institute of Standards and Technology | B4 Session 2 |
