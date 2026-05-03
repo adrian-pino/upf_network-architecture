@@ -33,9 +33,9 @@ header-includes:
 **Learning objectives:**
 
 1. Understand cloud computing's definition and essential characteristics
-2. Distinguish IaaS (Infrastructure as a Service), PaaS (Platform as a Service), and SaaS (Software as a Service)
-3. Understand core cloud architecture patterns: regions, availability zones, and virtual networks
-4. Design a cloud virtual network with subnets, security controls, and network services
+2. Distinguish IaaS (Infrastructure as a Service), PaaS (Platform as a Service), and SaaS (Software as a Service) and identify key cloud platforms
+3. Design a cloud virtual network with subnets, route tables, and security controls
+4. Identify essential cloud network services: load balancers, proxies, and VPNs
 
 ## Recap -- What We Virtualized (Session 1)
 
@@ -213,6 +213,8 @@ Virtualization & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \ce
 \hline
 Hardware & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
 \hline
+Network Services (LB, Proxy, VPN) & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider \\
+\hline
 \end{tabular}
 \end{center}
 
@@ -290,6 +292,37 @@ Google Cloud Platform & Data and AI focus & \includegraphics[height=0.25cm]{img/
 \vfill
 \footnotesize
 These map directly to the IaaS model we just covered: the provider (or you) manages compute, storage, and networking.
+
+## Public Cloud vs Private Cloud: What You Manage
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|}
+\hline
+\rowcolor{blue!10} \textbf{Component} & \textbf{Public Cloud} & \textbf{Private Cloud} \\
+\hline
+Applications & You & You \\
+\hline
+Data & You & You \\
+\hline
+Runtime / Middleware & You (IaaS) / Provider (PaaS) & You \\
+\hline
+Operating System & You (IaaS) / Provider (PaaS) & You \\
+\hline
+Virtualization & \cellcolor{blue!15}Provider & You \\
+\hline
+Hardware & \cellcolor{blue!15}Provider & You \\
+\hline
+Networking & \cellcolor{blue!15}Provider & You \\
+\hline
+Cooling / Power & \cellcolor{blue!15}Provider & You \\
+\hline
+\end{tabular}
+\end{center}
+
+\vfill
+\footnotesize Public cloud trades control for simplicity; private cloud gives full control at the cost of operational overhead.
 
 ## Container Orchestration Platforms
 
@@ -553,15 +586,15 @@ Hints: think about public vs private subnets, security groups, and NAT gateways.
 
 # Cloud Network Services
 
-## Cloud Network Services -- Overview
+## Cloud Network Services: Overview
 
 Beyond virtual networks and security controls, public cloud providers offer managed network services that simplify common infrastructure tasks, such as:
 \vspace{0.3cm}
 
-- **Load Balancer (LB)**
-- **Proxy**
-- **Reverse Proxy**
-- **VPN (Virtual Private Network)**
+1. **Load Balancer (LB)**
+2. **Proxy**
+3. **Reverse Proxy**
+4. **VPN (Virtual Private Network)**
 
 \vspace{0.3cm}
 
@@ -649,35 +682,13 @@ A reverse proxy sits in front of backend servers and mediates all inbound traffi
 \end{tikzpicture}
 \end{center}
 
+- **TLS termination**: handles HTTPS, backends receive plain HTTP
+- **URL routing**: directs requests to the right backend service
+- **Hides backend servers**: clients only see the proxy's address
+- Examples: NGINX, HAProxy, AWS CloudFront, Azure Front Door
+
 \vfill
 \footnotesize Will be covered in depth in Block 6.
-
-## Reverse Proxy vs Proxy
-
-\begin{center}
-\small
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{|l|l|l|}
-\hline
-\rowcolor{blue!10} & \textbf{Proxy} & \textbf{Reverse Proxy} \\
-\hline
-Protects & Clients (outbound) & Servers (inbound) \\
-\hline
-Position & In front of clients & In front of servers \\
-\hline
-Who knows? & Server sees proxy, not client & Client sees proxy, not server \\
-\hline
-Use case & Control outbound access & TLS termination, routing, caching \\
-\hline
-\end{tabular}
-\end{center}
-
-\vfill
-
-Think of it this way:
-
-- **Proxy**: "I control what my users can access outside"
-- **Reverse proxy**: "I control how outside users reach my servers"
 
 ## VPN -- Virtual Private Network
 
