@@ -1440,6 +1440,8 @@ Why it worked for them:
 - **Large, experienced ops team** → already managing servers regardless
 - **No need for global presence** → most users in the same region
 
+. . .
+
 \vfill
 
 \begin{alertblock}{Key insight}
