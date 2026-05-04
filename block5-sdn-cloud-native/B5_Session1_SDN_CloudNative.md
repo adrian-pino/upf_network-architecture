@@ -40,29 +40,81 @@ header-includes:
 
 ## Traditional Network Management
 
+:::::::::::::: {.columns}
+::: {.column width="50%"}
+
 - Each device (router, switch, firewall) configured **individually**
-- Configuration via CLI, **device by device**
+\vspace{0.2cm}
+- Configuration via Command-Line Interface (CLI), **device by device**
+\vspace{0.2cm}
 - Vendor-specific commands and interfaces
+\vspace{0.2cm}
 - Changes require **manual intervention** on every device
 
-\vfill
+:::
+::: {.column width="50%"}
 
-Imagine updating 1,000 switches one by one. That's traditional networking.
+\begin{center}
+\begin{tikzpicture}[scale=0.95, every node/.style={transform shape},
+    dev/.style={draw, thick, rounded corners, fill=gray!20, minimum width=1.4cm, minimum height=0.6cm, font=\scriptsize, align=center},
+    eng/.style={draw, thick, ellipse, fill=yellow!20, minimum width=1.4cm, minimum height=0.7cm, font=\scriptsize},
+    >=Stealth
+]
+% Top row: devices
+\node[dev] (r1) at (-2, 3.0) {Router 1};
+\node[dev] (r2) at (0,  3.0) {Switch 1};
+\node[dev] (r3) at (2,  3.0) {Firewall 1};
+
+% Middle: Admin
+\node[eng] (admin) at (0, 1.7) {Admin};
+
+% Bottom row: devices
+\node[dev] (r4) at (-2, 0.3) {Router 2};
+\node[dev] (r5) at (0,  0.3) {Switch 2};
+\node[dev] (r6) at (2,  0.3) {Firewall 2};
+
+% Admin to top row
+\draw[->, thick, red] (admin) -- node[left,  font=\tiny] {SSH} (r1);
+\draw[->, thick, red] (admin) -- node[right, font=\tiny] {SSH} (r2);
+\draw[->, thick, red] (admin) -- node[right, font=\tiny] {SSH} (r3);
+
+% Admin to bottom row
+\draw[->, thick, red] (admin) -- node[left,  font=\tiny] {SSH} (r4);
+\draw[->, thick, red] (admin) -- node[right, font=\tiny] {SSH} (r5);
+\draw[->, thick, red] (admin) -- node[right, font=\tiny] {SSH} (r6);
+
+\node[font=\tiny, text=red] at (0, -0.5) {Each device: separate login, separate config};
+\end{tikzpicture}
+\end{center}
+
+:::
+::::::::::::::
+
+\vfill
+\footnotesize Imagine updating 1,000 switches one by one. That is traditional networking.
 
 ## Scalability Challenges
 
 - Data centers grow from hundreds to **hundreds of thousands** of devices
+\vspace{0.2cm}
 - Manual configuration does **not scale**
+\vspace{0.2cm}
 - Network changes are **slow**: days or weeks for approval + implementation
+\vspace{0.2cm}
 - **Human errors** increase with complexity
+\vspace{0.2cm}
 - Cloud-scale infrastructure demands **automation**
 
 ## The Control Plane Problem
 
 - In traditional networks, **every device** runs its own control plane
+\vspace{0.2cm}
 - Each router independently computes routes (OSPF, BGP from Block 3)
+\vspace{0.2cm}
 - No **centralized view** of the entire network
+\vspace{0.2cm}
 - Difficult to implement **network-wide policies**
+\vspace{0.2cm}
 - Limited **programmability**: cannot easily add new features
 
 \vfill
@@ -82,15 +134,35 @@ The control plane is **distributed** by design. What if we **centralized** it?
 
 # Software-Defined Networking (SDN)
 
-## SDN -- Core Idea
+## Why SDN?
+
+Traditional networks have no central brain: every device runs its own control logic, independently. Updating a policy means logging into each device separately.
+
+\vspace{0.3cm}
+
+The key insight: what if we **separated the decision-making** (control plane) from the **packet forwarding** (data plane) and moved all decisions into a single piece of software?
+
+\vfill
+
+That is the core idea behind Software-Defined Networking (SDN).
+
+## SDN: Core Idea
+
+:::::::::::::: {.columns}
+::: {.column width="40%"}
 
 - **Separate** the control plane from the data plane
+\vspace{0.2cm}
 - **Centralize** network intelligence in a software controller
+\vspace{0.2cm}
 - **Program** network behavior through APIs
+
+:::
+::: {.column width="60%"}
 
 \begin{center}
 \begin{tikzpicture}[
-    plane/.style={draw, thick, rounded corners, minimum width=7cm, minimum height=1cm, font=\small},
+    plane/.style={draw, thick, rounded corners, minimum width=5.5cm, minimum height=0.9cm, font=\small},
     >=Stealth
 ]
 \node[plane, fill=orange!20] (app) at (0,3) {Application Plane};
@@ -102,9 +174,12 @@ The control plane is **distributed** by design. What if we **centralized** it?
 \end{tikzpicture}
 \end{center}
 
+:::
+::::::::::::::
+
 \footnotesize McKeown et al., "OpenFlow: Enabling Innovation in Campus Networks," *ACM SIGCOMM CCR*, 2008.
 
-## SDN Architecture -- Three Planes
+## SDN Architecture: Three Planes
 
 **Data Plane (Infrastructure Layer):**
 
@@ -112,11 +187,15 @@ The control plane is **distributed** by design. What if we **centralized** it?
 - No longer make independent routing decisions
 - Receive forwarding rules from the controller
 
+\vspace{0.2cm}
+
 **Control Plane (Controller):**
 
 - Centralized software with a **global view** of the network
 - Computes paths, installs forwarding rules on switches
 - Single point of management for the entire network
+
+\vspace{0.2cm}
 
 **Application Plane:**
 
@@ -125,50 +204,83 @@ The control plane is **distributed** by design. What if we **centralized** it?
 
 ## SDN Controllers
 
-- The controller is the **brain** of an SDN network
-- Maintains a real-time **topology database** of the entire network
-- Supports **high availability** (clustered deployment)
+:::::::::::::: {.columns}
+::: {.column width="50%"}
 
-Examples:
+- The controller is the **brain** of the network: it has a global view and makes all forwarding decisions
+\vspace{0.2cm}
+- Maintains a real-time **topology database**
+\vspace{0.2cm}
+- Supports **high availability** via clustering
 
-- **OpenDaylight** (Linux Foundation, Java-based, widely adopted)
-- **ONOS** (Open Network Operating System, carrier-grade, telecom-focused)
-- **Floodlight** (open-source, lightweight, educational)
-- Proprietary: **Cisco ACI**, **VMware NSX**
+\vspace{0.3cm}
+
+**Open-source examples:**
+
+- **OpenDaylight** (Linux Foundation)
+- **ONOS** (Open Network Operating System, carrier-grade)
+
+\vspace{0.2cm}
+
+**Proprietary examples:**
+
+- **Cisco ACI**, **VMware NSX**
 
 \footnotesize OpenDaylight Project, opendaylight.org; ONOS Project, onosproject.org.
 
-## Southbound Interface -- OpenFlow
-
-- **OpenFlow** (2008, Stanford): the original SDN protocol
-- Defines how the controller communicates with switches
-- Controller installs **flow rules** in the switch's flow table:
+:::
+::: {.column width="50%"}
 
 \begin{center}
-\small
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{|l|l|l|}
-\hline
-\rowcolor{blue!10} \textbf{Match} & \textbf{Action} & \textbf{Priority} \\
-\hline
-dst IP = \texttt{10.0.1.0/24} & Forward to port 3 & 100 \\
-\hline
-dst IP = \texttt{10.0.2.0/24} & Forward to port 5 & 100 \\
-\hline
-src IP = \texttt{192.168.1.100} & Drop & 200 \\
-\hline
-* (any) & Send to controller & 1 \\
-\hline
-\end{tabular}
+\begin{tikzpicture}[scale=0.8, every node/.style={transform shape},
+    sw/.style={draw, thick, rounded corners, fill=gray!20, minimum width=1.4cm, minimum height=0.6cm, font=\scriptsize, align=center},
+    >=Stealth
+]
+% Controller box (outer, larger)
+\node[draw, thick, rounded corners, fill=blue!20, minimum width=4cm, minimum height=2cm] (ctrlbox) at (0, 3.2) {};
+\node[font=\scriptsize, align=center] at (0, 3.7) {SDN Controller\\(global view)};
+\node[draw, thick, rounded corners, fill=blue!8, minimum width=3cm, minimum height=0.5cm, font=\tiny] at (0, 2.9) {Topology DB};
+
+% Southbound arrow with label
+\draw[->, thick] (0, 2.2) -- node[right, font=\tiny] {Southbound API} (0, 1.5);
+
+% Horizontal bus
+\draw[thick] (-2, 1.5) -- (2, 1.5);
+
+% Switches
+\node[sw] (s1) at (-2, 0.6) {Switch 1};
+\node[sw] (s2) at (0,  0.6) {Switch 2};
+\node[sw] (s3) at (2,  0.6) {Switch 3};
+
+\draw[->, thick] (-2, 1.5) -- (s1);
+\draw[->, thick] (0,  1.5) -- (s2);
+\draw[->, thick] (2,  1.5) -- (s3);
+
+\node[font=\tiny, text=gray, align=center] at (0, -0.1) {Flow rules pushed to all devices at once};
+\end{tikzpicture}
 \end{center}
 
-- If no rule matches $\rightarrow$ packet sent to controller for a decision
+:::
+::::::::::::::
+
+## Southbound Interface: OpenFlow
+
+- **OpenFlow** (2008, Stanford): the first standard southbound protocol
+\vspace{0.2cm}
+- Controller pushes **flow rules** to switches: match on packet fields, apply an action (forward, drop, redirect)
+\vspace{0.2cm}
+- Proved the concept: a controller can program any switch centrally
+\vspace{0.2cm}
+- Rarely used in production today; modern SDN relies on **gNMI**, **NETCONF/YANG**, and vendor APIs (Cisco ACI, VMware NSX)
+
+\vfill
 
 \footnotesize ONF, "Software-Defined Networking: The New Norm for Networks," ONF White Paper, 2012.
 
-## Northbound Interface -- Representational State Transfer (REST) APIs
+## Northbound Interface: Representational State Transfer (REST) APIs
 
 - Applications interact with the controller via **REST APIs**
+\vspace{0.2cm}
 - Example operations:
   - `GET /topology/links` $\rightarrow$ get network topology
   - `POST /flows` $\rightarrow$ add a flow rule
@@ -176,16 +288,18 @@ src IP = \texttt{192.168.1.100} & Drop & 200 \\
 
 \vfill
 
-Key benefit: the network becomes **programmable** like any other software system.
+Key benefit: the network becomes **programmable** like any other software system — any developer can write applications that control network behavior.
 
-Any developer can write applications that control network behavior.
-
-## SDN Benefits -- Summary
+## SDN Benefits: Summary
 
 - **Centralized management**: one controller, global network view
+\vspace{0.2cm}
 - **Programmability**: automate changes via APIs
+\vspace{0.2cm}
 - **Agility**: deploy new policies in seconds, not days
-- **Vendor independence**: OpenFlow works across vendors
+\vspace{0.2cm}
+- **Vendor independence**: open protocols (gNMI, NETCONF) and standard APIs reduce lock-in
+\vspace{0.2cm}
 - **Innovation**: researchers and developers can experiment easily
 
 \vfill
@@ -206,22 +320,40 @@ SDN is the foundation for modern cloud networking: AWS, Azure, and GCP all use S
 
 # Network Function Virtualization (NFV)
 
-## From Hardware Appliances to Software
+## Why NFV?
 
-- Traditional network functions run on **dedicated hardware**:
-  - Firewall $\rightarrow$ physical appliance (\$10K--\$100K+)
-  - Load balancer $\rightarrow$ physical appliance
-  - Router $\rightarrow$ physical appliance
+SDN solves *how* traffic flows: a central controller programs forwarding rules across the network. But the functions that actually **process** that traffic (firewalls, load balancers, routers) are still dedicated hardware boxes: expensive, slow to procure, and impossible to spin up in seconds.
 
-- Problems: **expensive**, inflexible, vendor lock-in, slow to deploy
-- NFV idea: run these functions as **software on commodity servers**
+\vspace{0.3cm}
 
-\footnotesize ETSI, "Network Functions Virtualisation -- An Introduction, Benefits, Enablers, Challenges \& Call for Action," White Paper, 2012.
+SDN can steer traffic perfectly — but if it leads to a \euro{}50K hardware appliance, we have not solved the flexibility problem.
 
-## Virtual Network Functions (VNFs)
+\vfill
 
-- A **VNF** = network function implemented as software
-- Runs on VMs or containers, on standard x86 servers
+NFV completes the picture: run those functions as **software on the same commodity servers** SDN already manages.
+
+## NFV: From Hardware to Software
+
+:::::::::::::: {.columns}
+::: {.column width="40%"}
+
+Traditional network functions run on **dedicated hardware boxes**:
+
+- Firewall: \euro{}10K--\euro{}100K+
+- Load balancer, router, IDS/IPS
+
+\vspace{0.2cm}
+
+Problems: **expensive**, inflexible, slow to deploy, vendor lock-in
+
+\vspace{0.2cm}
+
+NFV replaces them with **software (VNFs)** running on standard x86 servers or VMs.
+
+\footnotesize ETSI, "Network Functions Virtualisation," White Paper, 2012.
+
+:::
+::: {.column width="60%"}
 
 \begin{center}
 \small
@@ -230,51 +362,71 @@ SDN is the foundation for modern cloud networking: AWS, Azure, and GCP all use S
 \hline
 \rowcolor{blue!10} \textbf{Physical Appliance} & \textbf{VNF Equivalent} \\
 \hline
-Hardware firewall & Virtual firewall (pfSense, iptables) \\
+Hardware firewall & pfSense, iptables \\
 \hline
-Hardware load balancer & Virtual LB (HAProxy, NGINX) \\
+Hardware load balancer & HAProxy, NGINX \\
 \hline
-Hardware router & Virtual router (VyOS, FRRouting) \\
+Hardware router & VyOS, FRRouting \\
 \hline
-WAN optimizer & Virtual WAN optimizer \\
-\hline
-Intrusion Detection / Prevention (IDS/IPS) & Virtual IDS (Snort, Suricata) \\
+IDS/IPS & Snort, Suricata \\
 \hline
 \end{tabular}
 \end{center}
 
 \footnotesize ETSI GS NFV 002, "NFV Architectural Framework," v1.2.1, 2014.
 
+:::
+::::::::::::::
+
 ## NFV + Cloud Integration
 
 - Deploy VNFs on cloud infrastructure (IaaS) $\rightarrow$ **minutes** instead of months
+\vspace{0.2cm}
 - **Scale horizontally**: add more instances under load
+\vspace{0.2cm}
 - **Update easily**: software upgrades, no truck rolls
+\vspace{0.2cm}
 - **Cost reduction**: commodity servers vs specialized hardware
 
 \vfill
 
 No hardware procurement, no shipping, no rack-and-stack.
 
-## SDN + NFV -- Complementary Technologies
+## SDN + NFV: Complementary Technologies
+
+:::::::::::::: {.columns}
+::: {.column width="50%"}
 
 \begin{center}
 \begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=4cm, minimum height=1.2cm, font=\small, align=center},
+    box/.style={draw, thick, rounded corners, minimum width=3.5cm, minimum height=1.0cm, font=\small, align=center},
     >=Stealth
 ]
-\node[box, fill=blue!15] (sdn) at (-3,0) {SDN\\(How traffic flows)};
-\node[box, fill=green!15] (nfv) at (3,0) {NFV\\(What processes traffic)};
-
-\draw[<->, very thick, red] (sdn) -- node[above, font=\small] {Complementary} (nfv);
-
-\node[font=\scriptsize, text=gray, align=center] at (-3,-1.2) {Centralized control\\Programmable forwarding\\API-driven};
-\node[font=\scriptsize, text=gray, align=center] at (3,-1.2) {Software-based functions\\Runs on commodity HW\\Scalable, flexible};
+\node[box, fill=blue!15] (sdn) at (0, 1) {SDN\\{\tiny How traffic flows}};
+\node[box, fill=green!15] (nfv) at (0,-1) {NFV\\{\tiny What processes traffic}};
+\draw[<->, very thick, red] (sdn) -- node[right, font=\scriptsize] {work together} (nfv);
 \end{tikzpicture}
 \end{center}
 
-- SDN **steers** traffic to the right VNF (forwarding rules)
-- NFV **processes** the traffic (filter, balance, encrypt, inspect)
+:::
+::: {.column width="50%"}
+
+**Example: HTTP request entering a data center**
+
+\vspace{0.2cm}
+
+1. SDN controller sees incoming traffic
+2. Forwards it to a **VNF firewall** (NFV) for inspection
+3. Firewall approves; SDN routes it to the **VNF load balancer**
+4. Load balancer distributes to backend servers
+
+\vspace{0.2cm}
+
+- SDN **steers** traffic (forwarding rules)
+- NFV **processes** traffic (filter, balance, inspect)
+
+:::
+::::::::::::::
 
 ## Discussion: When Hardware Still Wins
 
@@ -289,11 +441,26 @@ No hardware procurement, no shipping, no rack-and-stack.
 
 # From VLANs to Overlay Networks
 
+## Why Overlay Networks?
+
+SDN and NFV give us programmable, virtualized infrastructure. Many tenants share the same physical network, so we need to **isolate their traffic**. We already know VLANs (Block 3) — but VLANs are capped at 4,096 networks and cannot span Layer 3 boundaries.
+
+\vspace{0.3cm}
+
+A cloud provider hosting millions of tenants, each running SDN-controlled VNFs, cannot rely on VLANs. A scalable isolation mechanism is needed: one that works across any physical topology and is invisible to the underlay.
+
+\vfill
+
+That is what overlay networks solve.
+
 ## The VLAN Scalability Problem
 
 - In Block 4 we used **VLANs** to isolate tenants on virtual networks
+\vspace{0.2cm}
 - VLANs use a **12-bit ID** $\rightarrow$ maximum **4,096** virtual networks
+\vspace{0.2cm}
 - Cloud providers host **millions** of tenants $\rightarrow$ VLANs are not enough
+\vspace{0.2cm}
 - Additional limitations:
   - VLANs are confined to a **single L2 domain**
   - Moving a VM to another host may require VLAN reconfiguration
@@ -304,31 +471,54 @@ We need a technology that scales beyond 4K networks and works across L3 boundari
 
 ## Overlay Networks: Concept
 
+:::::::::::::: {.columns}
+::: {.column width="45%"}
+
 - An **overlay network** is a virtual network built **on top of** the physical one
-- Uses **encapsulation**: wrap virtual frames inside physical packets
+\vspace{0.2cm}
+- Uses **encapsulation**: the original frame is wrapped inside a physical packet
+\vspace{0.2cm}
+- The physical network only sees the **outer headers** — tenant traffic is invisible
+\vspace{0.2cm}
+- Each tenant gets **full isolation** without the physical network knowing about them
+
+:::
+::: {.column width="55%"}
 
 \begin{center}
-\begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, font=\scriptsize, minimum height=0.6cm},
-    >=Stealth
-]
-\node[box, fill=green!15, minimum width=2cm] (inner) at (0,0) {Original Frame};
-\node[box, fill=blue!15, minimum width=1.5cm] (hdr) at (-2.2,0) {Overlay Hdr};
-\node[box, fill=gray!20, minimum width=1.2cm] (outer) at (-4,0) {Outer IP/UDP};
+\begin{tikzpicture}[>=Stealth, font=\scriptsize]
 
-\node[draw, thick, dashed, rounded corners, fit=(outer)(hdr)(inner), inner sep=4pt, label=above:{\scriptsize Encapsulated Packet}] {};
+% Outermost: Outer IP/UDP
+\node[draw, thick, rounded corners, fill=gray!20,
+      minimum width=6.5cm, minimum height=2.8cm] (outer) at (0,0) {};
+\node[anchor=north west, font=\tiny] at (outer.north west) {\textbf{Outer IP/UDP header}};
+
+% Middle: Overlay Header
+\node[draw, thick, rounded corners, fill=blue!15,
+      minimum width=4.8cm, minimum height=1.9cm] (mid) at (0.3,-0.2) {};
+\node[anchor=north west, font=\tiny] at (mid.north west) {\textbf{Overlay header (VNI)}};
+
+% Innermost: Original Frame
+\node[draw, thick, rounded corners, fill=green!15,
+      minimum width=3cm, minimum height=1.0cm] (inner) at (0.6,-0.5) {Original L2 Frame};
+
+\node[above=0.15cm of outer, font=\scriptsize] {\textit{Physical network sees only this}};
+
 \end{tikzpicture}
 \end{center}
 
-- The physical network only sees the **outer headers**
-- The virtual (tenant) traffic is hidden inside $\rightarrow$ **full isolation**
+:::
+::::::::::::::
 
 ## VXLAN: Overview
 
 - **VXLAN** (Virtual eXtensible LAN): most widely used overlay protocol
+\vspace{0.2cm}
 - Encapsulates L2 frames in **UDP packets** over the physical network
+\vspace{0.2cm}
 - Uses a **24-bit VNI** (VXLAN Network Identifier)
   - $2^{24}$ = **16 million** virtual networks (vs 4,096 VLANs)
+\vspace{0.2cm}
 - Endpoints: **VTEPs** (VXLAN Tunnel Endpoints)
   - Encapsulate at source, decapsulate at destination
 
@@ -366,8 +556,11 @@ We need a technology that scales beyond 4K networks and works across L3 boundari
 ## Overlay Benefits for Scalability
 
 - **16 million virtual networks** (vs 4,096 VLANs)
+\vspace{0.2cm}
 - Physical network does not need to know about tenants
+\vspace{0.2cm}
 - VMs can **migrate** across hosts without reconfiguring the underlay
+\vspace{0.2cm}
 - Decouples **virtual topology** from physical topology
 
 \vfill
@@ -389,12 +582,25 @@ Hints: think about overhead (extra headers), MTU implications, and troubleshooti
 
 # Container Networking
 
+## Why Container Networking?
+
+Overlays give us scalable, isolated virtual networks across any physical infrastructure. Now the question is: what runs *inside* those networks? Modern applications are no longer monolithic — they are split into dozens of small, independent services, each deployed as a **container**.
+
+\vspace{0.3cm}
+
+Each container needs its own network identity, must reach other containers (possibly on different hosts), and must be reachable from the outside. The overlay networks we just studied are exactly what makes this possible at scale.
+
+\vfill
+
+How does networking work inside and between container hosts?
+
 ## Container Networking: Starting Point
 
-- In Block 4 and Lab 3 we covered what containers are and how Docker works
-- Here we focus on the **networking layer**: how containers connect to each other and to the outside world
 - Every container gets its own **network namespace**: isolated IP stack, interfaces, routing table
+\vspace{0.2cm}
 - The container runtime (Docker) wires containers together using **virtual bridges** and **veth pairs**
+\vspace{0.2cm}
+- Containers can reach each other, the host, and the internet — depending on the **network model** chosen
 
 <!-- note: students have seen namespaces/cgroups/Docker in Lab3_Docker_Intro -- no need to repeat here -->
 
@@ -420,7 +626,7 @@ Hints: think about overhead (extra headers), MTU implications, and troubleshooti
 
 \footnotesize Docker, Inc., "Docker Networking Documentation," docs.docker.com/network.
 
-## Container Networking -- Visual
+## Container Networking: Visual
 
 \begin{center}
 \begin{tikzpicture}[
@@ -452,23 +658,20 @@ Hints: think about overhead (extra headers), MTU implications, and troubleshooti
 - Within a host: containers use a **bridge** network
 - Across hosts: an **overlay** connects the bridges (VXLAN from the previous section)
 
-## Microservices -- From Monolith to Distributed
+## Microservices: From Monolith to Distributed
 
 - **Monolithic** app: one big process, one deployment, one codebase
-- **Microservices**: app split into small, independent services
-  - Each service runs in its **own container**
-  - Services communicate over the **network** (HTTP/REST, gRPC Remote Procedure Call)
+\vspace{0.2cm}
+- **Microservices**: app split into small, independent services — each in its own container
+\vspace{0.2cm}
+- Services communicate over the **network** (HTTP/REST, gRPC Remote Procedure Call)
+\vspace{0.2cm}
+- Network implications for hundreds of containers talking to each other:
+  - Need **service discovery**: "where is the payment service?"
+  - Need **load balancing**: distribute requests across replicas
+  - Need **observability**: trace requests across services
 
-\vfill
-
-Network implications:
-
-- Hundreds of containers talking to each other
-- Need **service discovery**: "where is the payment service?"
-- Need **load balancing**: distribute requests across replicas
-- Need **observability**: trace requests across services
-
-## Microservices -- Network Challenges
+## Microservices: Network Challenges
 
 \begin{center}
 \begin{tikzpicture}[
@@ -508,21 +711,35 @@ Network implications:
 
 # Infrastructure as Code \& Network Automation
 
+## Why Infrastructure as Code?
+
+We can now program the network (SDN), virtualize its functions (NFV), scale tenant isolation (overlays), and run applications as containers. But if all of this is still configured by hand — clicking dashboards, running commands device by device — we are back to exactly the problem we started with: slow, error-prone, impossible to reproduce.
+
+\vspace{0.3cm}
+
+The final piece is treating infrastructure the same way we treat software: configuration written in files, reviewed in pull requests, stored in version control, and applied automatically.
+
+\vfill
+
+That closes the loop from the manual networks we saw at the start of this session.
+
 ## Infrastructure as Code (IaC)
 
 - **IaC**: manage infrastructure through **code files**, not manual clicks
+\vspace{0.2cm}
 - Describe desired state in a configuration file $\rightarrow$ tools apply it automatically
-
-Key benefits:
-
+\vspace{0.2cm}
 - **Reproducibility**: same config $\rightarrow$ same infrastructure, every time
+\vspace{0.2cm}
 - **Version control**: track changes in Git, review, rollback
+\vspace{0.2cm}
 - **Automation**: no manual steps $\rightarrow$ fewer human errors
+\vspace{0.2cm}
 - **Speed**: deploy entire environments in minutes
 
 \footnotesize Morris, *Infrastructure as Code*, 2nd ed., O'Reilly, 2021.
 
-## IaC Example -- Terraform (Conceptual)
+## IaC Example: Terraform (Conceptual)
 
 ```hcl
 # Define a VPC
@@ -564,7 +781,7 @@ resource "aws_security_group" "web" {
 
 # Session Summary
 
-## The Full Picture -- Where Everything Fits
+## The Full Picture: Where Everything Fits
 
 \begin{center}
 \begin{tikzpicture}[

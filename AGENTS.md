@@ -31,7 +31,7 @@
 4. Summary / key takeaways
 
 ## Writing style
-- **No long dashes** in slide content: do not use em dashes (`—`), en dashes (`–`), or LaTeX double hyphens (`--`) as phrase connectors. Use colons, semicolons, parentheses, or restructure the sentence instead. This applies to all visible slide text; HTML comments are exempt.
+- **No long dashes** in slide content: do not use em dashes (`—`), en dashes (`–`), or LaTeX double hyphens (`--`) as phrase connectors. This applies to **all visible slide text including slide titles (`##` headings)**; use colons, semicolons, or parentheses instead. HTML comments are exempt. Exception: the YAML `title:` front matter field uses `--` as a conventional Pandoc title separator and must not be changed.
 - Avoid English contractions (`don't` → `do not`, `can't` → `cannot`)
 - Prefer direct and natural language, avoiding repetitive patterns that look LLM-generated
 - **Acronyms**: always expand an acronym on first use (e.g. "Virtual Private Cloud (VPC)"). Subsequent uses can use the acronym alone. Do not assume the student knows the meaning.
@@ -83,6 +83,7 @@
 - Tables with full borders (`|l|l|`, `\hline` between each row), `\rowcolor{blue!10}` in header, `\renewcommand{\arraystretch}{1.3}` for padding. Do NOT use `booktabs` (`\toprule`/`\midrule`/`\bottomrule`)
 - `\vfill` for vertical spacing, `\footnotesize` for annotations
 - **Spacing between bullet groups**: blank lines between Markdown bullets with sub-bullets do NOT produce visible spacing in Beamer. Use `\vspace{0.2cm}` or `\vspace{0.3cm}` between bullet groups when needed. Same applies inside Pandoc columns. Only add spacing on slides with few bullets/content (visual judgment); dense slides risk overflow
+- **Sparse slides**: when a slide has 5 or fewer bullet points and no diagram, add `\vspace{0.2cm}` between every bullet to avoid the slide looking empty. Do not apply this to diagram-heavy slides or slides where bullets have sub-bullets (risk of overflow).
 - Pandoc columns: `:::::::::::::: {.columns}` / `::: {.column width="50%"}`
 
 ## TikZ conventions
