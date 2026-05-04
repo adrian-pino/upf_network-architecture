@@ -63,10 +63,11 @@ header-includes:
 \end{tikzpicture}
 \end{center}
 
+:::incremental
 - **Compute**: VMs share physical hardware via hypervisors; containers share the host kernel directly
 - **Networking**: Virtual NICs, Switches, and Routers replicate the physical stack in software
 - **Isolation**: VLANs and overlay networks separate tenants on shared infrastructure
-
+:::
 ## The Leap to Cloud
 
 
@@ -97,8 +98,6 @@ Run multiple VMs/containers on one host & Offer compute as a \textbf{service} \\
 \hline
 Run multiple VMs/containers on one host & Offer compute as a \textbf{service} \\
 \hline
-Internal IT optimization & External/internal consumption \\
-\hline
 \end{tabular}}
 \only<6>{
 \small
@@ -108,8 +107,6 @@ Internal IT optimization & External/internal consumption \\
 \rowcolor{blue!10} \textbf{Virtualization} & \textbf{Cloud Computing} \\
 \hline
 Run multiple VMs/containers on one host & Offer compute as a \textbf{service} \\
-\hline
-Internal IT optimization & External/internal consumption \\
 \hline
 Manual provisioning possible & \textbf{Automated, self-service} \\
 \hline
@@ -122,8 +119,6 @@ Manual provisioning possible & \textbf{Automated, self-service} \\
 \rowcolor{blue!10} \textbf{Virtualization} & \textbf{Cloud Computing} \\
 \hline
 Run multiple VMs/containers on one host & Offer compute as a \textbf{service} \\
-\hline
-Internal IT optimization & External/internal consumption \\
 \hline
 Manual provisioning possible & \textbf{Automated, self-service} \\
 \hline
@@ -164,7 +159,7 @@ We have laptops, code, and zero infrastructure.
 ::: {.column width="55%"}
 
 \vspace{0.8cm}
-\Large\textit{Your company already runs VMs on its own servers. Why would you move to the cloud instead of keeping everything in-house?}
+\Large\textit{Cloudbite is running in some VMs in some spare servers. Why would you move to the cloud instead of keeping everything in-house?}
 
 :::
 ::: {.column width="40%"}
@@ -432,7 +427,7 @@ Major providers (AWS, Azure, GCP) offer all three models.
 
 \only<1->{
 \begin{block}{Case A: University}
-\small A large university wants a web tool for students to submit assignments. The IT department has 10 staff. Student data must stay within EU jurisdiction. Budget is fixed yearly.
+\small A large university wants a web tool for students to submit assignments. They have an IT department. Student data must comply with EU strict regulations. 
 \end{block}
 
 \small
@@ -445,6 +440,7 @@ Major providers (AWS, Azure, GCP) offer all three models.
 - Ready-made products exist (Canvas, Moodle)
 
 - No need to scale suddenly
+
 }
 
 :::
@@ -465,6 +461,7 @@ Major providers (AWS, Azure, GCP) offer all three models.
 - Email: SaaS (Mailchimp, SendGrid)
 
 - Database: PaaS managed DB, or IaaS if we need fine-grained control
+
 }
 
 :::
@@ -472,55 +469,39 @@ Major providers (AWS, Azure, GCP) offer all three models.
 
 # Cloud & Container Platforms
 
-## CloudBite Asks: "Which Platform Do We Use?"
-
-<!-- nota: transition slide — connects scenario to section content -->
-:::incremental
-- We chose **IaaS**: we want full control over the stack
-- Now we must choose: run our own infrastructure (private cloud) or rent from a provider (public cloud)?
-- We also hear about **Kubernetes** everywhere: should we use containers?
-:::
-\vfill
-
-. . .
-
-\begin{center}
-\textit{Let us look at the platforms available.}
-\end{center}
-
-## Putting It All Together
-
-:::::::::::::: {.columns}
-::: {.column width="48%"}
-
-**What we have seen (Session 1)**
-
-- Virtual Switches and Virtual Routers
-- Virtual NICs and VLANs
-- Hypervisors (KVM, VMware) and containers
-
-\vspace{0.2cm}
-
-These are the **building blocks** of any virtual network; they do not run in isolation.
-
-:::
-::: {.column width="48%"}
-
-**Platforms manage these building blocks**
-
-- Provision and connect VMs or containers automatically
-- Handle networking, storage, and scaling under the hood
-- Hide hardware complexity from the developer
-
-\vspace{0.2cm}
-
-Two families:
-
-- **Cloud platforms** (AWS, Azure, GCP, OpenStack): full infrastructure stack
-- **Container orchestration** (Kubernetes): deploy and scale containerized workloads
-
-:::
-::::::::::::::
+<!-- ## Putting It All Together -->
+<!---->
+<!-- :::::::::::::: {.columns} -->
+<!-- ::: {.column width="48%"} -->
+<!---->
+<!-- **What we have seen (Session 1)** -->
+<!---->
+<!-- - Virtual Switches and Virtual Routers -->
+<!-- - Virtual NICs and VLANs -->
+<!-- - Hypervisors (KVM, VMware) and containers -->
+<!---->
+<!-- \vspace{0.2cm} -->
+<!---->
+<!-- These are the **building blocks** of any virtual network; they do not run in isolation. -->
+<!---->
+<!-- ::: -->
+<!-- ::: {.column width="48%"} -->
+<!---->
+<!-- **Platforms manage these building blocks** -->
+<!---->
+<!-- - Provision and connect VMs or containers automatically -->
+<!-- - Handle networking, storage, and scaling under the hood -->
+<!-- - Hide hardware complexity from the developer -->
+<!---->
+<!-- \vspace{0.2cm} -->
+<!---->
+<!-- Two families: -->
+<!---->
+<!-- - **Cloud platforms** (AWS, Azure, GCP, OpenStack): full infrastructure stack -->
+<!-- - **Container orchestration** (Kubernetes): deploy and scale containerized workloads -->
+<!---->
+<!-- ::: -->
+<!-- :::::::::::::: -->
 
 ## Private Cloud Platforms
 
@@ -552,7 +533,6 @@ Proxmox VE & Open-source, gaining traction since recent VMware price rises & \in
 :::incremental
 - **Managed / Public**: rent capacity on demand, pay-as-you-go
 - Provider handles hardware, networking, cooling, security, and updates
-- Maps directly to the IaaS model: provider manages compute, storage, and networking
 :::
 \vspace{0.2cm}
 
@@ -574,7 +554,7 @@ Google Cloud Platform (GCP) & Data and AI focus & \includegraphics[height=0.25cm
 \vfill
 \footnotesize
 
-These map directly to the IaaS model we just covered: the provider (or you) manages compute, storage, and networking.
+These map directly to the IaaS model we just covered: the provider manages compute, storage, and networking.
 
 ## Public Cloud vs Private Cloud: What You Manage
 
@@ -1124,9 +1104,6 @@ Default & Deny all inbound & Allow all \\
 - Security Groups $\rightarrow$ fine-grained per-instance control
 - Network ACLs $\rightarrow$ broad subnet-level guardrails
 
-\begin{alertblock}{Common mistake}
-ACLs are \textbf{stateless}: if you allow inbound TCP port 80, you must \emph{also} explicitly allow outbound ephemeral ports (1024--65535) for the response. Forgetting this blocks return traffic.
-\end{alertblock}
 
 ## Discussion: Cloud Networking
 
@@ -1142,32 +1119,17 @@ ACLs are \textbf{stateless}: if you allow inbound TCP port 80, you must \emph{al
 \textbf{Think about:}
 
 \small
+:::incremental
 - Our web server needs a public subnet with an Internet Gateway route
 - Our database goes in a private subnet: no direct route to the Internet
 - Security group on the DB: allow traffic only from our web server
 - NAT Gateway if the DB needs outbound access (e.g. pulling updates)
+:::
 
 :::
 ::::::::::::::
 
 # Cloud Network Services
-
-## CloudBite Asks: "We Need HTTPS, Scaling, and Office Access"
-
-<!-- nota: transition slide — connects scenario to section content -->
-:::incremental
-- Our app is live, but traffic is growing fast
-- A single web server cannot handle the load; we need **traffic distribution**
-- The API must be reachable via HTTPS, but the backends should stay hidden
-- The CTO also wants to access the cloud network from the office without exposing it to the Internet
-:::
-\vfill
-
-. . .
-
-\begin{center}
-\textit{Three services solve these problems: load balancers, proxies, and VPNs.}
-\end{center}
 
 ## Cloud Network Services: Overview
 
@@ -1525,31 +1487,6 @@ Control & Limited (provider's rules) & Full (your hardware, your rules) \\
 - **Most real-world deployments are hybrid**: critical/stable workloads on-premises, burst/variable workloads in the cloud
 - There is no universal answer; **every case is a trade-off**
 
-## Discussion: The Cloud Trade-Off
-
-:::::::::::::: {.columns}
-::: {.column width="55%"}
-
-\vspace{0.5cm}
-\Large\textit{CloudBite now has 30 engineers, 2M users, and stable traffic. Should we leave the cloud, go hybrid, or stay? Why?}
-
-:::
-::: {.column width="40%"}
-
-\textbf{Think about:}
-
-\small
-:::incremental
-- Is the workload predictable or bursty?
-- Does the team have ops expertise?
-- How much vendor-specific code exists (Lambda, DynamoDB)?
-- What would migration cost in time and money?
-- Could a hybrid approach capture the best of both?
-:::
-
-:::
-::::::::::::::
-
 # Session Summary
 
 ## Key Takeaways: CloudBite's Journey
@@ -1557,16 +1494,16 @@ Control & Limited (provider's rules) & Full (your hardware, your rules) \\
 :::::::::::::: {.columns}
 ::: {.column width="48%"}
 
-**What we built:**
+**What we learned:**
 
 :::incremental
 1. Virtualization $\rightarrow$ cloud: technology vs **business model**
 2. Five NIST characteristics define true cloud
 3. **IaaS / PaaS / SaaS**: who manages what
-4. Chose a **platform** (AWS, public cloud)
-5. Created a **virtual network** with public and private subnets
+4. Public vs Private cloud.
+5. Designed a **virtual network** with public and private subnets
 6. Secured it with **security groups** + **ACLs**
-7. Added **load balancer**, **reverse proxy**, **VPN**
+7. Added a **load balancer**, **reverse proxy**, **VPN**
 :::
 
 :::
