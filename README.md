@@ -1,11 +1,11 @@
-# Arquitectura de Xarxes: Universitat Pompeu Fabra
+# Arquitectura de Xarxes (Network Architecture): Universitat Pompeu Fabra
 
-Slide decks and lab documents for the "Arquitectura de Xarxes" course (Blocks 4–5).
+Slide decks and lab documents for the "Arquitectura de Xarxes (Network Architecture)" course (Blocks 4–5).
 
 ## Structure
 
 ```
-ax/
+upf_network-architecture/
 ├── theory/
 │   ├── block4-virtualization-cloud/   # Network Virtualization & Cloud Computing (Sessions 1–2)
 │   └── block5-sdn-cloud-native/       # SDN & Cloud Native (Session 1)
