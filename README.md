@@ -45,6 +45,21 @@ B5 Session 1: Software-Defined & Cloud-Native Networking
 
 Requires Docker. No local pandoc/xelatex installation needed.
 
+**Single file (slides):**
+```bash
+docker run --rm -v "$(pwd):/data" pandoc/extra:latest \
+  theory/<block-folder>/<file>.md -t beamer --slide-level=2 --pdf-engine=xelatex \
+  -o theory/<block-folder>/<file>.pdf
+```
+
+**Single file (lab document):**
+```bash
+docker run --rm -v "$(pwd):/data" pandoc/extra:latest \
+  labs/<lab-folder>/<file>.md --pdf-engine=xelatex \
+  -o labs/<lab-folder>/<file>.pdf
+```
+
+**Build all at once via Make:**
 ```bash
 make            # build everything (slides + labs)
 make theory     # build all slide decks
