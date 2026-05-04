@@ -146,6 +146,19 @@
 - Inline citations with `\footnotesize Source: ...` at the bottom of relevant slides
 - Consolidated "References" slide at the end of each presentation
 
+## Syllabus
+
+Full course syllabus for reference. Blocks 4 and 5 are covered in this repository.
+
+- **Block 1 - Networking Fundamentals (1 session):** OSI vs TCP/IP protocol stacks, network equipment and topologies, network performance & metrics (Capacity, Delay, Latency, Error Rate).
+- **Block 2 - Application and Transport (2 sessions):** Layer 5 protocols (HTTP vs HTTPS vs HTTP/3, DASH), Layer 4 (ports and sockets, flow control, reliability, TCP vs UDP, QUIC).
+- **Block 3 - Network Access & Internetworking (2 sessions):** Layer 2 (media access control, framing, Wired vs Wireless technologies, ARP, VLANs, tunneling), Layer 3 (IP, routing, OSPF/BGP, ICMP), Layer 5 applications for connectivity (DHCP, NAT, DNS).
+- **Block 4 - Network Virtualization & Cloud Computing (2 sessions):**
+  - Session 1: Data centers and physical infrastructure, Virtualization concepts (VMs, hypervisors, containers), Virtual networking (vNIC, virtual switch, virtual router, networking modes), Network isolation and multi-tenancy (VLANs, overlay networks, micro-segmentation).
+  - Session 2: Cloud computing fundamentals (NIST definition, service models IaaS/PaaS/SaaS, deployment models), Cloud and container platforms (AWS, Azure, GCP, Kubernetes), Cloud network architecture (VPC, subnets, route tables, security groups, network ACLs), Cloud network services (load balancer, proxy, reverse proxy, VPN).
+- **Block 5 - Software-Defined and Cloud-Native Networking (1 session):** Software-Defined Networking (SDN architecture, control/data plane separation, OpenFlow, controllers), Network Functions Virtualization (NFV, VNFs), Overlay networks (VXLAN), Container networking (network models, microservices), Infrastructure as Code and network automation (Terraform).
+- **Block 6 - Network Security & Privacy (1 session):** Network attacks (MAC/IP spoofing, DoS, DNS poisoning), Authentication (digital certificates), Firewalls, Proxy, Reverse Proxy, Encryption basics (Symmetric vs Asymmetric encryption, Hashing), VPNs & IPSec, Network security protocols (TLS/SSL).
+
 ## Prior content (already covered by students)
 - **Block 1**: Networking fundamentals
 - **Block 2**: Application and transport layer

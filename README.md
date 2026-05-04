@@ -15,26 +15,18 @@ ax/
 └── README.md
 ```
 
-## Course Flow
+## Syllabus Overview
 
-**Overarching questions:** What is the Cloud and how is it formed? How do networks work in the cloud?
+| Block | Topic | Sessions |
+|-------|-------|----------|
+| 1 | Networking Fundamentals | 1 |
+| 2 | Application and Transport | 2 |
+| 3 | Network Access & Internetworking | 2 |
+| **4** | **Network Virtualization & Cloud Computing** | **2** |
+| **5** | **Software-Defined and Cloud-Native Networking** | **1** |
+| 6 | Network Security & Privacy | 1 |
 
-```
-"What are the building blocks of virtual networking?"
-  ↓
-B4 Session 1: Network Virtualization
-  VMs, hypervisors, containers → virtual NICs, switches, routers → VLANs, isolation
-
-"How is the cloud sold, and how do you architect a cloud network?"
-  ↓
-B4 Session 2: Cloud Computing & Cloud Architectures
-  Cloud business model (NIST, IaaS/PaaS/SaaS) → platforms → VPC architecture → LB, proxy, VPN
-
-"How are modern networks built and automated under the hood?"
-  ↓
-B5 Session 1: Software-Defined & Cloud-Native Networking
-  SDN → NFV → VXLAN overlays → container networking, microservices → IaC → serverless, edge
-```
+Blocks 4 and 5 are covered in this repository. Labs complement Block 4.
 
 ## Dependencies
 
