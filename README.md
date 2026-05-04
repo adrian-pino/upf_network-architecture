@@ -88,6 +88,14 @@ make clean      # remove generated PDFs
 - **Slides**: Markdown → Beamer PDF via [pandoc/extra](https://hub.docker.com/r/pandoc/extra) (`xelatex`, `--slide-level=2`)
 - **Labs**: Markdown → article PDF via [pandoc/extra](https://hub.docker.com/r/pandoc/extra) (`xelatex`)
 
+## Contributing
+
+All contributions must go through a pull request. Direct pushes to `main` are not allowed.
+
+1. Create a branch from `main`
+2. Make your changes
+3. Open a pull request — only collaborators with write access can merge
+
 ## Contributors
 
 - [Adrian Pino](https://github.com/adrian-pino)
