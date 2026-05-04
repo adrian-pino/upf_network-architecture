@@ -63,11 +63,9 @@ header-includes:
 \end{tikzpicture}
 \end{center}
 
-:::incremental
 - **Compute**: VMs share physical hardware via hypervisors; containers share the host kernel directly
 - **Networking**: Virtual NICs, Switches, and Routers replicate the physical stack in software
 - **Isolation**: VLANs and overlay networks separate tenants on shared infrastructure
-:::
 
 ## The Leap to Cloud
 
@@ -99,6 +97,8 @@ Run multiple VMs/containers on one host & Offer compute as a \textbf{service} \\
 \hline
 Run multiple VMs/containers on one host & Offer compute as a \textbf{service} \\
 \hline
+Internal IT optimization & External/internal consumption \\
+\hline
 \end{tabular}}
 \only<6>{
 \small
@@ -108,6 +108,8 @@ Run multiple VMs/containers on one host & Offer compute as a \textbf{service} \\
 \rowcolor{blue!10} \textbf{Virtualization} & \textbf{Cloud Computing} \\
 \hline
 Run multiple VMs/containers on one host & Offer compute as a \textbf{service} \\
+\hline
+Internal IT optimization & External/internal consumption \\
 \hline
 Manual provisioning possible & \textbf{Automated, self-service} \\
 \hline
@@ -120,6 +122,8 @@ Manual provisioning possible & \textbf{Automated, self-service} \\
 \rowcolor{blue!10} \textbf{Virtualization} & \textbf{Cloud Computing} \\
 \hline
 Run multiple VMs/containers on one host & Offer compute as a \textbf{service} \\
+\hline
+Internal IT optimization & External/internal consumption \\
 \hline
 Manual provisioning possible & \textbf{Automated, self-service} \\
 \hline
@@ -160,14 +164,13 @@ We have laptops, code, and zero infrastructure.
 ::: {.column width="55%"}
 
 \vspace{0.8cm}
-\Large\textit{In CloudBite we already know about VMs. Why not just buy servers instead of using the cloud?}
+\Large\textit{Your company already runs VMs on its own servers. Why would you move to the cloud instead of keeping everything in-house?}
 
 :::
 ::: {.column width="40%"}
 
 \textbf{Think about:}
 
-\small
 :::incremental
 - Capital expenditure vs operational expenditure
 - How fast can you scale today?
@@ -201,7 +204,7 @@ Three phrases to remember:
 ## Five Essential Characteristics
 
 \only<1>{
-\begin{center}\scriptsize\begin{tabular}{|p{3.0cm}|p{4.5cm}|p{4.5cm}|}
+\begin{center}\scriptsize\begin{tabular}{|p{2.4cm}|p{3.2cm}|p{3.4cm}|}
 \hline
 \rowcolor{blue!10} \textbf{Characteristic} & \textbf{What it means} & \textbf{Real-world example} \\
 \hline
@@ -209,7 +212,7 @@ On-demand self-service & Provision via Application Programming Interface (API), 
 \hline
 \end{tabular}\end{center}}
 \only<2>{
-\begin{center}\scriptsize\begin{tabular}{|p{3.0cm}|p{4.5cm}|p{4.5cm}|}
+\begin{center}\scriptsize\begin{tabular}{|p{2.4cm}|p{3.2cm}|p{3.4cm}|}
 \hline
 \rowcolor{blue!10} \textbf{Characteristic} & \textbf{What it means} & \textbf{Real-world example} \\
 \hline
@@ -219,7 +222,7 @@ Broad network access & Available from any device over the network & Access S3 fr
 \hline
 \end{tabular}\end{center}}
 \only<3>{
-\begin{center}\scriptsize\begin{tabular}{|p{3.0cm}|p{4.5cm}|p{4.5cm}|}
+\begin{center}\scriptsize\begin{tabular}{|p{2.4cm}|p{3.2cm}|p{3.4cm}|}
 \hline
 \rowcolor{blue!10} \textbf{Characteristic} & \textbf{What it means} & \textbf{Real-world example} \\
 \hline
@@ -231,7 +234,7 @@ Resource pooling & Shared infrastructure, multi-tenant & Same physical server, d
 \hline
 \end{tabular}\end{center}}
 \only<4>{
-\begin{center}\scriptsize\begin{tabular}{|p{3.0cm}|p{4.5cm}|p{4.5cm}|}
+\begin{center}\scriptsize\begin{tabular}{|p{2.4cm}|p{3.2cm}|p{3.4cm}|}
 \hline
 \rowcolor{blue!10} \textbf{Characteristic} & \textbf{What it means} & \textbf{Real-world example} \\
 \hline
@@ -245,7 +248,7 @@ Rapid elasticity & Scale up/down automatically & Black Friday: $10\times$ more i
 \hline
 \end{tabular}\end{center}}
 \only<5>{
-\begin{center}\scriptsize\begin{tabular}{|p{3.0cm}|p{4.5cm}|p{4.5cm}|}
+\begin{center}\scriptsize\begin{tabular}{|p{2.4cm}|p{3.2cm}|p{3.4cm}|}
 \hline
 \rowcolor{blue!10} \textbf{Characteristic} & \textbf{What it means} & \textbf{Real-world example} \\
 \hline
@@ -317,7 +320,7 @@ Measured service & Pay only for what you use & Billed per CPU-hour, GB stored \\
 ## Service Models: Who Manages What?
 
 \only<1>{
-\begin{center}\scriptsize\begin{tabular}{|p{6.5cm}|c|c|c|}
+\begin{center}\scriptsize\begin{tabular}{|p{4.2cm}|c|c|c|}
 \hline
 \rowcolor{blue!10} \textbf{Component} & \textbf{IaaS} & \textbf{PaaS} & \textbf{SaaS} \\
 \hline
@@ -325,7 +328,7 @@ Applications & You & You & \cellcolor{blue!15}Provider \\
 \hline
 \end{tabular}\end{center}}
 \only<2>{
-\begin{center}\scriptsize\begin{tabular}{|p{6.5cm}|c|c|c|}
+\begin{center}\scriptsize\begin{tabular}{|p{4.2cm}|c|c|c|}
 \hline
 \rowcolor{blue!10} \textbf{Component} & \textbf{IaaS} & \textbf{PaaS} & \textbf{SaaS} \\
 \hline
@@ -335,7 +338,7 @@ Data & You & You & You \\
 \hline
 \end{tabular}\end{center}}
 \only<3>{
-\begin{center}\scriptsize\begin{tabular}{|p{6.5cm}|c|c|c|}
+\begin{center}\scriptsize\begin{tabular}{|p{4.2cm}|c|c|c|}
 \hline
 \rowcolor{blue!10} \textbf{Component} & \textbf{IaaS} & \textbf{PaaS} & \textbf{SaaS} \\
 \hline
@@ -347,7 +350,7 @@ Runtime / Middleware & You & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Pr
 \hline
 \end{tabular}\end{center}}
 \only<4>{
-\begin{center}\scriptsize\begin{tabular}{|p{6.5cm}|c|c|c|}
+\begin{center}\scriptsize\begin{tabular}{|p{4.2cm}|c|c|c|}
 \hline
 \rowcolor{blue!10} \textbf{Component} & \textbf{IaaS} & \textbf{PaaS} & \textbf{SaaS} \\
 \hline
@@ -361,7 +364,7 @@ Operating System & You & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provid
 \hline
 \end{tabular}\end{center}}
 \only<5>{
-\begin{center}\scriptsize\begin{tabular}{|p{6.5cm}|c|c|c|}
+\begin{center}\scriptsize\begin{tabular}{|p{4.2cm}|c|c|c|}
 \hline
 \rowcolor{blue!10} \textbf{Component} & \textbf{IaaS} & \textbf{PaaS} & \textbf{SaaS} \\
 \hline
@@ -377,7 +380,7 @@ Virtualization & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \ce
 \hline
 \end{tabular}\end{center}}
 \only<6>{
-\begin{center}\scriptsize\begin{tabular}{|p{6.5cm}|c|c|c|}
+\begin{center}\scriptsize\begin{tabular}{|p{4.2cm}|c|c|c|}
 \hline
 \rowcolor{blue!10} \textbf{Component} & \textbf{IaaS} & \textbf{PaaS} & \textbf{SaaS} \\
 \hline
@@ -395,7 +398,7 @@ Hardware & \cellcolor{blue!15}Provider & \cellcolor{blue!15}Provider & \cellcolo
 \hline
 \end{tabular}\end{center}}
 \only<7>{
-\begin{center}\scriptsize\begin{tabular}{|p{6.5cm}|c|c|c|}
+\begin{center}\scriptsize\begin{tabular}{|p{4.2cm}|c|c|c|}
 \hline
 \rowcolor{blue!10} \textbf{Component} & \textbf{IaaS} & \textbf{PaaS} & \textbf{SaaS} \\
 \hline
@@ -429,7 +432,7 @@ Major providers (AWS, Azure, GCP) offer all three models.
 
 \only<1->{
 \begin{block}{Case A: University}
-\small A large university wants a web tool for students to submit assignments. They have a consolidated IT department. Student data must stay within EU jurisdiction (GPDR compliant). Budget is fixed yearly.
+\small A large university wants a web tool for students to submit assignments. The IT department has 10 staff. Student data must stay within EU jurisdiction. Budget is fixed yearly.
 \end{block}
 
 \small
@@ -468,6 +471,56 @@ Major providers (AWS, Azure, GCP) offer all three models.
 ::::::::::::::
 
 # Cloud & Container Platforms
+
+## CloudBite Asks: "Which Platform Do We Use?"
+
+<!-- nota: transition slide — connects scenario to section content -->
+:::incremental
+- We chose **IaaS**: we want full control over the stack
+- Now we must choose: run our own infrastructure (private cloud) or rent from a provider (public cloud)?
+- We also hear about **Kubernetes** everywhere: should we use containers?
+:::
+\vfill
+
+. . .
+
+\begin{center}
+\textit{Let us look at the platforms available.}
+\end{center}
+
+## Putting It All Together
+
+:::::::::::::: {.columns}
+::: {.column width="48%"}
+
+**What we have seen (Session 1)**
+
+- Virtual Switches and Virtual Routers
+- Virtual NICs and VLANs
+- Hypervisors (KVM, VMware) and containers
+
+\vspace{0.2cm}
+
+These are the **building blocks** of any virtual network; they do not run in isolation.
+
+:::
+::: {.column width="48%"}
+
+**Platforms manage these building blocks**
+
+- Provision and connect VMs or containers automatically
+- Handle networking, storage, and scaling under the hood
+- Hide hardware complexity from the developer
+
+\vspace{0.2cm}
+
+Two families:
+
+- **Cloud platforms** (AWS, Azure, GCP, OpenStack): full infrastructure stack
+- **Container orchestration** (Kubernetes): deploy and scale containerized workloads
+
+:::
+::::::::::::::
 
 ## Private Cloud Platforms
 
@@ -1071,13 +1124,17 @@ Default & Deny all inbound & Allow all \\
 - Security Groups $\rightarrow$ fine-grained per-instance control
 - Network ACLs $\rightarrow$ broad subnet-level guardrails
 
+\begin{alertblock}{Common mistake}
+ACLs are \textbf{stateless}: if you allow inbound TCP port 80, you must \emph{also} explicitly allow outbound ephemeral ports (1024--65535) for the response. Forgetting this blocks return traffic.
+\end{alertblock}
+
 ## Discussion: Cloud Networking
 
 :::::::::::::: {.columns}
 ::: {.column width="55%"}
 
 \vspace{0.8cm}
-\Large\textit{We have running CloudBite on AWS. We need to make sure that our web server is reachable from the users, but the database is not be exposed to the Internet. How do we set this up?}
+\Large\textit{We just deployed CloudBite on AWS. Our web server must be reachable from users, but the database must not be exposed to the Internet. How do we set this up?}
 
 :::
 ::: {.column width="40%"}
@@ -1085,25 +1142,24 @@ Default & Deny all inbound & Allow all \\
 \textbf{Think about:}
 
 \small
-:::incremental
 - Our web server needs a public subnet with an Internet Gateway route
 - Our database goes in a private subnet: no direct route to the Internet
 - Security group on the DB: allow traffic only from our web server
 - NAT Gateway if the DB needs outbound access (e.g. pulling updates)
-:::
 
 :::
 ::::::::::::::
 
 # Cloud Network Services
 
-## CloudBite Asks: "We Need Scaling... and Office Access!"
+## CloudBite Asks: "We Need HTTPS, Scaling, and Office Access"
 
 <!-- nota: transition slide — connects scenario to section content -->
 :::incremental
 - Our app is live, but traffic is growing fast
 - A single web server cannot handle the load; we need **traffic distribution**
-- We want to access the cloud network from the office without exposing it to the Internet
+- The API must be reachable via HTTPS, but the backends should stay hidden
+- The CTO also wants to access the cloud network from the office without exposing it to the Internet
 :::
 \vfill
 
@@ -1175,8 +1231,6 @@ Without a proxy, every instance in your network reaches the Internet directly: n
 
 - Clients send requests to the proxy, which forwards them to the Internet
 
-. . .
-
 \begin{center}
 \begin{tikzpicture}[
     box/.style={draw, thick, rounded corners, minimum width=1.8cm, minimum height=0.6cm, font=\scriptsize},
@@ -1201,6 +1255,7 @@ Without a proxy, every instance in your network reaches the Internet directly: n
 - **Logging**: monitor what employees or VMs access
 - Examples: Squid, corporate firewalls with proxy mode
 :::
+
 ## Reverse Proxy
 
 A reverse proxy sits in front of backend servers and mediates all inbound traffic. Clients never communicate directly with the backend.
@@ -1220,8 +1275,6 @@ A reverse proxy sits in front of backend servers and mediates all inbound traffi
 \draw[->, thick] (rp) -- node[below, font=\tiny] {/*} (web);
 \end{tikzpicture}
 \end{center}
-
-. . .
 
 :::incremental
 - **TLS termination**: handles HTTPS, backends receive plain HTTP
@@ -1265,7 +1318,6 @@ A reverse proxy sits in front of backend servers and mediates all inbound traffi
 \end{center}
 
 \scriptsize
-
 Two main types:
 
 - **Site-to-site VPN**: office $\leftrightarrow$ cloud network
@@ -1278,7 +1330,7 @@ Two main types:
 ::: {.column width="55%"}
 
 \vspace{0.5cm}
-\Large\textit{CloudBite has a public frontend, a private API, and a database. Our employees also need to access the cloud from the office. Which services would you use?}
+\Large\textit{A company has a public frontend, a private API, and a database. Employees also need to access the cloud from the office. Which services would you use?}
 
 :::
 ::: {.column width="40%"}
@@ -1301,74 +1353,72 @@ Two main types:
 
 \begin{center}
 \begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=1.9cm, minimum height=0.6cm, font=\scriptsize, align=center},
-    subnet/.style={draw, thick, dashed, rounded corners, inner sep=5pt},
-    sg/.style={font=\tiny, text=red!70!black},
-    >=Stealth, node distance=0.5cm
+    box/.style={draw, thick, rounded corners, minimum width=1.6cm, minimum height=0.55cm, font=\scriptsize, align=center},
+    >=Stealth
 ]
 
-% External: Internet + Office
-\node[cloud, draw, thick, fill=cyan!10, cloud puffs=10, minimum width=1.6cm, minimum height=0.9cm, font=\scriptsize] (inet) at (0,1.8) {Internet};
-\node[box, fill=green!15] (office) at (0,-1) {Office\\employees};
-
-% VPC outer box
-\node[draw, thick, dashed, blue, rounded corners, minimum width=8.5cm, minimum height=5.2cm, label={[font=\scriptsize\bfseries, blue]above:CloudBite VPC (10.0.0.0/16)}] (vpc) at (7.5,0.4) {};
+% VPC outer box (drawn first)
+\draw[thick, dashed, blue, rounded corners] (3.3,-3.2) rectangle (12.5,3.4);
+\node[font=\scriptsize\bfseries, blue, anchor=south east] at (12.4,3.45) {CloudBite VPC (10.0.0.0/16)};
 
 % Public subnet
-\node[box, fill=blue!20, minimum width=1.7cm] (lb) at (5.2,2) {Load\\Balancer};
-\node[box, fill=orange!20, minimum width=1.7cm] (rp) at (7.4,2) {Reverse\\Proxy};
-\node[subnet, fit=(lb)(rp), label={[font=\tiny\bfseries]above left:Public Subnet (10.0.1.0/24)}] (pub) {};
+\draw[thick, dashed, rounded corners, fill=blue!4] (5.9,1.1) rectangle (12.2,2.85);
+\node[font=\tiny\bfseries, anchor=north west] at (6.0,2.8) {Public Subnet (10.0.1.0/24)};
+\node[box, fill=orange!20] (igw) at (7.2,1.55) {Internet GW};
+\node[box, fill=orange!25] (rp) at (10.1,1.55) {Reverse\\Proxy};
 
-% Private subnet -- API tier
-\node[box, fill=purple!15, minimum width=1.8cm] (api) at (7.4,0.3) {API Server};
-\node[subnet, fit=(api), label={[font=\tiny\bfseries]above left:Private Subnet -- App (10.0.2.0/24)}, fill=red!2] (apinet) {};
+% Private subnet -- App
+\draw[thick, dashed, rounded corners, fill=red!4] (5.9,-0.7) rectangle (12.2,0.95);
+\node[font=\tiny\bfseries, anchor=north west] at (6.0,0.9) {Private Subnet -- App (10.0.2.0/24)};
+\node[box, fill=green!15] (web) at (8.9,-0.1) {Web UI};
+\node[box, fill=purple!15] (api) at (10.9,-0.1) {API Server};
 
-% Private subnet -- DB tier
-\node[box, fill=purple!15, minimum width=1.8cm] (db) at (7.4,-1.6) {Database};
-\node[subnet, fit=(db), label={[font=\tiny\bfseries]above left:Private Subnet -- Data (10.0.3.0/24)}, fill=red!2] (dbnet) {};
+% Private subnet -- Data
+\draw[thick, dashed, rounded corners, fill=red!4] (5.9,-3.0) rectangle (12.2,-1.1);
+\node[font=\tiny\bfseries, anchor=north west] at (6.0,-1.15) {Private Subnet -- Data (10.0.3.0/24)};
+\node[box, fill=purple!15] (db) at (10.9,-2.1) {Database};
 
-% VPN gateway (on the VPC edge)
-\node[box, fill=yellow!25, minimum width=1.4cm] (vpn) at (3.7,-1) {VPN GW};
+% VPN gateway: inside VPC, on the left margin (outside any subnet)
+\node[box, fill=yellow!30, minimum width=1.4cm] (vpn) at (4.6,-0.5) {VPN GW};
 
-% Internet GW
-\node[box, fill=orange!15, minimum width=1.4cm] (igw) at (3.7,2) {Internet GW};
+% External entities (outside VPC)
+\node[cloud, draw, thick, fill=cyan!15, cloud puffs=10, minimum width=1.5cm, minimum height=0.9cm, font=\scriptsize] (inet) at (1.4,1.55) {Internet};
+\node[box, fill=green!20, minimum width=1.6cm] (office) at (1.4,-0.5) {Office\\employees};
 
-% Connections
+% Traffic flow (black, solid)
 \draw[<->, thick] (inet) -- node[above, font=\tiny] {HTTPS} (igw);
-\draw[<->, thick] (igw) -- (lb);
-\draw[<->, thick] (lb) -- node[above, font=\tiny] {/api/*} (rp);
-\draw[<->, thick] (rp) -- (api);
+\draw[<->, thick] (igw) -- (rp);
+\draw[<->, thick] (rp.south) -- node[right, font=\tiny, pos=0.5] {/api/*} (api.north);
+\draw[<->, thick] (rp.south) .. controls +(-0.4,-0.7) and +(0.4,0.7) .. node[left, font=\tiny, pos=0.5] {/*} (web.north);
+\draw[<->, thick] (web) -- (api);
 \draw[<->, thick] (api) -- node[right, font=\tiny] {SQL} (db);
 
-% VPN tunnel
+% VPN tunnel (blue)
 \draw[<->, thick, blue, double] (office) -- node[above, font=\tiny, text=blue] {Encrypted tunnel} (vpn);
-\draw[<->, thick, blue, dashed] (vpn) -- (api);
-\draw[<->, thick, blue, dashed] (vpn) |- (db);
 
-% Security group annotations
-\node[sg] at (5.2,2.9) {SG: 80, 443 from 0.0.0.0/0};
-\node[sg] at (7.4,1.05) {SG: 8080 from LB only};
-\node[sg] at (7.4,-0.85) {SG: 3306 from API only};
+% VPN dashed access lines: enter App and Data subnets from the left edge
+\draw[->, thick, blue, dashed] (vpn.north) |- (5.9,-0.1);
+\draw[->, thick, blue, dashed] (vpn.south) |- (5.9,-2.1);
 
 \end{tikzpicture}
 \end{center}
 
-\vspace{0.1cm}
-\footnotesize
-\textbf{Flow:} Users hit the **Load Balancer** (public IP) $\rightarrow$ **Reverse Proxy** routes `/api/*` to the **API Server** (private) $\rightarrow$ API queries the **Database** (private). Office employees access internal resources via the **VPN tunnel**, never traversing the public Internet.
-
+<!-- \vspace{0.1cm} -->
+<!-- \footnotesize -->
+<!-- \textbf{Flow:} Internet $\rightarrow$ IGW $\rightarrow$ Reverse Proxy: routes \texttt{/*} to the Web UI and \texttt{/api/*} to the API Server (both private) $\rightarrow$ API queries the Database. Office employees reach all private tiers via the VPN tunnel. -->
+<!---->
 # The Cloud Trade-Off
 
 ## CloudBite, Five Years Later
 
-<!-- nota: transition slide — closes the narrative arc -->
-
+:::incremental
 - We grew to 2 million users. AWS bill: **\$40,000/month** and rising
-- Egress fees alone: \$5,000/month (data leaving AWS to users)
 - The team now has 30 engineers; we *could* run our own servers
 - We now ask: "Should we leave the cloud?"
-
+:::
 \vfill
+
+. . .
 
 \begin{center}
 \textit{The cloud is not always the cheapest option. Let us explore why.}
@@ -1376,17 +1426,19 @@ Two main types:
 
 ## Case Study: Basecamp Leaves the Cloud
 
+:::incremental
 - **Basecamp / 37signals** (creators of Ruby on Rails) ran on AWS for 15 years
-- In 2023, they **moved everything to their own hardware**: no new staff needed
+- In 2023, they **moved everything to their own hardware**.
 - Result: **\$10 million saved over five years** (50\%+ cost reduction)
+:::
 
 . . .
 
 Why it worked for them:
 
-- **Stable, predictable workload**: no sudden traffic spikes
-- **Large, experienced ops team**: already managing servers regardless
-- **No need for global presence**: most users in the same region
+- **Stable, predictable workload** → no sudden traffic spikes
+- **Large, experienced ops team** → already managing servers regardless
+- **No need for global presence** → most users in the same region
 
 \vfill
 
@@ -1398,18 +1450,20 @@ Basecamp's exit worked because their workload was \textbf{predictable}. For a st
 
 ## Vendor Lock-In: The Hidden Cost
 
+:::incremental
 - Cloud providers design services that are **easy to adopt, hard to leave**
 - Proprietary services create **architectural dependencies**:
   - AWS Lambda, DynamoDB, SQS $\rightarrow$ no direct equivalent on Azure or GCP
   - Rewriting the application can cost more than years of cloud bills
-
+:::
 . . .
 
+:::incremental
 - **Data egress fees** make leaving expensive:
   - AWS charges \$0.09/GB for outbound traffic
   - Moving 50 TB out of AWS $\approx$ \$4,500 in fees alone
   - Egress fees increased 20\% in 2023; inter-Availability-Zone (AZ) fees doubled in 2025
-
+:::
 . . .
 
 - **68\% of enterprises** exceeded their cloud budget due to unexpected data transfer costs (Flexera, 2024)
@@ -1418,25 +1472,30 @@ Basecamp's exit worked because their workload was \textbf{predictable}. For a st
 
 ## The Pricing Ratchet
 
-- Cloud providers attract customers with **low initial pricing and free tiers**
-- Once adoption deepens, prices increase:
-  - AWS EC2 instance families: significant price rises in 2025
-  - Azure: 5\%+ on subscriptions, 10\% on Premium SSDs (2025)
-  - Google Workspace: 20\%--34\% increase (March 2025)
+- The commercial cloud boom started around **2006**: Amazon S3 and Elastic Compute Cloud (EC2) made infrastructure rentable by API
+- Adoption accelerated in **2008 to 2012**: startups could launch without buying servers first
+- Providers reduced entry friction with **free tiers**, credits, and pay-as-you-go pricing
+
+. . .
+
+- Once adoption deepens, dependency grows:
+  - Data migration takes time and money
+  - Proprietary services increase lock-in
+  - Re-architecting may cost more than staying
 
 . . .
 
 - This pattern appears across industries:
-  - **Video streaming**: low subscription prices to gain users, then steady increases once the audience is locked in
-  - **Cloud computing**: same dynamic, but switching costs are higher because your entire architecture depends on the provider
+  - **Video streaming**: low initial pricing to gain users, then gradual increases
+  - **Cloud computing**: same logic, but switching costs are higher because the whole architecture depends on the provider
 
 \vfill
 
 \begin{block}{The pattern}
-Low prices $\rightarrow$ adoption $\rightarrow$ dependency $\rightarrow$ price increases $\rightarrow$ switching is too expensive.
+Low entry cost $\rightarrow$ fast adoption $\rightarrow$ architectural dependency $\rightarrow$ weak bargaining power.
 \end{block}
 
-\footnote{InfotechLead, "AWS, Azure, and Google Cloud adjust billing models in 2025," 2025.}
+\footnote{AWS, "Amazon EC2 FAQs" and "AWS Free Tier"; Microsoft Azure, "Free Azure services"; Google Cloud, "Free Trial and Free Tier Services".}
 
 ## So... Cloud or Not?
 
@@ -1478,11 +1537,13 @@ Control & Limited (provider's rules) & Full (your hardware, your rules) \\
 \textbf{Think about:}
 
 \small
+:::incremental
 - Is the workload predictable or bursty?
 - Does the team have ops expertise?
 - How much vendor-specific code exists (Lambda, DynamoDB)?
 - What would migration cost in time and money?
 - Could a hybrid approach capture the best of both?
+:::
 
 :::
 ::::::::::::::
@@ -1496,6 +1557,7 @@ Control & Limited (provider's rules) & Full (your hardware, your rules) \\
 
 **What we built:**
 
+:::incremental
 1. Virtualization $\rightarrow$ cloud: technology vs **business model**
 2. Five NIST characteristics define true cloud
 3. **IaaS / PaaS / SaaS**: who manages what
@@ -1503,19 +1565,21 @@ Control & Limited (provider's rules) & Full (your hardware, your rules) \\
 5. Created a **virtual network** with public and private subnets
 6. Secured it with **security groups** + **ACLs**
 7. Added **load balancer**, **reverse proxy**, **VPN**
+:::
 
 :::
 ::: {.column width="48%"}
 
 **What we learned:**
 
+:::incremental
 8. The cloud is **not free**: costs grow with scale
 9. **Vendor lock-in** makes leaving expensive
 10. Prices increase once you depend on the provider
 11. On-premises works for **stable, predictable** workloads
 12. **Hybrid** is often the pragmatic answer
 13. **Every case is a trade-off**; there is no universal solution
-
+:::
 :::
 ::::::::::::::
 
@@ -1533,3 +1597,6 @@ Control & Limited (provider's rules) & Full (your hardware, your rules) \\
 8. AWS, "Elastic Load Balancing Documentation," docs.aws.amazon.com.
 9. NGINX, Inc., "What Is a Reverse Proxy?," nginx.com/resources.
 10. AWS, "AWS VPN Documentation," docs.aws.amazon.com.
+11. AWS, "Amazon EC2 FAQs" and "AWS Free Tier," aws.amazon.com.
+12. Microsoft Azure, "Free Azure services," azure.microsoft.com.
+13. Google Cloud, "Free Trial and Free Tier Services," cloud.google.com.
