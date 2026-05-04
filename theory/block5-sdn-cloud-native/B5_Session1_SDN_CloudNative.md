@@ -25,7 +25,13 @@ header-includes:
 ## What If You Could Program Your Entire Network?
 
 \begin{center}
-\Large\textit{Traditional networks are configured device by device.\\What if the network was as programmable as software?}
+\Large\textit{How are modern networks built and automated under the hood?}
+\end{center}
+
+\vfill
+
+\begin{center}
+\large\textit{Traditional networks are configured device by device.\\What if the network was as programmable as software?}
 \end{center}
 
 \vfill

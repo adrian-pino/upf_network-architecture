@@ -28,6 +28,27 @@ upf_network-architecture/
 
 Blocks 4 and 5 are covered in this repository. Labs complement Block 4.
 
+## Narrative Thread
+
+Each block is built around a guiding question that connects the content:
+
+```
+"What are the building blocks of virtual networking?"
+  ↓
+B4 Session 1: Network Virtualization
+  VMs, hypervisors, containers → virtual NICs, switches, routers → VLANs, isolation
+
+"How is the cloud sold, and how do you architect a cloud network?"
+  ↓
+B4 Session 2: Cloud Computing & Cloud Architectures
+  Cloud service models (IaaS/PaaS/SaaS) → platforms → VPC architecture → LB, proxy, VPN
+
+"How are modern networks built and automated under the hood?"
+  ↓
+B5 Session 1: Software-Defined & Cloud-Native Networking
+  SDN → NFV → VXLAN overlays → container networking, microservices → IaC
+```
+
 ## Dependencies
 
 - [Docker](https://docs.docker.com/get-docker/) — compiles slides and labs via the `pandoc/extra` image
