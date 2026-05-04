@@ -4,14 +4,14 @@ fontsize: 11pt
 colorlinks: true
 urlcolor: blue
 header-includes:
-  - \input{lab3-containers/preamble.tex}
+  - \input{labs/lab3-containers/preamble.tex}
 ---
 
 ```{=latex}
 \begin{center}
   {\Large\textbf{Lab 3 -- Virtualization with Containers (Docker)}}\\[0.4cm]
   {\large Arquitectura de Xarxes -- 2025-2026 3rd quarter}\\[0.4cm]
-  \includegraphics[height=1.5cm]{lab3-containers/img/upf-logo.png}\\[0.3cm]
+  \includegraphics[height=1.5cm]{labs/lab3-containers/img/upf-logo.png}\\[0.3cm]
   {\normalsize Universitat Pompeu Fabra}
 \end{center}
 \vspace{0.5cm}

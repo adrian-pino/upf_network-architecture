@@ -107,7 +107,7 @@
 ### Slides (Beamer)
 - No local pandoc/xelatex — use Docker:
   ```bash
-  docker run --rm -v "/home/adrian/upf/ax:/data" pandoc/extra:latest <file>.md -t beamer --slide-level=2 --pdf-engine=xelatex -o <file>.pdf
+  docker run --rm -v "/home/adrian/upf/ax:/data" pandoc/extra:latest theory/<block-folder>/<file>.md -t beamer --slide-level=2 --pdf-engine=xelatex -o theory/<block-folder>/<file>.pdf
   ```
 
 ### Lab documents (article PDF)
@@ -115,11 +115,11 @@
 - Compile command:
   ```bash
   docker run --rm -v "/home/adrian/upf/ax:/data" pandoc/extra:latest \
-    <labN-folder>/<file>.md --pdf-engine=xelatex -o <labN-folder>/<file>.pdf
+    labs/<labN-folder>/<file>.md --pdf-engine=xelatex -o labs/<labN-folder>/<file>.pdf
   ```
 - **Do NOT use `-t beamer` or `--slide-level`** for lab documents
-- Complex LaTeX (tcolorbox environments, multi-line `\newtcblisting`, mdframed) must go in a separate `preamble.tex` file in the lab folder, included via `header-includes: - \input{<labN-folder>/preamble.tex}`. Do not embed multi-line LaTeX directly in YAML header-includes — pandoc mangles it.
-- Image paths in `preamble.tex` and in the document must be relative to the Docker `/data` mount root (i.e. `<labN-folder>/img/upf-logo.png`, not `img/upf-logo.png`)
+- Complex LaTeX (tcolorbox environments, multi-line `\newtcblisting`, mdframed) must go in a separate `preamble.tex` file in the lab folder, included via `header-includes: - \input{labs/<labN-folder>/preamble.tex}`. Do not embed multi-line LaTeX directly in YAML header-includes — pandoc mangles it.
+- Image paths in `preamble.tex` and in the document must be relative to the Docker `/data` mount root (i.e. `labs/<labN-folder>/img/upf-logo.png`, not `img/upf-logo.png`)
 - Standard YAML front matter for labs:
   ```yaml
   title: "Lab N -- Title"
@@ -131,14 +131,14 @@
   colorlinks: true
   urlcolor: blue
   header-includes:
-    - \input{<labN-folder>/preamble.tex}
+    - \input{labs/<labN-folder>/preamble.tex}
   ```
 - Standard `preamble.tex` for labs includes:
   - `\usepackage{graphicx}` + fancyhdr with UPF logo in header (right) and page number (centre footer)
   - `tcolorbox` with `shellblock` (gray, for terminal commands) and `dockerblock` (blue, for file contents)
   - `mdframed` `questionbox` environment (blue background) for questions students must answer in their report
   - Notes and warnings as plain bold text (`**Note:**`), no colored box
-- See `lab3-containers/preamble.tex` as the reference implementation
+- See `labs/lab3-containers/preamble.tex` as the reference implementation
 
 ## References policy
 - Only sources from: standards bodies (IETF RFCs, ETSI, NIST, IEEE), major vendors (AWS, Azure, GCP, VMware, Red Hat, Docker, HashiCorp), or published books (O'Reilly, Pearson, Morgan Kaufmann, Wiley)

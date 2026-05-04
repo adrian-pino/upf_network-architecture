@@ -1,13 +1,19 @@
 # Arquitectura de Xarxes — Universitat Pompeu Fabra
 
-Beamer slide decks for the "Arquitectura de Xarxes" course (Blocks 4–5).
+Slide decks and lab documents for the "Arquitectura de Xarxes" course (Blocks 4–5).
 
 ## Structure
 
-| Directory | Content |
-|-----------|---------|
-| `block4-virtualization-cloud/` | Network Virtualization & Cloud Computing (Sessions 1–2) |
-| `block5-sdn-cloud-native/` | SDN & Cloud Native (Session 1) |
+```
+ax/
+├── theory/
+│   ├── block4-virtualization-cloud/   # Network Virtualization & Cloud Computing (Sessions 1–2)
+│   └── block5-sdn-cloud-native/       # SDN & Cloud Native (Session 1)
+├── labs/
+│   └── lab3-containers/               # Lab 3: Virtualization with Containers (Docker)
+├── Makefile
+└── README.md
+```
 
 ## Course Flow
 
@@ -32,7 +38,7 @@ B5 Session 1: Software-Defined & Cloud-Native Networking
 
 ## Dependencies
 
-- [Docker](https://docs.docker.com/get-docker/) — compiles slides via the `pandoc/extra` image
+- [Docker](https://docs.docker.com/get-docker/) — compiles slides and labs via the `pandoc/extra` image
 - [OpenCode](https://opencode.ai/) — AI coding agent used to author and maintain the slides
 
 ## Building
@@ -40,12 +46,21 @@ B5 Session 1: Software-Defined & Cloud-Native Networking
 Requires Docker. No local pandoc/xelatex installation needed.
 
 ```bash
-make          # build all PDFs
-make block4   # build Block 4 only
-make block5   # build Block 5 only
-make clean    # remove generated PDFs
+make            # build everything (slides + labs)
+make theory     # build all slide decks
+make labs       # build all lab documents
+make block4     # build Block 4 only
+make block5     # build Block 5 only
+make lab3       # build Lab 3 only
+make clean      # remove generated PDFs
 ```
 
 ## Toolchain
 
-Markdown → Beamer PDF via [pandoc/extra](https://hub.docker.com/r/pandoc/extra) Docker image (`xelatex` engine, `--slide-level=2`).
+- **Slides**: Markdown → Beamer PDF via [pandoc/extra](https://hub.docker.com/r/pandoc/extra) (`xelatex`, `--slide-level=2`)
+- **Labs**: Markdown → article PDF via [pandoc/extra](https://hub.docker.com/r/pandoc/extra) (`xelatex`)
+
+## Contributors
+
+- [Adrian Pino](https://github.com/adrian-pino)
+- [Sergio Giménez](https://github.com/sergio-gimenez)
