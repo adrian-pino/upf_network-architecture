@@ -146,9 +146,9 @@
 - Inline citations with `\footnotesize Source: ...` at the bottom of relevant slides
 - Consolidated "References" slide at the end of each presentation
 
-## Syllabus
+## Subject Syllabus (2025-2026)
 
-Full course syllabus for reference. Blocks 4 and 5 are covered in this repository.
+Full subject syllabus for reference. Blocks 4 and 5 are covered in this repository.
 
 - **Block 1 - Networking Fundamentals (1 session):** OSI vs TCP/IP protocol stacks, network equipment and topologies, network performance & metrics (Capacity, Delay, Latency, Error Rate).
 - **Block 2 - Application and Transport (2 sessions):** Layer 5 protocols (HTTP vs HTTPS vs HTTP/3, DASH), Layer 4 (ports and sockets, flow control, reliability, TCP vs UDP, QUIC).

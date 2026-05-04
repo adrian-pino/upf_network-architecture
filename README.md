@@ -15,7 +15,7 @@ ax/
 └── README.md
 ```
 
-## Syllabus Overview
+## Subject Syllabus (2025-2026)
 
 | Block | Topic | Sessions |
 |-------|-------|----------|
