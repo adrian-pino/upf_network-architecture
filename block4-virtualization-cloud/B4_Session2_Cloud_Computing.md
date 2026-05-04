@@ -381,7 +381,6 @@ Hints: team size, upfront cost, time to market, scaling needs, control over infr
 
 ## Virtual Networks in the Cloud
 
-:::incremental
 - Every cloud provider lets you create your own **isolated virtual network**
   - AWS: Virtual Private Cloud (VPC)
   - Azure: Virtual Network (VNet)
@@ -397,13 +396,8 @@ Hints: team size, upfront cost, time to market, scaling needs, control over infr
   - **Address space** (e.g., `10.0.0.0/16`)
   - **Subnets** (subdivisions of the address space)
   - **Routing rules** and **security policies**
-:::
 
 \vfill
-
-<!-- nota: el virtual network usa overlays VXLAN por debajo — se cubrirán en Block 5 -->
-
-. . .
 
 Key: under the hood, cloud providers use **overlay networks** (covered in Block 5) to isolate tenants at scale.
 
@@ -453,7 +447,6 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 
 \vspace{0.2cm}
 
-:::incremental
 **Public subnet:**
 
 - Route to an **Internet Gateway**
@@ -465,7 +458,6 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 - **No route** to the Internet
 - Only **private IPs**
 - Use: databases, backends
-:::
 
 :::
 ::: {.column width="42%"}
@@ -516,11 +508,9 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 
 \vspace{0.2cm}
 
-:::incremental
 - **Local route**: traffic stays inside the virtual network
 - **Default route** (`0.0.0.0/0`): public subnets exit via the Internet Gateway
 - Private subnets have no default route
-:::
 
 :::
 ::: {.column width="42%"}
@@ -575,17 +565,14 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 
 \vspace{0.2cm}
 
-:::incremental
 - **Outbound only**: instance can reach the Internet, but is not reachable from outside
   - No public IP needed; the provider performs NAT transparently
 - **Bidirectional**: instance is also reachable from the Internet
   - Requires a **public IP**
   - Use: web servers, load balancers
-:::
 
 \vspace{0.1cm}
 
-. . .
 
 \footnotesize Note: a NAT Gateway can be added for private instances that need outbound Internet access (e.g. updates), without exposing them inbound.
 
@@ -731,9 +718,6 @@ Default & Deny all inbound & Allow all \\
 - Security Groups $\rightarrow$ fine-grained per-instance control
 - Network ACLs $\rightarrow$ broad subnet-level guardrails
 
-\begin{alertblock}{Common mistake}
-ACLs are \textbf{stateless}: if you allow inbound TCP port 80, you must \emph{also} explicitly allow outbound ephemeral ports (1024-65535) for the response. Forgetting this blocks return traffic.
-\end{alertblock}
 
 ## Discussion: Cloud Networking
 
