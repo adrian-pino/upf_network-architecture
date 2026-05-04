@@ -429,7 +429,7 @@ Key: under the hood, cloud providers use **overlay networks** (covered in Block 
 
 % Internet gateway
 \node[draw, thick, fill=orange!20, rounded corners, font=\tiny] (igw) at (-1.4,-1.35) {Internet Gateway};
-\node[cloud, draw, thick, fill=cyan!10, cloud puffs=9, minimum width=1.2cm, minimum height=0.5cm, font=\tiny] (inet) at (-1.4,-2.45) {Internet};
+\node[cloud, draw, thick, fill=cyan!10, cloud puffs=9, minimum width=1.2cm, minimum height=0.5cm, font=\tiny] (inet) at (-1.4,-3.0) {Internet};
 
 \draw[<->, thick] (web) -- (igw);
 \draw[<->, thick] (igw) -- (inet);
@@ -449,15 +449,21 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 
 **Public subnet:**
 
-- Route to an **Internet Gateway**
-- Instances can have **public IPs**
-- Use: web servers, load balancers
+\begin{itemize}\itemsep4pt
+  \item Route to an \textbf{Internet Gateway}
+  \item Instances can have \textbf{public IPs}
+  \item Use: web servers, load balancers
+\end{itemize}
+
+\vspace{0.3cm}
 
 **Private subnet:**
 
-- **No route** to the Internet
-- Only **private IPs**
-- Use: databases, backends
+\begin{itemize}\itemsep4pt
+  \item \textbf{No route} to the Internet
+  \item Only \textbf{private IPs}
+  \item Use: databases, backends
+\end{itemize}
 
 :::
 ::: {.column width="42%"}
@@ -493,7 +499,7 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 
 \scriptsize Every virtual network has an implicit **virtual router** managed by the provider. Route tables tell it where to forward traffic.
 
-\vspace{0.1cm}
+\vspace{0.3cm}
 
 \scriptsize
 \begin{tabular}{|l|l|l|}
@@ -506,11 +512,13 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 \hline
 \end{tabular}
 
-\vspace{0.2cm}
+\vspace{0.3cm}
 
-- **Local route**: traffic stays inside the virtual network
-- **Default route** (`0.0.0.0/0`): public subnets exit via the Internet Gateway
-- Private subnets have no default route
+\begin{itemize}\itemsep4pt
+  \item \textbf{Local route}: traffic stays inside the virtual network
+  \item \textbf{Default route} (\texttt{0.0.0.0/0}): public subnets exit via the Internet Gateway
+  \item Private subnets have no default route
+\end{itemize}
 
 :::
 ::: {.column width="42%"}
@@ -565,11 +573,17 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 
 \vspace{0.2cm}
 
-- **Outbound only**: instance can reach the Internet, but is not reachable from outside
-  - No public IP needed; the provider performs NAT transparently
-- **Bidirectional**: instance is also reachable from the Internet
-  - Requires a **public IP**
-  - Use: web servers, load balancers
+\begin{itemize}\itemsep4pt
+  \item \textbf{Outbound only}: instance can reach the Internet, but is not reachable from outside
+    \begin{itemize}
+      \item No public IP needed; the provider performs NAT transparently
+    \end{itemize}
+  \item \textbf{Bidirectional}: instance is also reachable from the Internet
+    \begin{itemize}
+      \item Requires a \textbf{public IP}
+      \item Use: web servers, load balancers
+    \end{itemize}
+\end{itemize}
 
 \vspace{0.1cm}
 
@@ -581,18 +595,20 @@ Cloud providers distinguish between subnets reachable from the Internet and isol
 
 ## Security Groups: Instance-Level Firewall
 
-:::::::::::::: {.columns}
-::: {.column width="55%"}
+\begin{columns}[t]
+\begin{column}{0.55\textwidth}
 
 \scriptsize Once traffic reaches an instance, you still need to control what it can send and receive.
 
 \vspace{0.1cm}
 
-- **Security group** = virtual firewall on an instance
-- Specifies allowed **inbound/outbound** traffic
-- **Stateful**: allow inbound $\rightarrow$ response automatically allowed
+\begin{itemize}\itemsep4pt
+  \item \textbf{Security group} = virtual firewall on an instance
+  \item Specifies allowed \textbf{inbound/outbound} traffic
+  \item \textbf{Stateful}: allow inbound $\rightarrow$ response automatically allowed
+\end{itemize}
 
-\vspace{0.2cm}
+\vspace{0.4cm}
 
 \scriptsize
 \begin{tabular}{|l|l|l|l|}
@@ -609,8 +625,8 @@ Out & All & All & \texttt{0.0.0.0/0} \\
 \hline
 \end{tabular}
 
-:::
-::: {.column width="42%"}
+\end{column}
+\begin{column}{0.42\textwidth}
 
 \begin{center}
 \begin{tikzpicture}[
@@ -631,25 +647,27 @@ Out & All & All & \texttt{0.0.0.0/0} \\
 
 \footnotesize By default: all inbound denied, all outbound allowed.
 
-:::
-::::::::::::::
+\end{column}
+\end{columns}
 
 \footnote{AWS, "Security Groups for Your VPC," docs.aws.amazon.com.}
 
 ## Network ACLs (Access Control Lists): Subnet-Level Firewall
 
-:::::::::::::: {.columns}
-::: {.column width="55%"}
+\begin{columns}[t]
+\begin{column}{0.55\textwidth}
 
-\scriptsize Network ACLs add a layer of control at the **subnet boundary**, before traffic reaches any instance.
+\scriptsize Network ACLs add a layer of control at the \textbf{subnet boundary}, before traffic reaches any instance.
 
 \vspace{0.1cm}
 
-- **Network ACL** = firewall at the **subnet** level
-- Rules evaluated in **order** (numbered, first match wins)
-- **Stateless**: must explicitly allow inbound AND outbound
+\begin{itemize}\itemsep4pt
+  \item \textbf{Network ACL} = firewall at the \textbf{subnet} level
+  \item Rules evaluated in \textbf{order} (numbered, first match wins)
+  \item \textbf{Stateless}: must explicitly allow inbound AND outbound
+\end{itemize}
 
-\vspace{0.2cm}
+\vspace{0.4cm}
 
 \scriptsize
 \begin{tabular}{|c|l|l|l|l|}
@@ -664,8 +682,8 @@ Out & All & All & \texttt{0.0.0.0/0} \\
 \hline
 \end{tabular}
 
-:::
-::: {.column width="42%"}
+\end{column}
+\begin{column}{0.42\textwidth}
 
 \begin{center}
 \begin{tikzpicture}[
@@ -683,10 +701,10 @@ Out & All & All & \texttt{0.0.0.0/0} \\
 \end{tikzpicture}
 \end{center}
 
-\footnotesize Filter applies to **all** instances in the subnet.
+\footnotesize Filter applies to \textbf{all} instances in the subnet.
 
-:::
-::::::::::::::
+\end{column}
+\end{columns}
 
 \footnote{AWS, "Network ACLs," docs.aws.amazon.com.}
 
