@@ -1,4 +1,4 @@
-# Arquitectura de Xarxes — Universitat Pompeu Fabra
+# Arquitectura de Xarxes: Universitat Pompeu Fabra
 
 Slide decks and lab documents for the "Arquitectura de Xarxes" course (Blocks 4–5).
 
