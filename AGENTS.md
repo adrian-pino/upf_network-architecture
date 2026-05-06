@@ -87,7 +87,7 @@
 - Pandoc columns: `:::::::::::::: {.columns}` / `::: {.column width="50%"}`
 
 ## TikZ conventions
-- **Node colours**: VM 1 / Server 1 = `green!15`, VM 2 / Server 2 = `purple!15`. Alternate for additional VMs
+- **Node colours**: VM 1 / Container 1 / Server 1 = `green!15`, VM 2 / Container 2 / Server 2 = `purple!15`. Alternate for additional VMs/containers. This rule is strict and must always be applied — never use the same colour for two different VMs or containers in the same diagram.
 - **Do not use parameterised TikZ styles** (e.g. `fill=#1`) because Pandoc/Beamer breaks them (`#` is interpreted as a macro parameter). Use parameter-free styles and apply `fill=` directly on each node
 - **Internet**: represent as `cloud` shape (`shapes.symbols`) with `fill=cyan!10`
 - **Physical NIC**: `fill=orange!15`, include connection to Internet when relevant
@@ -143,7 +143,11 @@
 ## References policy
 - Only sources from: standards bodies (IETF RFCs, ETSI, NIST, IEEE), major vendors (AWS, Azure, GCP, VMware, Red Hat, Docker, HashiCorp), or published books (O'Reilly, Pearson, Morgan Kaufmann, Wiley)
 - **NO blogs**
-- Inline citations with `\footnotesize Source: ...` at the bottom of relevant slides
+- Citations must be **mapped to the specific claim or idea** they support using superscript numbers:
+  - Place `$^1$` inline immediately after the sentence or bullet that uses the source
+  - At the bottom of the same slide, place centered using `\vfill\begin{center}\tiny $^1$ Author, "Title," Publisher, Year.\end{center}`
+  - Never float a reference at the bottom of a slide without a corresponding inline marker
+- Inline citation font: always `\tiny` (never `\footnotesize`)
 - Consolidated "References" slide at the end of each presentation
 
 ## Subject Syllabus (2025-2026)
@@ -217,3 +221,9 @@ Check this list before using an acronym. If it was already defined in a previous
 | VPN | Virtual Private Network | B4 Session 2 |
 | LB | Load Balancer | B4 Session 2 |
 | TLS | Transport Layer Security | B4 Session 2 |
+| gNMI | gRPC Network Management Interface | B5 Session 1 |
+| NETCONF | Network Configuration Protocol | B5 Session 1 |
+| YANG | Yet Another Next Generation | B5 Session 1 |
+| MTU | Maximum Transmission Unit | B5 Session 1 |
+| CNCF | Cloud Native Computing Foundation | B5 Session 1 |
+| CNI | Container Network Interface | B5 Session 1 |
