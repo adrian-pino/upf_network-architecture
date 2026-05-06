@@ -2,6 +2,7 @@
 
 **Overarching questions:**
 - How can networks be programmed and automated at scale?
+- What does it mean to design an application *for* the cloud, not just *in* the cloud?
 - How do containers communicate with each other and with the outside world?
 
 ---
@@ -24,10 +25,15 @@
 
 ### Network Function Virtualization (NFV)
 - From Hardware Appliances to Software (physical appliance vs VNF, cost/flexibility)
-- Virtual Network Functions (VNFs) (software on VMs or containers, comparison table)
 - NFV + Cloud Integration (deploy in minutes, scale horizontally)
 - SDN + NFV -- Complementary Technologies (SDN steers, NFV processes)
 - Discussion: When Hardware Still Wins
+
+### Cloud-Native Applications
+- What Does Cloud-Native Mean? (cloud-hosted vs cloud-native table + monolith vs microservices TikZ diagram with K8s layer)
+- Cloud-Native Design Principles (microservices, containers, declarative config, immutable infra, CI/CD)
+- Kubernetes: The Cloud-Native Platform (Pods, Services, Ingress, Network Policies, CNI -- link to B4S2)
+- Discussion: Is Cloud-Native Always Better?
 
 ### From VLANs to Overlay Networks
 - The VLAN Scalability Problem (12-bit ID, 4,096 limit, L2 domain constraint)
@@ -52,6 +58,6 @@
 
 ### Session Summary
 - The Full Picture -- Where Everything Fits (TikZ evolution diagram)
-- References
-- Key Takeaways (8 points)
+- Key Takeaways (9 points)
 - Discussion
+- References

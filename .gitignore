@@ -5,6 +5,9 @@
 # Backup files
 *.bak
 
+# Exams
+exams/
+
 # LaTeX intermediates
 *.tex
 *.aux
