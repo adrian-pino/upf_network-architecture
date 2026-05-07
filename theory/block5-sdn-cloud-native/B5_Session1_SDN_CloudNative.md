@@ -110,10 +110,27 @@ header-includes:
 
 # Software-Defined Networking (SDN)
 
+## Software-Defined Networking (SDN)
+
+Software-Defined Networking is an approach to network management that makes the network **programmable** by separating the logic that controls traffic from the hardware that forwards it.
+
+\vspace{0.3cm}
+
+- **Separate the control plane from the data plane**: decisions and forwarding become independent layers
+\vspace{0.2cm}
+- **Centralize control**: one (or a cluster of) software controller(s) has a global view of the network
+\vspace{0.2cm}
+- **Use software to configure devices**: no manual CLI per device — push rules programmatically
+\vspace{0.2cm}
+- **Open interfaces**: any application can interact with the network via standard APIs
+
+\vfill
+\footnotesize \textit{The network becomes as flexible as software — you can change how traffic flows without touching hardware.}
+
 ## SDN: The Centralized Brain
 
-\begin{block}{Control plane}
-The logic inside a network device that decides \textbf{where to send traffic}: computing routes, building forwarding tables, reacting to failures. In traditional networks, every device runs its own — SDN extracts it into one central place.
+\begin{block}{\small Control plane}
+\footnotesize The logic inside a network device that decides \textbf{where to send traffic}: computing routes, building forwarding tables, reacting to failures. In traditional networks, every device runs its own — SDN extracts it into one central place.
 \end{block}
 
 \vspace{0.1cm}
@@ -126,7 +143,6 @@ The logic inside a network device that decides \textbf{where to send traffic}: c
 - Maintains a real-time **topology database**
 \vspace{0.2cm}
 - **Programmable via API**: any script or app can read topology, push rules, or automate changes without touching the CLI
-  - Uses a **REST API**: the same way your browser loads Google Maps or Instagram — one program asks another for data over the web
 \vspace{0.2cm}
 - Multiple controllers sync with each other for redundancy $^2$
 \vspace{0.2cm}
