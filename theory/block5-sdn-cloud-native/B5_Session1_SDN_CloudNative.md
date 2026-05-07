@@ -1025,60 +1025,6 @@ resource "aws\_security\_group" "web" \{\\
 
 # Session Summary
 
-## The Full Picture: Where Everything Fits
-
-\begin{center}
-\begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=3.2cm, minimum height=0.7cm, font=\small, align=center},
-    kw/.style={font=\tiny, text=gray},
-    >=Stealth
-]
-
-% ---- Row 0: Foundation (prior knowledge) ----
-\node[box, fill=gray!20] (hw)  at (-2.5, 0) {Physical Servers};
-\node[kw] at (-2.5, -0.55) {Racks, NICs, switches};
-\node[box, fill=green!15] (vm)  at (2.5, 0)  {Virtual Machines (VMs)};
-\node[kw] at (2.5, -0.55) {Hypervisor, vNIC, isolation};
-
-% ---- Row 1: Network technologies (this session) ----
-\node[box, fill=blue!20]   (sdn)     at (-4.5, 2.2) {SDN};
-\node[kw] at (-4.5, 1.65) {Controller, flow rules, APIs};
-\node[box, fill=yellow!25] (overlay) at (0,    2.2) {Overlay Networks};
-\node[kw] at (0, 1.65) {VXLAN, VNI, VTEP, tunnels};
-\node[box, fill=orange!20] (nfv)     at (4.5,  2.2) {NFV};
-\node[kw] at (4.5, 1.65) {VNF, firewall, LB, router};
-
-% ---- Row 2: Application layer ----
-\node[box, fill=purple!15] (cont) at (-2.5, 4.2) {Containers \& Microservices};
-\node[kw] at (-2.5, 3.65) {Docker, bridge, service mesh};
-\node[box, fill=teal!15]   (cn)   at (2.5,  4.2) {Cloud-Native Design};
-\node[kw] at (2.5, 3.65) {K8s, CI/CD, immutable infra};
-
-% ---- IaC bar spanning full width ----
-\node[box, fill=cyan!20, minimum width=10cm] (iac) at (0, 5.8) {IaC \& Automation};
-\node[kw] at (0, 5.25) {Terraform, Git, declarative config, reproducibility};
-
-% ---- Arrows: "enables" direction ----
-\draw[->, thick] (hw)  -- (sdn);
-\draw[->, thick] (hw)  -- (overlay);
-\draw[->, thick] (vm)  -- (overlay);
-\draw[->, thick] (vm)  -- (nfv);
-\draw[->, thick] (sdn) -- (overlay);
-\draw[->, thick] (nfv) -- (overlay);
-\draw[->, thick] (overlay) -- (cont);
-\draw[->, thick] (overlay) -- (cn);
-\draw[->, thick] (cont) -- (iac);
-\draw[->, thick] (cn)   -- (iac);
-
-% ---- Legend ----
-\node[font=\tiny, text=gray] at (7.5, 2.2) {\textit{arrows: "enables"}};
-
-\end{tikzpicture}
-\end{center}
-
-\vspace{-0.1cm}
-\footnotesize Each layer builds on the previous one: from bare metal to fully automated cloud-native infrastructure.
-
 ## Key Takeaways
 
 1. Traditional networks are **manual, rigid, and do not scale**
