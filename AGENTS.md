@@ -34,6 +34,7 @@
 - **No long dashes** in slide content: do not use em dashes (`—`), en dashes (`–`), or LaTeX double hyphens (`--`) as phrase connectors. This applies to **all visible slide text including slide titles (`##` headings)**; use colons, semicolons, or parentheses instead. HTML comments are exempt. Exception: the YAML `title:` front matter field uses `--` as a conventional Pandoc title separator and must not be changed.
 - Avoid English contractions (`don't` → `do not`, `can't` → `cannot`)
 - Prefer direct and natural language, avoiding repetitive patterns that look LLM-generated
+- **Capitalisation**: all visible text added to slides (TikZ node labels, footnotes, bullet points, annotations) must start with an uppercase letter. Exception: technical abbreviations with an intentional lowercase prefix are kept as-is (e.g. `vNIC`, `vSwitch`, `vRouter`, `docker0`, `br0`).
 - **Acronyms**: always expand an acronym on first use (e.g. "Virtual Private Cloud (VPC)"). Subsequent uses can use the acronym alone. Do not assume the student knows the meaning.
   - **CRITICAL**: before delivering or compiling any presentation, run an acronym audit: search all acronyms in the file and verify each one is expanded before its first use. This includes acronyms in titles and tables.
   - Exception: the "References" slide at the end does not require acronym expansion (bibliographic citations, not teaching content).

@@ -43,72 +43,59 @@ header-includes:
 3. Describe overlay networks (VXLAN) and why they scale beyond VLANs
 4. Explain how containers communicate and how Infrastructure as Code automates network management
 
-## Traditional Network Management
-
-:::::::::::::: {.columns}
-::: {.column width="50%"}
-
-- Each device (router, switch, firewall) configured **individually**
-\vspace{0.2cm}
-- Configuration via Command-Line Interface (CLI), **device by device**
-\vspace{0.2cm}
-- Vendor-specific commands and interfaces
-\vspace{0.2cm}
-- Changes require **manual intervention** on every device
-
-:::
-::: {.column width="50%"}
+## The Problem with Traditional Networks
 
 \begin{center}
-\begin{tikzpicture}[scale=0.95, every node/.style={transform shape},
-    dev/.style={draw, thick, rounded corners, fill=gray!20, minimum width=1.4cm, minimum height=0.6cm, font=\scriptsize, align=center},
-    eng/.style={draw, thick, ellipse, fill=yellow!20, minimum width=1.4cm, minimum height=0.7cm, font=\scriptsize},
+\begin{tikzpicture}[
+    dev/.style={draw, thick, rounded corners, fill=gray!20, minimum width=1.1cm, minimum height=0.5cm, font=\tiny, align=center},
+    eng/.style={draw, thick, ellipse, fill=yellow!20, minimum width=1.0cm, minimum height=0.6cm, font=\tiny},
     >=Stealth
 ]
-% Top row: devices
-\node[dev] (r1) at (-2, 3.0) {Router 1};
-\node[dev] (r2) at (0,  3.0) {Switch 1};
-\node[dev] (r3) at (2,  3.0) {Firewall 1};
 
-% Middle: Admin
-\node[eng] (admin) at (0, 1.7) {Admin};
+% --- Small network (left) ---
+\node[font=\small\bfseries] at (-4.5, 4.0) {Small network};
+\node[eng] (a1) at (-4.5, 3.0) {Admin};
+\node[dev] (d1) at (-6.2, 1.8) {Switch 1};
+\node[dev] (d2) at (-4.5, 1.8) {Router 1};
+\node[dev] (d3) at (-2.8, 1.8) {FW 1};
+\draw[->, thick, red!60] (a1) -- node[left, font=\tiny] {SSH} (d1);
+\draw[->, thick, red!60] (a1) -- (d2);
+\draw[->, thick, red!60] (a1) -- node[right, font=\tiny] {SSH} (d3);
+\node[font=\tiny, text=gray] at (-4.5, 1.1) {Tedious, but doable};
 
-% Bottom row: devices
-\node[dev] (r4) at (-2, 0.3) {Router 2};
-\node[dev] (r5) at (0,  0.3) {Switch 2};
-\node[dev] (r6) at (2,  0.3) {Firewall 2};
+% --- Arrow in the middle ---
+\draw[->, very thick, black!50] (-1.8, 1.3) -- (-0.5, 1.3);
+\node[font=\tiny, align=center] at (-1.15, 1.7) {Data center\\grows...};
 
-% Admin to top row
-\draw[->, thick, red] (admin) -- node[left,  font=\tiny] {SSH} (r1);
-\draw[->, thick, red] (admin) -- node[right, font=\tiny] {SSH} (r2);
-\draw[->, thick, red] (admin) -- node[right, font=\tiny] {SSH} (r3);
+% --- Large network (right) ---
+\node[font=\small\bfseries] at (4.0, 4.0) {Cloud-scale network};
+\node[eng] (a2) at (4.0, 3.2) {Admin};
 
-% Admin to bottom row
-\draw[->, thick, red] (admin) -- node[left,  font=\tiny] {SSH} (r4);
-\draw[->, thick, red] (admin) -- node[right, font=\tiny] {SSH} (r5);
-\draw[->, thick, red] (admin) -- node[right, font=\tiny] {SSH} (r6);
+% Many devices arranged in a grid
+\foreach \x in {1.5, 2.5, 3.5, 4.5, 5.5, 6.5} {
+    \foreach \y in {2.1, 1.3, 0.5} {
+        \node[dev, minimum width=0.8cm, minimum height=0.35cm] at (\x, \y) {};
+    }
+}
 
-\node[font=\tiny, text=red] at (0, -0.5) {Each device: separate login, separate config};
+% Red arrows fanning out from admin to top row
+\draw[->, thick, red!70] (a2) -- (1.5, 2.1);
+\draw[->, thick, red!70] (a2) -- (2.5, 2.1);
+\draw[->, thick, red!70] (a2) -- (3.5, 2.1);
+\draw[->, thick, red!70] (a2) -- (4.5, 2.1);
+\draw[->, thick, red!70] (a2) -- (5.5, 2.1);
+\draw[->, thick, red!70] (a2) -- (6.5, 2.1);
+
+% Question mark / overwhelmed label
+\node[font=\Large, text=red!80] at (4.0, 2.55) {?};
+\node[font=\tiny, text=red!70] at (4.0, -0.05) {Hundreds of thousands of devices};
+\node[font=\tiny, text=red!70] at (4.0, -0.45) {Days or weeks per change, errors inevitable};
+
 \end{tikzpicture}
 \end{center}
 
-:::
-::::::::::::::
-
 \vfill
-\footnotesize Imagine updating 1,000 switches one by one. That is traditional networking.
-
-## Scalability Challenges
-
-- Data centers grow from hundreds to **hundreds of thousands** of devices
-\vspace{0.2cm}
-- Manual configuration does **not scale**
-\vspace{0.2cm}
-- Network changes are **slow**: days or weeks for approval + implementation
-\vspace{0.2cm}
-- **Human errors** increase with complexity
-\vspace{0.2cm}
-- Cloud-scale infrastructure demands **automation**
+\footnotesize At cloud scale, manual configuration breaks completely. There has to be a better way.
 
 ## The Control Plane Problem
 
@@ -139,180 +126,220 @@ The control plane is **distributed** by design. What if we **centralized** it?
 
 # Software-Defined Networking (SDN)
 
-## Why SDN?
-
-Traditional networks have no central brain: every device runs its own control logic, independently. Updating a policy means logging into each device separately.
-
-\vspace{0.3cm}
-
-The key insight: what if we **separated the decision-making** (control plane) from the **packet forwarding** (data plane) and moved all decisions into a single piece of software?
-
-\vfill
-
-That is the core idea behind Software-Defined Networking (SDN).
-
-## SDN: Core Idea
-
-:::::::::::::: {.columns}
-::: {.column width="40%"}
-
-- **Separate** the control plane from the data plane $^1$
-\vspace{0.2cm}
-- **Centralize** network intelligence in a software controller
-\vspace{0.2cm}
-- **Program** network behavior through APIs
-
-:::
-::: {.column width="60%"}
+## SDN: Separating Decisions from Forwarding
 
 \begin{center}
 \begin{tikzpicture}[
-    plane/.style={draw, thick, rounded corners, minimum width=5.5cm, minimum height=0.9cm, font=\small},
+    plane/.style={draw, thick, rounded corners, minimum width=3.8cm, minimum height=0.75cm, font=\small, align=center},
+    box/.style={draw, thick, rounded corners, minimum width=2.2cm, minimum height=0.6cm, font=\scriptsize, align=center},
     >=Stealth
 ]
-\node[plane, fill=orange!20] (app) at (0,3) {Application Plane};
-\node[plane, fill=blue!20] (ctrl) at (0,1.5) {Control Plane (SDN Controller)};
-\node[plane, fill=green!15] (data) at (0,0) {Data Plane (Switches)};
 
-\draw[<->, thick] (app) -- node[right, font=\scriptsize] {Northbound API} (ctrl);
-\draw[<->, thick] (ctrl) -- node[right, font=\scriptsize] {Southbound API} (data);
+% --- Traditional router (left) ---
+\node[font=\small\bfseries] at (-4.5, 3.8) {Traditional Router};
+\draw[draw=gray, thick, rounded corners, fill=gray!10] (-6.2, -0.3) rectangle (-2.8, 3.4);
+
+\node[box, fill=blue!20, minimum width=2.8cm] at (-4.5, 2.7) {Control Plane};
+\node[font=\tiny, text=gray] at (-4.5, 2.2) {"Where should this packet go?"};
+\node[font=\tiny, text=gray] at (-4.5, 0.7) {"Forward it out port 3"};
+\node[font=\tiny, text=red!70] at (-4.5, 0.1) {Both stuck inside every device};
+
+% --- Arrow in the middle ---
+\draw[->, very thick, red!70] (-2.4, 1.8) -- (-1.0, 1.8) node[midway, above, font=\tiny, text=red!70] {SDN extracts};
+\node[font=\tiny, text=red!70] at (-1.7, 1.45) {The brain};
+
+% --- SDN architecture (right) ---
+\node[font=\small\bfseries] at (2.8, 3.8) {SDN};
+
+% Apps annotation above controller
+\node[draw, dashed, rounded corners, fill=orange!10, minimum width=3.8cm, minimum height=0.55cm, font=\tiny, align=center] (app) at (2.8, 3.2) {Your apps \& scripts (via REST API)};
+\draw[->, thin, gray] (app.south) -- (2.8, 2.65);
+
+\node[plane, fill=blue!20] (ctrl) at (2.8, 2.2) {SDN Controller\\{\tiny centralized brain — global view}};
+\node[plane, fill=green!15] (data) at (2.8, 0.9) {Data Plane (Switches)\\{\tiny just forward — no decisions}};
+
+\draw[->, thick] (ctrl) -- node[right, font=\tiny] {flow rules} (data);
+
+\node[font=\tiny, text=blue!70] at (2.8, 0.1) {One controller programs \textit{all} switches};
+
 \end{tikzpicture}
 \end{center}
 
-:::
-::::::::::::::
-
 \vfill
 \begin{center}
-\tiny $^1$ McKeown et al., "OpenFlow: Enabling Innovation in Campus Networks," *ACM SIGCOMM CCR*, 2008.
+\tiny $^1$ McKeown et al., "OpenFlow: Enabling Innovation in Campus Networks," \textit{ACM SIGCOMM CCR}, 2008.
 \end{center}
-
-## SDN Architecture: Three Planes
-
-**Data Plane (Infrastructure Layer):**
-
-- Physical/virtual switches that **forward packets**
-- No longer make independent routing decisions
-- Receive forwarding rules from the controller
-
-\vspace{0.2cm}
-
-**Control Plane (Controller):**
-
-- Centralized software with a **global view** of the network
-- Computes paths, installs forwarding rules on switches
-- Single point of management for the entire network
-
-\vspace{0.2cm}
-
-**Application Plane:**
-
-- Applications that define **network behavior** (firewall, load balancer, monitor)
-- Communicate with the controller via northbound APIs
 
 ## SDN Controllers
 
 :::::::::::::: {.columns}
-::: {.column width="50%"}
+::: {.column width="44%"}
 
-- The controller is the **brain** of the network: it has a global view and makes all forwarding decisions
+- The controller is the **brain** of the network: global view, all forwarding decisions
 \vspace{0.2cm}
 - Maintains a real-time **topology database**
 \vspace{0.2cm}
-- Supports **high availability** via clustering
-
-\vspace{0.3cm}
-
-**Open-source examples:**
-
-- **OpenDaylight** (Linux Foundation)
-- **ONOS** (Open Network Operating System, carrier-grade)
+- **Programmable via API**: any script or app can read topology, push rules, or automate changes without touching the CLI
+  - Uses a **REST API**: the same way your browser loads Google Maps or Instagram — one program asks another for data over the web
+\vspace{0.2cm}
+- Multiple controllers sync with each other for redundancy $^2$
+\vspace{0.2cm}
+- Controller talks to switches via a common protocol (southbound); apps talk to the controller from above (northbound) — see figure
 
 \vspace{0.2cm}
 
-**Proprietary examples:**
+**Open-source:** OpenDaylight, ONOS
 
-- **Cisco ACI**, **VMware NSX**
+**Proprietary:** Cisco ACI, VMware NSX
 
 :::
-::: {.column width="50%"}
+::: {.column width="56%"}
 
 \begin{center}
-\begin{tikzpicture}[scale=0.8, every node/.style={transform shape},
-    sw/.style={draw, thick, rounded corners, fill=gray!20, minimum width=1.4cm, minimum height=0.6cm, font=\scriptsize, align=center},
-    >=Stealth
-]
-% Controller box (outer, larger)
-\node[draw, thick, rounded corners, fill=blue!20, minimum width=4cm, minimum height=2cm] (ctrlbox) at (0, 3.2) {};
-\node[font=\scriptsize, align=center] at (0, 3.7) {SDN Controller\\(global view)};
-\node[draw, thick, rounded corners, fill=blue!8, minimum width=3cm, minimum height=0.5cm, font=\tiny] at (0, 2.9) {Topology DB};
+\includegraphics[width=0.75\columnwidth]{theory/block5-sdn-cloud-native/img/Layered-view-of-SDN-Architecture.png}
+\end{center}
 
-% Southbound arrow with label
-\draw[->, thick] (0, 2.2) -- node[right, font=\tiny] {Southbound API} (0, 1.5);
-
-% Horizontal bus
-\draw[thick] (-2, 1.5) -- (2, 1.5);
-
-% Switches
-\node[sw] (s1) at (-2, 0.6) {Switch 1};
-\node[sw] (s2) at (0,  0.6) {Switch 2};
-\node[sw] (s3) at (2,  0.6) {Switch 3};
-
-\draw[->, thick] (-2, 1.5) -- (s1);
-\draw[->, thick] (0,  1.5) -- (s2);
-\draw[->, thick] (2,  1.5) -- (s3);
-
-\node[font=\tiny, text=gray, align=center] at (0, -0.1) {Flow rules pushed to all devices at once};
-\end{tikzpicture}
+\vfill
+\begin{center}
+\tiny $^2$ Latif et al., "A Comprehensive Survey of Interface Protocols for SDN," arXiv:1902.07913, 2019.
 \end{center}
 
 :::
 ::::::::::::::
 
-## Southbound Interface: OpenFlow
+## How Does the Controller Talk to Switches?
 
-- **OpenFlow** (2008, Stanford): the first standard southbound protocol
+:::::::::::::: {.columns}
+::: {.column width="44%"}
+
+The controller needs a **common language** to program any switch, regardless of vendor. That language is called the **southbound protocol**.
+
 \vspace{0.2cm}
-- Controller pushes **flow rules** to switches: match on packet fields, apply an action (forward, drop, redirect)
+
+- **OpenFlow** (Stanford, 2008): the first standard protocol $^1$
+  - Controller sends **flow rules**: "if packet matches X, do Y"
+  - Proved the concept works on real hardware
+  - Rarely used in production today
 \vspace{0.2cm}
-- Proved the concept: a controller can program any switch centrally
+- **Modern alternatives**: gNMI, NETCONF/YANG, vendor APIs (Cisco ACI, VMware NSX)
+
 \vspace{0.2cm}
-- Rarely used in production today; modern SDN relies on **gNMI** (gRPC Network Management Interface), **NETCONF** (Network Configuration Protocol) / **YANG** (Yet Another Next Generation data modelling language), and vendor APIs (Cisco ACI, VMware NSX) $^1$
+\footnotesize
+\textit{Think of it as a universal remote control: one controller, any switch brand.}
+
+:::
+::: {.column width="56%"}
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, font=\scriptsize, align=center},
+    sw/.style={draw, thick, rounded corners, fill=gray!20, minimum width=1.4cm, minimum height=0.55cm, font=\tiny, align=center},
+    >=Stealth
+]
+
+% Controller
+\node[box, fill=blue!20, minimum width=3.2cm, minimum height=1.0cm] (ctrl) at (0, 3.5) {SDN Controller\\{\tiny global view of the network}};
+
+% Flow rule message
+\node[draw, dashed, fill=yellow!15, rounded corners, font=\tiny, align=left, inner sep=4pt] (rule) at (0, 2.1) {
+  \textbf{Flow rule:}\\
+  if dst=10.0.0.2\\
+  $\rightarrow$ forward out port 3
+};
+
+\draw[->, thick, blue!70] (ctrl.south) -- (rule.north);
+
+% Switch bus
+\draw[thick] (-2.4, 0.8) -- (2.4, 0.8);
+\draw[->, thick, blue!70] (rule.south) -- (0, 0.82);
+
+% Switches
+\node[sw] (s1) at (-2.0, 0.2) {Switch 1};
+\node[sw] (s2) at (0,    0.2) {Switch 2};
+\node[sw] (s3) at (2.0,  0.2) {Switch 3};
+
+\draw[thick] (-2.0, 0.8) -- (s1.north);
+\draw[thick] (0,    0.8) -- (s2.north);
+\draw[thick] (2.0,  0.8) -- (s3.north);
+
+\node[font=\tiny, text=gray] at (0, -0.35) {All switches speak the same protocol};
+
+\end{tikzpicture}
+\end{center}
+
+:::
+::::::::::::::
 
 \vfill
 \begin{center}
 \tiny $^1$ ONF, "Software-Defined Networking: The New Norm for Networks," ONF White Paper, 2012.
 \end{center}
 
-## Northbound Interface: Representational State Transfer (REST) APIs
+## SDN Today: It Is Everywhere
 
-- Applications interact with the controller via **REST APIs**
+:::::::::::::: {.columns}
+::: {.column width="48%"}
+
+Every time you create a network in AWS, Azure, or GCP, **SDN is doing the work**. No engineer is SSHing into a switch.
+
 \vspace{0.2cm}
-- Example operations:
-  - `GET /topology/links` $\rightarrow$ get network topology
-  - `POST /flows` $\rightarrow$ add a flow rule
-  - `GET /statistics/port` $\rightarrow$ query traffic statistics
+\small
+- **Cloud providers** (AWS, Azure, GCP): SDN logic distributed across every server in the data center
+- **Telcos**: network functions running as **containers**, controlled via software APIs
 
-\vfill
-
-Key benefit: the network becomes **programmable** like any other software system; any developer can write applications that control network behavior.
-
-## SDN Benefits: Summary
-
-- **Centralized management**: one controller, global network view
 \vspace{0.2cm}
-- **Programmability**: automate changes via APIs
-\vspace{0.2cm}
-- **Agility**: deploy new policies in seconds, not days
-\vspace{0.2cm}
-- **Vendor independence**: open protocols (gNMI, NETCONF) and standard APIs reduce lock-in
-\vspace{0.2cm}
-- **Innovation**: researchers and developers can experiment easily
 
-\vfill
+The SDN \textbf{principles} are identical to what we studied:
+\begin{itemize}
+  \item Separate decisions from forwarding
+  \item Control via software and APIs
+\end{itemize}
 
+\vspace{0.1cm}
 \footnotesize
-SDN is the foundation for modern cloud networking: AWS, Azure, and GCP all use SDN internally.
+The difference: instead of one controller box, the logic is \textbf{distributed across thousands of servers}.
+
+:::
+::: {.column width="52%"}
+
+\begin{center}
+\begin{tikzpicture}[
+    box/.style={draw, thick, rounded corners, font=\scriptsize, align=center},
+    sw/.style={draw, thick, rounded corners, fill=gray!20, minimum width=1.5cm, minimum height=0.5cm, font=\tiny, align=center},
+    >=Stealth
+]
+
+\node[box, fill=yellow!20, minimum width=2.8cm] (user) at (0, 4.2) {You (Cloud Console / API)};
+
+\node[box, fill=blue!15, minimum width=4.8cm, minimum height=0.7cm] (ctrl) at (0, 2.8) {Distributed Control Plane\\{\tiny software on thousands of servers}};
+
+\draw[->, thick] (user) -- node[right, font=\tiny, align=left] {create VPC,\\add route,\\attach firewall rule} (ctrl);
+
+\node[sw] (v1) at (-2.2, 1.2) {vSwitch};
+\node[sw] (v2) at (0,    1.2) {vSwitch};
+\node[sw] (v3) at (2.2,  1.2) {vSwitch};
+
+\draw[->, thick, blue!60] (ctrl) -- (v1);
+\draw[->, thick, blue!60] (ctrl) -- (v2);
+\draw[->, thick, blue!60] (ctrl) -- (v3);
+
+\node[draw, rounded corners, fill=green!15, minimum width=1.3cm, minimum height=0.4cm, font=\tiny] at (-2.2, 0.3) {your VM};
+\node[draw, rounded corners, fill=green!15, minimum width=1.3cm, minimum height=0.4cm, font=\tiny] at (0,    0.3) {your VM};
+\node[draw, rounded corners, fill=green!15, minimum width=1.3cm, minimum height=0.4cm, font=\tiny] at (2.2,  0.3) {your VM};
+
+\draw[thick] (v1.south) -- (-2.2, 0.52);
+\draw[thick] (v2.south) -- (0,    0.52);
+\draw[thick] (v3.south) -- (2.2,  0.52);
+
+\node[font=\tiny, text=gray] at (0, -0.25) {No engineer touches a physical switch};
+
+\end{tikzpicture}
+\end{center}
+
+:::
+::::::::::::::
+
+<!-- note: the point is not the vendor names but the recognition that SDN is what makes cloud networking work at scale -->
 
 ## Discussion: SDN Trade-offs
 
@@ -327,31 +354,25 @@ SDN is the foundation for modern cloud networking: AWS, Azure, and GCP all use S
 
 # Network Function Virtualization (NFV)
 
-## Why NFV?
+## Network Functions Virtualization (NFV)
 
-SDN solves *how* traffic flows: a central controller programs forwarding rules across the network. But the functions that actually **process** that traffic (firewalls, load balancers, routers) are still dedicated hardware boxes: expensive, slow to procure, and impossible to spin up in seconds.
+:::::::::::::: {.columns}
+::: {.column width="52%"}
 
-\vspace{0.3cm}
+- SDN solves *how* traffic flows: centralized controller programs forwarding rules
+\vspace{0.15cm}
+- But traffic still hits **dedicated hardware boxes**: firewalls, load balancers, routers
+  - Expensive (\euro{}10K--\euro{}100K+), slow to procure, impossible to scale instantly
+\vspace{0.15cm}
+- SDN can steer traffic perfectly, but if it leads to a \euro{}50K appliance, flexibility is lost
+\vspace{0.15cm}
+- **NFV**: run those network functions as **software (VNFs)** on commodity servers or VMs $^1$
 
-SDN can steer traffic perfectly, but if it leads to a \euro{}50K hardware appliance, we have not solved the flexibility problem.
+\vspace{0.2cm}
+\footnotesize SDN \textbf{steers} traffic. NFV \textbf{processes} it. Together they replace the traditional hardware stack.
 
-\vfill
-
-NFV completes the picture: run those functions as **software on the same commodity servers** SDN already manages.
-
-## NFV: From Hardware to Software
-
-\small
-Traditional network functions run on **dedicated hardware boxes**:
-
-- Firewall: \euro{}10K--\euro{}100K+
-- Load balancer, router, IDS/IPS
-
-Problems: **expensive**, inflexible, slow to deploy, vendor lock-in
-
-NFV replaces them with **software (VNFs)** running on standard x86 servers or VMs. $^1$
-
-\vspace{0.3cm}
+:::
+::: {.column width="48%"}
 
 \begin{center}
 \scriptsize
@@ -370,6 +391,9 @@ IDS/IPS & Snort, Suricata \\
 \hline
 \end{tabular}
 \end{center}
+
+:::
+::::::::::::::
 
 \vfill
 \begin{center}
@@ -402,7 +426,7 @@ No hardware procurement, no shipping, no rack-and-stack.
 ]
 \node[box, fill=blue!15] (sdn) at (0, 1) {SDN\\{\tiny How traffic flows}};
 \node[box, fill=green!15] (nfv) at (0,-1) {NFV\\{\tiny What processes traffic}};
-\draw[<->, very thick, red] (sdn) -- node[right, font=\scriptsize] {work together} (nfv);
+\draw[<->, very thick, red] (sdn) -- node[right, font=\scriptsize] {Work together} (nfv);
 \end{tikzpicture}
 \end{center}
 
@@ -441,7 +465,13 @@ No hardware procurement, no shipping, no rack-and-stack.
 
 ## What Does Cloud-Native Mean?
 
-SDN and NFV give us programmable, automated infrastructure. But the applications running on top can still be designed the old way: one big monolith, manually deployed, that happens to run in the cloud. **Cloud-native** is the design philosophy that fully exploits what SDN, NFV, and containers make possible.
+- SDN and NFV give us programmable, virtualized infrastructure
+\vspace{0.2cm}
+- But applications can still be designed the **old way**: one big monolith, manually deployed, that happens to run in the cloud
+\vspace{0.2cm}
+- **Cloud-native** is the design philosophy that fully exploits what SDN, NFV, and containers make possible
+\vspace{0.2cm}
+- Key question: are you just *lifting and shifting* an old app, or designing for the cloud from the start?
 
 \vspace{0.2cm}
 
@@ -482,7 +512,7 @@ Deploy & Manual steps & CI/CD pipeline \\
 \node[box, fill=gray!25, minimum width=2.4cm] at (-2.2, 1.4) {Payment};
 \node[box, fill=gray!25, minimum width=2.4cm] at (-2.2, 0.8) {Inventory};
 \node[box, fill=gray!35, minimum width=2.4cm] at (-2.2, 0.2) {DB};
-\node[font=\tiny, text=gray] at (-2.2,-0.5) {one VM, one deploy};
+\node[font=\tiny, text=gray] at (-2.2,-0.5) {One VM, one deploy};
 
 % --- Cloud-Native (right) ---
 \node[font=\tiny\bfseries, text=green!60!black] at (2.2, 3.3) {Cloud-Native};
@@ -505,7 +535,7 @@ Deploy & Manual steps & CI/CD pipeline \\
   (0.2, 0.2) rectangle (4.2, 0.55);
 \node[font=\tiny\bfseries, text=blue!70] at (2.2, 0.38) {Kubernetes (K8s)};
 
-\node[font=\tiny, text=gray] at (2.2,-0.5) {independent containers};
+\node[font=\tiny, text=gray] at (2.2,-0.5) {Independent containers};
 \end{tikzpicture}
 \end{center}
 
@@ -537,6 +567,147 @@ Cloud-native applications are built around a small set of principles: $^1$
 \begin{center}
 \tiny $^1$ Burns et al., \textit{Kubernetes: Up and Running}, 3rd ed., O'Reilly, 2022.
 \end{center}
+
+## Microservices: From Monolith to Distributed
+
+\small
+\begin{itemize}
+  \item \textbf{Monolithic} app: one big process, one deployment, one codebase
+  \item \textbf{Microservices}: app split into small, independent services, each in its own container
+  \item Rule of thumb: \textbf{1 microservice = 1 container}
+\end{itemize}
+
+\vspace{0.2cm}
+
+:::::::::::::: {.columns}
+::: {.column width="50%"}
+\begin{center}
+\begin{tikzpicture}[scale=0.85,
+    box/.style={draw, thick, rounded corners, minimum width=1.4cm, minimum height=0.42cm, font=\tiny},
+    >=Stealth
+]
+\node[font=\tiny\bfseries] at (0, 0.75) {Monolith Architecture};
+\node[box, fill=gray!20] (mono) at (0,0) {Monolith};
+\draw[->, line width=1pt, black!70] (0.85,0) -- (1.55,0);
+\node[font=\tiny\bfseries] at (3.3, 1.05) {Microservice Architecture};
+\node[box, fill=green!15] (ms1) at (3.3, 0.55) {Microservice 1};
+\node[box, fill=green!15] (ms2) at (3.3, 0.0)  {Microservice 2};
+\node[box, fill=green!15] (ms3) at (3.3,-0.55) {Microservice 3};
+\draw[thin, gray] (1.55, 0.55) -- (ms1.west);
+\draw[thin, gray] (1.55, 0.0)  -- (ms2.west);
+\draw[thin, gray] (1.55,-0.55) -- (ms3.west);
+\draw[thin, gray] (1.55,-0.55) -- (1.55,0.55);
+\end{tikzpicture}
+\end{center}
+:::
+::: {.column width="50%"}
+\begin{center}
+\tiny\textit{Example: e-commerce app}
+
+\vspace{0.1cm}
+\begin{tikzpicture}[scale=0.75,
+    box/.style={draw, thick, rounded corners, minimum width=1.5cm, minimum height=0.42cm, font=\tiny},
+    >=Stealth
+]
+% Monolith
+\node[font=\tiny\bfseries] at (-2.2,1.6) {Monolith};
+\draw[draw=gray, thick, rounded corners, fill=gray!10] (-3.4,-1.8) rectangle (-1.0,1.4);
+\node[box, fill=green!15] at (-2.2, 1.0) {UI};
+\node[box, fill=green!15] at (-2.2, 0.4) {Auth};
+\node[box, fill=green!15] at (-2.2,-0.2) {Payment};
+\node[box, fill=green!15] at (-2.2,-0.8) {Inventory};
+\node[box, fill=purple!15] at (-2.2,-1.4) {DB};
+
+% Arrow
+\draw[->, line width=1pt, black!70] (-0.7,0) -- (0.1,0);
+
+% Microservices (shifted left, wider spacing)
+\node[font=\tiny\bfseries] at (2.0,1.6) {Microservices};
+\node[box, fill=green!15] (ui)   at (2.0, 1.0) {UI};
+\node[box, fill=green!15] (auth) at (0.2, 0.2) {Auth};
+\node[box, fill=green!15] (pay)  at (2.0, 0.2) {Payment};
+\node[box, fill=green!15] (inv)  at (3.8, 0.2) {Inventory};
+\node[box, fill=purple!15] (db1) at (0.2,-0.8) {Users DB};
+\node[box, fill=purple!15] (db2) at (2.0,-0.8) {Pay DB};
+\node[box, fill=purple!15] (db3) at (3.8,-0.8) {Inv DB};
+
+\draw[thin, gray] (ui.south) -- ++(0,-0.2) -| (auth.north);
+\draw[thin, gray] (ui.south) -- (pay.north);
+\draw[thin, gray] (ui.south) -- ++(0,-0.2) -| (inv.north);
+\draw[thin, gray] (auth.south) -- (db1.north);
+\draw[thin, gray] (pay.south)  -- (db2.north);
+\draw[thin, gray] (inv.south)  -- (db3.north);
+
+\node[font=\tiny, text=gray] at (2.0,-1.5) {Each service: own container \& database};
+\end{tikzpicture}
+\end{center}
+:::
+::::::::::::::
+
+## Microservices: Network Challenges
+
+:::::::::::::: {.columns}
+::: {.column width="55%"}
+\vfill
+\begin{center}
+\begin{tikzpicture}[scale=0.75,
+    svc/.style={draw, thick, rounded corners, fill=green!15, minimum width=1.5cm, minimum height=0.5cm, font=\tiny},
+    db/.style={draw, thick, rounded corners, fill=purple!15, minimum width=1.5cm, minimum height=0.5cm, font=\tiny},
+    cont/.style={draw, dashed, rounded corners, fill=gray!5, inner sep=6pt},
+    lbl/.style={font=\tiny\bfseries, text=black!60, fill=white, inner sep=1pt},
+    >=Stealth
+]
+
+% Web Frontend
+\node[cont, minimum width=2.2cm, minimum height=0.9cm] (cweb) at (0,0) {};
+\node[svc] (web) at (0,0) {Web Frontend};
+\node[lbl] at (cweb.north west) {Container};
+
+% Auth Service
+\node[cont, minimum width=2.2cm, minimum height=0.9cm] (cauth) at (-3,-1.8) {};
+\node[svc] (auth) at (-3,-1.8) {Auth Service};
+\node[lbl] at (cauth.north west) {Container};
+
+% Payment
+\node[cont, minimum width=2.2cm, minimum height=0.9cm] (cpay) at (0,-1.8) {};
+\node[svc] (pay) at (0,-1.8) {Payment};
+\node[lbl] at (cpay.north west) {Container};
+
+% Inventory
+\node[cont, minimum width=2.2cm, minimum height=0.9cm] (cinv) at (3,-1.8) {};
+\node[svc] (inv) at (3,-1.8) {Inventory};
+\node[lbl] at (cinv.north west) {Container};
+
+% DBs
+\node[db] (db1) at (-3,-3.1) {Users DB};
+\node[db] (db2) at (3,-3.1) {Products DB};
+
+\draw[->, thick] (web) -- (auth);
+\draw[->, thick] (web) -- (pay);
+\draw[->, thick] (web) -- (inv);
+\draw[->, thick] (auth) -- (db1);
+\draw[->, thick] (inv) -- (db2);
+\draw[->, thick] (pay) -- (inv);
+\end{tikzpicture}
+\end{center}
+\vfill
+:::
+::: {.column width="45%"}
+\scriptsize
+\begin{itemize}\itemsep6pt
+  \item Services communicate over the \textbf{network} (HTTP/REST, gRPC)
+  \item Network implications for hundreds of containers:
+  \begin{itemize}\itemsep3pt
+    \item \scriptsize \textbf{Service discovery}: "where is the payment service?"
+    \item \scriptsize \textbf{Load balancing}: distribute requests across replicas
+    \item \scriptsize \textbf{Observability}: trace requests across services
+  \end{itemize}
+  \item Every arrow = \textbf{network call} $\rightarrow$ latency and failure risk
+  \item If Inventory is down $\rightarrow$ Payment and Web are affected (\textbf{cascading failure})
+  \item Solutions: retries, timeouts, circuit breakers, service meshes
+\end{itemize}
+:::
+::::::::::::::
 
 ## Kubernetes: The Cloud-Native Platform
 
@@ -573,31 +744,21 @@ Cloud-native networking requirements (dynamic IPs, cross-host comms, load balanc
 
 ## Why Overlay Networks?
 
-SDN and NFV give us programmable, virtualized infrastructure. Many tenants share the same physical network, so we need to **isolate their traffic**. We already know VLANs (Block 3), but VLANs are capped at 4,096 networks and cannot span Layer 3 boundaries.
-
-\vspace{0.3cm}
-
-A cloud provider hosting millions of tenants, each running SDN-controlled VNFs, cannot rely on VLANs. A scalable isolation mechanism is needed: one that works across any physical topology and is invisible to the underlay.
-
-\vfill
-
-That is what overlay networks solve.
-
-## The VLAN Scalability Problem
-
-- In Block 4 we used **VLANs** to isolate tenants on virtual networks
+- SDN and NFV give us programmable, virtualized infrastructure
 \vspace{0.2cm}
-- VLANs use a **12-bit ID** $\rightarrow$ maximum **4,096** virtual networks
+- Multiple tenants share the same physical network: their traffic must be **isolated**
 \vspace{0.2cm}
-- Cloud providers host **millions** of tenants $\rightarrow$ VLANs are not enough
-\vspace{0.2cm}
-- Additional limitations:
-  - VLANs are confined to a **single L2 domain**
+- We know VLANs (Block 3), but VLANs have hard limits:
+  - **12-bit ID**: maximum 4,096 networks
+  - **Layer 2 only**: cannot span Layer 3 boundaries
   - Moving a VM to another host may require VLAN reconfiguration
+\vspace{0.2cm}
+- A cloud provider hosting millions of tenants cannot rely on VLANs
+\vspace{0.2cm}
+- **Overlay networks** solve this: scalable isolation that works across any physical topology
 
 \vfill
-\footnotesize
-We need a technology that scales beyond 4K networks and works across L3 boundaries.
+\footnotesize We need a technology that scales beyond 4K networks and works across L3 boundaries.
 
 ## Overlay Networks: Concept
 
@@ -715,15 +876,18 @@ Hints: think about overhead (extra headers), Maximum Transmission Unit (MTU) imp
 
 ## Why Container Networking?
 
-Overlays give us scalable, isolated virtual networks across any physical infrastructure. Now the question is: what runs *inside* those networks? Modern applications are no longer monolithic; they are split into dozens of small, independent services, each deployed as a **container**.
-
-\vspace{0.3cm}
-
-Each container needs its own network identity, must reach other containers (possibly on different hosts), and must be reachable from the outside. The overlay networks we just studied are exactly what makes this possible at scale.
+- Overlay networks give us scalable, isolated virtual networks across any physical infrastructure
+\vspace{0.2cm}
+- Modern applications are split into **dozens of independent services**, each deployed as a container
+\vspace{0.2cm}
+- Each container needs its own **network identity** (IP address, hostname)
+\vspace{0.2cm}
+- Containers must reach each other, possibly on **different physical hosts**
+\vspace{0.2cm}
+- The overlay networks we just studied are exactly what makes cross-host container communication possible at scale
 
 \vfill
-
-How does networking work inside and between container hosts?
+\footnotesize How does networking work inside and between container hosts?
 
 ## Container Networking: Starting Point
 
@@ -784,7 +948,7 @@ How does networking work inside and between container hosts?
 \draw[thick] (bridge.south) -- (pnic.north);
 
 % Annotation outside host box on the right, arrow pointing to Physical NIC
-\node[font=\tiny, text=gray, align=left] (ann) at (7.5,0.1) {visible from the host:};
+\node[font=\tiny, text=gray, align=left] (ann) at (7.5,0.1) {Visible from the host:};
 \node[draw, fill=black, rounded corners=1pt, font=\tiny\ttfamily\color{white}, align=left, inner sep=3pt] (code) at (7.5,-1.2) {
   \$ ip a\\
   1: lo ...\\
@@ -856,153 +1020,12 @@ How does networking work inside and between container hosts?
 \draw[thick] (c4) -- (9.2,0.25);
 
 % Overlay
-\draw[thick, dashed, red] (br1) -- node[below, font=\scriptsize] {overlay network (VXLAN)} (br2);
+\draw[thick, dashed, red] (br1) -- node[below, font=\scriptsize] {Overlay network (VXLAN)} (br2);
 \end{tikzpicture}
 \end{center}
 
 - Within a host: containers use a **bridge** network
 - Across hosts: an **overlay** connects the bridges (VXLAN from the previous section)
-
-## Microservices: From Monolith to Distributed
-
-\small
-\begin{itemize}
-  \item \textbf{Monolithic} app: one big process, one deployment, one codebase
-  \item \textbf{Microservices}: app split into small, independent services, each in its own container
-  \item Rule of thumb: \textbf{1 microservice = 1 container}
-\end{itemize}
-
-\vspace{0.2cm}
-
-:::::::::::::: {.columns}
-::: {.column width="50%"}
-\begin{center}
-\begin{tikzpicture}[scale=0.85,
-    box/.style={draw, thick, rounded corners, minimum width=1.4cm, minimum height=0.42cm, font=\tiny},
-    >=Stealth
-]
-\node[font=\tiny\bfseries] at (0, 0.75) {Monolith Architecture};
-\node[box, fill=gray!20] (mono) at (0,0) {Monolith};
-\draw[->, line width=1pt, black!70] (0.85,0) -- (1.55,0);
-\node[font=\tiny\bfseries] at (3.3, 1.05) {Microservice Architecture};
-\node[box, fill=green!15] (ms1) at (3.3, 0.55) {Microservice 1};
-\node[box, fill=green!15] (ms2) at (3.3, 0.0)  {Microservice 2};
-\node[box, fill=green!15] (ms3) at (3.3,-0.55) {Microservice 3};
-\draw[thin, gray] (1.55, 0.55) -- (ms1.west);
-\draw[thin, gray] (1.55, 0.0)  -- (ms2.west);
-\draw[thin, gray] (1.55,-0.55) -- (ms3.west);
-\draw[thin, gray] (1.55,-0.55) -- (1.55,0.55);
-\end{tikzpicture}
-\end{center}
-:::
-::: {.column width="50%"}
-\begin{center}
-\tiny\textit{Example: e-commerce app}
-
-\vspace{0.1cm}
-\begin{tikzpicture}[scale=0.75,
-    box/.style={draw, thick, rounded corners, minimum width=1.5cm, minimum height=0.42cm, font=\tiny},
-    >=Stealth
-]
-% Monolith
-\node[font=\tiny\bfseries] at (-2.2,1.6) {Monolith};
-\draw[draw=gray, thick, rounded corners, fill=gray!10] (-3.4,-1.8) rectangle (-1.0,1.4);
-\node[box, fill=green!15] at (-2.2, 1.0) {UI};
-\node[box, fill=green!15] at (-2.2, 0.4) {Auth};
-\node[box, fill=green!15] at (-2.2,-0.2) {Payment};
-\node[box, fill=green!15] at (-2.2,-0.8) {Inventory};
-\node[box, fill=purple!15] at (-2.2,-1.4) {DB};
-
-% Arrow
-\draw[->, line width=1pt, black!70] (-0.7,0) -- (0.1,0);
-
-% Microservices (shifted left, wider spacing)
-\node[font=\tiny\bfseries] at (2.0,1.6) {Microservices};
-\node[box, fill=green!15] (ui)   at (2.0, 1.0) {UI};
-\node[box, fill=green!15] (auth) at (0.2, 0.2) {Auth};
-\node[box, fill=green!15] (pay)  at (2.0, 0.2) {Payment};
-\node[box, fill=green!15] (inv)  at (3.8, 0.2) {Inventory};
-\node[box, fill=purple!15] (db1) at (0.2,-0.8) {Users DB};
-\node[box, fill=purple!15] (db2) at (2.0,-0.8) {Pay DB};
-\node[box, fill=purple!15] (db3) at (3.8,-0.8) {Inv DB};
-
-\draw[thin, gray] (ui.south) -- ++(0,-0.2) -| (auth.north);
-\draw[thin, gray] (ui.south) -- (pay.north);
-\draw[thin, gray] (ui.south) -- ++(0,-0.2) -| (inv.north);
-\draw[thin, gray] (auth.south) -- (db1.north);
-\draw[thin, gray] (pay.south)  -- (db2.north);
-\draw[thin, gray] (inv.south)  -- (db3.north);
-
-\node[font=\tiny, text=gray] at (2.0,-1.5) {each service: own container \& database};
-\end{tikzpicture}
-\end{center}
-:::
-::::::::::::::
-
-## Microservices: Network Challenges
-
-:::::::::::::: {.columns}
-::: {.column width="55%"}
-\vfill
-\begin{center}
-\begin{tikzpicture}[scale=0.75,
-    svc/.style={draw, thick, rounded corners, fill=green!15, minimum width=1.5cm, minimum height=0.5cm, font=\tiny},
-    db/.style={draw, thick, rounded corners, fill=purple!15, minimum width=1.5cm, minimum height=0.5cm, font=\tiny},
-    cont/.style={draw, dashed, rounded corners, fill=gray!5, inner sep=6pt},
-    lbl/.style={font=\tiny\bfseries, text=black!60, fill=white, inner sep=1pt},
-    >=Stealth
-]
-
-% Web Frontend
-\node[cont, minimum width=2.2cm, minimum height=0.9cm] (cweb) at (0,0) {};
-\node[svc] (web) at (0,0) {Web Frontend};
-\node[lbl] at (cweb.north west) {container};
-
-% Auth Service
-\node[cont, minimum width=2.2cm, minimum height=0.9cm] (cauth) at (-3,-1.8) {};
-\node[svc] (auth) at (-3,-1.8) {Auth Service};
-\node[lbl] at (cauth.north west) {container};
-
-% Payment
-\node[cont, minimum width=2.2cm, minimum height=0.9cm] (cpay) at (0,-1.8) {};
-\node[svc] (pay) at (0,-1.8) {Payment};
-\node[lbl] at (cpay.north west) {container};
-
-% Inventory
-\node[cont, minimum width=2.2cm, minimum height=0.9cm] (cinv) at (3,-1.8) {};
-\node[svc] (inv) at (3,-1.8) {Inventory};
-\node[lbl] at (cinv.north west) {container};
-
-% DBs
-\node[db] (db1) at (-3,-3.1) {Users DB};
-\node[db] (db2) at (3,-3.1) {Products DB};
-
-\draw[->, thick] (web) -- (auth);
-\draw[->, thick] (web) -- (pay);
-\draw[->, thick] (web) -- (inv);
-\draw[->, thick] (auth) -- (db1);
-\draw[->, thick] (inv) -- (db2);
-\draw[->, thick] (pay) -- (inv);
-\end{tikzpicture}
-\end{center}
-\vfill
-:::
-::: {.column width="45%"}
-\scriptsize
-\begin{itemize}\itemsep6pt
-  \item Services communicate over the \textbf{network} (HTTP/REST, gRPC)
-  \item Network implications for hundreds of containers:
-  \begin{itemize}\itemsep3pt
-    \item \scriptsize \textbf{Service discovery}: "where is the payment service?"
-    \item \scriptsize \textbf{Load balancing}: distribute requests across replicas
-    \item \scriptsize \textbf{Observability}: trace requests across services
-  \end{itemize}
-  \item Every arrow = \textbf{network call} $\rightarrow$ latency and failure risk
-  \item If Inventory is down $\rightarrow$ Payment and Web are affected (\textbf{cascading failure})
-  \item Solutions: retries, timeouts, circuit breakers, service meshes
-\end{itemize}
-:::
-::::::::::::::
 
 ## Discussion: Containers vs VMs
 
@@ -1017,29 +1040,17 @@ How does networking work inside and between container hosts?
 
 # Infrastructure as Code \& Network Automation
 
-## Why Infrastructure as Code?
-
-We can now program the network (SDN), virtualize its functions (NFV), scale tenant isolation (overlays), and run applications as containers following cloud-native principles. But if all of this is still configured by hand (clicking dashboards, running commands device by device) we are back to exactly the problem we started with: slow, error-prone, impossible to reproduce.
-
-\vspace{0.3cm}
-
-The final piece is treating infrastructure the same way we treat software: configuration written in files, reviewed in pull requests, stored in version control, and applied automatically.
-
-\vfill
-
-That closes the loop from the manual networks we saw at the start of this session.
-
 ## Infrastructure as Code (IaC)
 
-- **IaC**: manage infrastructure through **code files**, not manual clicks
+- SDN, NFV, overlays, and cloud-native containers are all programmable — but if still configured **by hand**, we are back to slow, error-prone, and unreproducible
 \vspace{0.2cm}
-- Describe desired state in a configuration file $\rightarrow$ tools apply it automatically
+- **IaC**: manage infrastructure through **code files**, not manual clicks or dashboards
+\vspace{0.2cm}
+- Describe the desired state in a file $\rightarrow$ tools apply it automatically
 \vspace{0.2cm}
 - **Reproducibility**: same config $\rightarrow$ same infrastructure, every time
 \vspace{0.2cm}
-- **Version control**: track changes in Git, review, rollback
-\vspace{0.2cm}
-- **Automation**: no manual steps $\rightarrow$ fewer human errors
+- **Version control**: track changes in Git, review in pull requests, rollback instantly
 \vspace{0.2cm}
 - **Speed**: deploy entire environments in minutes $^1$
 
@@ -1102,7 +1113,7 @@ resource "aws\_security\_group" "web" \{\\
 
 % Security group shield label
 \node[box, draw=orange!60, fill=orange!10, minimum width=2.4cm] (sg) at (0,-0.8) {Security Group};
-\node[font=\tiny, text=orange!80] at (0,-1.15) {port 80/tcp allowed};
+\node[font=\tiny, text=orange!80] at (0,-1.15) {Port 80/tcp allowed};
 
 % Arrow VM -> SG
 \draw[->, thick, orange!60] (vm.south) -- (sg.north);
@@ -1141,33 +1152,55 @@ resource "aws\_security\_group" "web" \{\\
 
 \begin{center}
 \begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, minimum width=3.5cm, minimum height=0.8cm, font=\small},
+    box/.style={draw, thick, rounded corners, minimum width=3.2cm, minimum height=0.7cm, font=\small, align=center},
+    kw/.style={font=\tiny, text=gray},
     >=Stealth
 ]
-\node[box, fill=gray!15]   (trad)    at (0,6)    {Traditional (HW appliances)};
-\node[box, fill=green!15]  (virt)    at (0,5)    {Virtualization (VMs, vNICs)};
-\node[box, fill=blue!15]   (sdn)     at (-3,4)   {SDN (programmable control)};
-\node[box, fill=orange!15] (nfv)     at (3,4)    {NFV (software functions)};
-\node[box, fill=yellow!20] (overlay) at (0,3)    {Overlay Networks (VXLAN)};
-\node[box, fill=purple!15] (cloud)   at (0,2)    {Cloud (IaaS / PaaS / SaaS)};
-\node[box, fill=red!15]    (cont)    at (-3,1)   {Containers + Microservices};
-\node[box, fill=teal!15]   (cn)      at (3,1)    {Cloud-Native Design};
-\node[box, fill=cyan!15]   (iac)     at (0,0)    {IaC + Automation};
 
-\draw[->, thick] (trad) -- (virt);
-\draw[->, thick] (virt) -- (sdn);
-\draw[->, thick] (virt) -- (nfv);
+% ---- Row 0: Foundation (prior knowledge) ----
+\node[box, fill=gray!20] (hw)  at (-2.5, 0) {Physical Servers};
+\node[kw] at (-2.5, -0.55) {Racks, NICs, switches};
+\node[box, fill=green!15] (vm)  at (2.5, 0)  {Virtual Machines (VMs)};
+\node[kw] at (2.5, -0.55) {Hypervisor, vNIC, isolation};
+
+% ---- Row 1: Network technologies (this session) ----
+\node[box, fill=blue!20]   (sdn)     at (-4.5, 2.2) {SDN};
+\node[kw] at (-4.5, 1.65) {Controller, flow rules, APIs};
+\node[box, fill=yellow!25] (overlay) at (0,    2.2) {Overlay Networks};
+\node[kw] at (0, 1.65) {VXLAN, VNI, VTEP, tunnels};
+\node[box, fill=orange!20] (nfv)     at (4.5,  2.2) {NFV};
+\node[kw] at (4.5, 1.65) {VNF, firewall, LB, router};
+
+% ---- Row 2: Application layer ----
+\node[box, fill=purple!15] (cont) at (-2.5, 4.2) {Containers \& Microservices};
+\node[kw] at (-2.5, 3.65) {Docker, bridge, service mesh};
+\node[box, fill=teal!15]   (cn)   at (2.5,  4.2) {Cloud-Native Design};
+\node[kw] at (2.5, 3.65) {K8s, CI/CD, immutable infra};
+
+% ---- IaC bar spanning full width ----
+\node[box, fill=cyan!20, minimum width=10cm] (iac) at (0, 5.8) {IaC \& Automation};
+\node[kw] at (0, 5.25) {Terraform, Git, declarative config, reproducibility};
+
+% ---- Arrows: "enables" direction ----
+\draw[->, thick] (hw)  -- (sdn);
+\draw[->, thick] (hw)  -- (overlay);
+\draw[->, thick] (vm)  -- (overlay);
+\draw[->, thick] (vm)  -- (nfv);
 \draw[->, thick] (sdn) -- (overlay);
 \draw[->, thick] (nfv) -- (overlay);
-\draw[->, thick] (overlay) -- (cloud);
-\draw[->, thick] (cloud) -- (cont);
-\draw[->, thick] (cloud) -- (cn);
+\draw[->, thick] (overlay) -- (cont);
+\draw[->, thick] (overlay) -- (cn);
 \draw[->, thick] (cont) -- (iac);
-\draw[->, thick] (cn) -- (iac);
+\draw[->, thick] (cn)   -- (iac);
+
+% ---- Legend ----
+\node[font=\tiny, text=gray] at (7.5, 2.2) {\textit{arrows: "enables"}};
+
 \end{tikzpicture}
 \end{center}
 
-Each layer builds on the previous one. This is the **evolution of networking**.
+\vspace{-0.1cm}
+\footnotesize Each layer builds on the previous one: from bare metal to fully automated cloud-native infrastructure.
 
 ## Key Takeaways
 
@@ -1212,3 +1245,4 @@ Hints: centralized control, automated testing, instant rollback, reproducibility
 13. IETF RFC 8926, "Geneve: Generic Network Virtualization Encapsulation," 2020.
 14. CNCF, "Cloud Native Definition v1.0," github.com/cncf/toc, 2018.
 15. Burns et al., \textit{Kubernetes: Up and Running}, 3rd ed., O'Reilly, 2022.
+16. Latif et al., "A Comprehensive Survey of Interface Protocols for Software Defined Networks," arXiv:1902.07913, 2019.
