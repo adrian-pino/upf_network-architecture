@@ -31,7 +31,14 @@
 4. Summary / key takeaways
 
 ## Writing style
-- **No long dashes** in slide content: do not use em dashes (`—`), en dashes (`–`), or LaTeX double hyphens (`--`) as phrase connectors. This applies to **all visible slide text including slide titles (`##` headings)**; use colons, semicolons, or parentheses instead. HTML comments are exempt. Exception: the YAML `title:` front matter field uses `--` as a conventional Pandoc title separator and must not be changed.
+- **CRITICAL — NO DASHES**: never use em dashes (`—`), en dashes (`–`), or `--` as phrase connectors anywhere in slide content. This is the most frequently violated rule. Before writing any sentence, replace the instinct to use a dash with a colon, semicolon, or parenthesis.
+  - Wrong: `SDN extracts it — one central place`
+  - Right: `SDN extracts it into one central place`
+  - Wrong: `decisions and forwarding — independent layers`
+  - Right: `decisions and forwarding: independent layers`
+  - Exception: the YAML `title:` front matter field uses `--` as a Pandoc separator. Do not change it.
+  - Exception: HTML comments (`<!-- ... -->`) are exempt.
+  - **Pre-commit check**: before every commit, run `grep -n "—\|–" <file>.md` and fix all matches before proceeding.
 - Avoid English contractions (`don't` → `do not`, `can't` → `cannot`)
 - Prefer direct and natural language, avoiding repetitive patterns that look LLM-generated
 - **Capitalisation**: all visible text added to slides (TikZ node labels, footnotes, bullet points, annotations) must start with an uppercase letter. Exception: technical abbreviations with an intentional lowercase prefix are kept as-is (e.g. `vNIC`, `vSwitch`, `vRouter`, `docker0`, `br0`).
