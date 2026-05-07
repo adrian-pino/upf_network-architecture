@@ -264,18 +264,19 @@ The difference: instead of one controller box, the logic is \textbf{distributed 
 
 ## Network Functions Virtualization (NFV)
 
+Network Functions Virtualization replaces **dedicated hardware appliances** (firewalls, routers, load balancers) with software running on commodity servers. The same function, no specialized box required.
+
 :::::::::::::: {.columns}
 ::: {.column width="52%"}
 
-- But traffic still hits **dedicated hardware boxes**: firewalls, load balancers, routers
-  - Expensive (\euro{}10K--\euro{}100K+), slow to procure, impossible to scale instantly
-\vspace{0.15cm}
-- SDN can steer traffic perfectly, but if it leads to a \euro{}50K appliance, flexibility is lost
-\vspace{0.15cm}
-- **NFV**: run those network functions as **software (VNFs)** on commodity servers or VMs $^1$
-
+- Traditional appliances: expensive (\euro{}10K--\euro{}100K+), slow to procure, hard to scale
 \vspace{0.2cm}
-\footnotesize SDN \textbf{steers} traffic. NFV \textbf{processes} it. Together they replace the traditional hardware stack.
+- **VNF** (Virtual Network Function): the software equivalent, runs on a standard VM or container $^1$
+\vspace{0.2cm}
+- Can be instantiated, scaled, or deleted in minutes via software
+
+\vspace{0.3cm}
+\footnotesize SDN \textbf{steers} traffic. NFV \textbf{processes} it.
 
 :::
 ::: {.column width="48%"}
