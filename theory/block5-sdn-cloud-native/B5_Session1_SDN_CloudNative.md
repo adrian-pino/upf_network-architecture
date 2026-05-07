@@ -41,7 +41,7 @@ header-includes:
 1. Explain SDN architecture and why centralized control matters
 2. Understand NFV and how it replaces hardware appliances
 3. Describe overlay networks (VXLAN) and why they scale beyond VLANs
-4. Explain how containers communicate and how Infrastructure as Code automates network management
+4. Define cloud-native design and explain how containers, microservices, and IaC work together
 
 ## The Problem with Traditional Networks
 
@@ -368,7 +368,7 @@ No hardware procurement, no shipping, no rack-and-stack.
 - Hint: think about latency, throughput, and specialized workloads
 - What about hardware accelerators (FPGAs, SmartNICs)?
 
-# Cloud-Native Applications
+# Cloud-Native
 
 ## What Does Cloud-Native Mean?
 
