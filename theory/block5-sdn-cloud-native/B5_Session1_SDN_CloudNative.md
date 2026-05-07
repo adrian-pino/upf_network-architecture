@@ -262,41 +262,16 @@ The SDN \textbf{principles} are identical to what we studied:
 
 A **network function (NF)** is any processing task a device performs on traffic: routing, filtering, load balancing, intrusion detection. Traditionally, each NF ran on a dedicated hardware appliance. NFV moves them to software on commodity servers.
 
-:::::::::::::: {.columns}
-::: {.column width="52%"}
-
 - Traditional appliances: expensive (\euro{}10K--\euro{}100K+), slow to procure, hard to scale
 \vspace{0.2cm}
-- **VNF** (Virtual Network Function): the software equivalent, runs on a standard VM or container $^1$
+- **VNF** (Virtual Network Function): an NF running on top of a VM $^1$
+\vspace{0.2cm}
+- **CNF** (Cloud-Native Network Function): an NF running on top of a container
 \vspace{0.2cm}
 - Can be instantiated, scaled, or deleted in minutes via software
 
 \vspace{0.3cm}
-\footnotesize SDN \textbf{steers} traffic. NFV \textbf{processes} it.
-
-:::
-::: {.column width="48%"}
-
-\begin{center}
-\scriptsize
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{|l|l|}
-\hline
-\rowcolor{blue!10} \textbf{Physical Appliance} & \textbf{VNF Equivalent} \\
-\hline
-Hardware firewall & pfSense, iptables \\
-\hline
-Hardware load balancer & HAProxy, NGINX \\
-\hline
-Hardware router & VyOS, FRRouting \\
-\hline
-IDS/IPS & Snort, Suricata \\
-\hline
-\end{tabular}
-\end{center}
-
-:::
-::::::::::::::
+\footnotesize SDN decides where traffic goes. NFV decides what happens to it.
 
 \vfill
 \begin{center}
@@ -306,8 +281,6 @@ IDS/IPS & Snort, Suricata \\
 ## NFV + Cloud Integration
 
 - Deploy VNFs on cloud infrastructure $\rightarrow$ **minutes** instead of months
-\vspace{0.2cm}
-- **CNF** (Cloud-Native Network Function): a network function deployed as a container
 \vspace{0.2cm}
 - **Scale horizontally**: add more instances under load
 \vspace{0.2cm}
