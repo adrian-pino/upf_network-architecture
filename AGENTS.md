@@ -103,6 +103,11 @@
 - **Virtual NICs**: spell out as `Virtual NIC` in diagrams; abbreviation `vNIC` acceptable in running text
 - **Nesting**: NICs should be drawn inside their parent box (NIC inside Server on the physical side, Virtual NIC inside VM on the virtual side)
 
+## Git workflow
+
+- Commit directly to `main`. No feature branches, no pull requests.
+- Push after every commit: `git add ... && git commit -m "..." && git push`
+
 ## Compilation
 
 ### Slides (Beamer)
@@ -170,6 +175,7 @@ Full subject syllabus for reference. Blocks 4 and 5 are covered in this reposito
 - **Block 3**: Network and link layer (Ethernet, VLANs 802.1Q, ARP, STP, subnetting CIDR/VLSM, OSPF, BGP, DHCP, NAT/NAPT)
 
 ## Self-maintenance rule
+- **Before every commit**, review this file (AGENTS.md) and evaluate whether any section needs updating: new acronyms, new conventions learned, corrected rules, or structural changes. Apply updates in the same commit rather than deferring them.
 - **After every session that modifies slides or project structure**, review this file (AGENTS.md) and evaluate whether any section needs updating: new acronyms, new conventions learned, corrected rules, or structural changes. Apply updates immediately rather than deferring them.
 - **After modifying the content of any presentation**, check whether the corresponding `table-of-contents_sessionN.md` file needs updating. Each block directory contains one toc file per session (e.g., `table-of-contents_session1.md`, `table-of-contents_session2.md`). These files are not used for compilation but serve as a structural reference.
 - **Before compiling any presentation**, review the "Key Takeaways" slide and verify it accurately reflects the current content of the presentation. Update it if needed before compiling.
