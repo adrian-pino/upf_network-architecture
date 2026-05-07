@@ -390,7 +390,7 @@ No hardware procurement, no shipping, no rack-and-stack.
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{|l|l|l|}
 \hline
-\rowcolor{blue!10} & \textbf{Cloud-Hosted} & \textbf{Cloud-Native} \\
+\rowcolor{blue!10} & \textbf{Legacy} & \textbf{Cloud-Native} \\
 \hline
 Design & Monolith in a VM & Microservices \\
 \hline
@@ -411,8 +411,8 @@ Deploy & Manual steps & CI/CD pipeline \\
     box/.style={draw, thick, rounded corners, minimum width=1.3cm, minimum height=0.42cm, font=\tiny},
     >=Stealth
 ]
-% --- Cloud-Hosted (left) ---
-\node[font=\tiny\bfseries, text=red!70] at (-2.2, 3.3) {Cloud-Hosted};
+% --- Legacy (left) ---
+\node[font=\tiny\bfseries, text=red!70] at (-2.2, 3.3) {Legacy};
 \draw[draw=gray, thick, rounded corners, fill=gray!10] (-3.6,-0.2) rectangle (-0.8, 3.0);
 \node[box, fill=gray!25, minimum width=2.4cm] at (-2.2, 2.6) {UI};
 \node[box, fill=gray!25, minimum width=2.4cm] at (-2.2, 2.0) {Auth};
