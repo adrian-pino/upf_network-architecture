@@ -136,11 +136,9 @@ Software-Defined Networking is an approach to network management that makes the 
 \vspace{0.2cm}
 - Maintains a real-time **topology database**
 \vspace{0.2cm}
-- **Programmable via API**: any script or app can read topology, push rules, or automate changes without touching the CLI
+- **Programmable via API**: scripts and apps push rules without touching the CLI
 \vspace{0.2cm}
-- Multiple controllers sync with each other for redundancy $^2$
-\vspace{0.2cm}
-- Controller talks to switches via a common protocol (southbound); apps talk to the controller from above (northbound) (see figure)
+- Multiple controllers sync for redundancy $^2$
 
 \vspace{0.2cm}
 
@@ -269,8 +267,6 @@ The difference: instead of one controller box, the logic is \textbf{distributed 
 :::::::::::::: {.columns}
 ::: {.column width="52%"}
 
-- SDN solves *how* traffic flows: centralized controller programs forwarding rules
-\vspace{0.15cm}
 - But traffic still hits **dedicated hardware boxes**: firewalls, load balancers, routers
   - Expensive (\euro{}10K--\euro{}100K+), slow to procure, impossible to scale instantly
 \vspace{0.15cm}
