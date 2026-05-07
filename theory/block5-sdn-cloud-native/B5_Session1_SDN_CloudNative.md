@@ -71,17 +71,9 @@ header-includes:
 \node[font=\small\bfseries] at (4.0, 4.0) {Cloud-scale network};
 \node[eng] (a2) at (4.0, 3.2) {Admin};
 
-% Top row: named devices
-\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (1.5, 2.1) {Switch 1};
-\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (2.5, 2.1) {Router 1};
-\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (3.5, 2.1) {Firewall 1};
-\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (4.5, 2.1) {LB 1};
-\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (5.5, 2.1) {Switch 2};
-\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (6.5, 2.1) {Router 2};
-
-% Remaining rows: unnamed (convey scale)
+% All rows: unnamed (convey scale)
 \foreach \x in {1.5, 2.5, 3.5, 4.5, 5.5, 6.5} {
-    \foreach \y in {1.3, 0.5} {
+    \foreach \y in {2.1, 1.3, 0.5} {
         \node[dev, minimum width=0.8cm, minimum height=0.35cm] at (\x, \y) {};
     }
 }
