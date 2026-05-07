@@ -203,10 +203,6 @@ The SDN \textbf{principles} are identical to what we studied:
   \item Control via software and APIs
 \end{itemize}
 
-\vspace{0.1cm}
-\footnotesize
-The difference: instead of one controller box, the logic is \textbf{distributed across thousands of servers}.
-
 :::
 ::: {.column width="52%"}
 
@@ -264,7 +260,7 @@ The difference: instead of one controller box, the logic is \textbf{distributed 
 
 ## Network Functions Virtualization (NFV)
 
-Network Functions Virtualization replaces **dedicated hardware appliances** (firewalls, routers, load balancers) with software running on commodity servers. The same function, no specialized box required.
+A **network function (NF)** is any processing task a device performs on traffic: routing, filtering, load balancing, intrusion detection. Traditionally, each NF ran on a dedicated hardware appliance. NFV moves them to software on commodity servers.
 
 :::::::::::::: {.columns}
 ::: {.column width="52%"}
@@ -309,7 +305,9 @@ IDS/IPS & Snort, Suricata \\
 
 ## NFV + Cloud Integration
 
-- Deploy VNFs on cloud infrastructure (IaaS) $\rightarrow$ **minutes** instead of months
+- Deploy VNFs on cloud infrastructure $\rightarrow$ **minutes** instead of months
+\vspace{0.2cm}
+- **CNF** (Cloud-Native Network Function): a network function deployed as a container
 \vspace{0.2cm}
 - **Scale horizontally**: add more instances under load
 \vspace{0.2cm}

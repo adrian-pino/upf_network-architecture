@@ -241,3 +241,5 @@ Check this list before using an acronym. If it was already defined in a previous
 | MTU | Maximum Transmission Unit | B5 Session 1 |
 | CNCF | Cloud Native Computing Foundation | B5 Session 1 |
 | CNI | Container Network Interface | B5 Session 1 |
+| CNF | Cloud-Native Network Function | B5 Session 1 |
+| NF | Network Function | B5 Session 1 |
