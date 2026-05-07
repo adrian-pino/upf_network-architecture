@@ -311,19 +311,18 @@ No hardware procurement, no shipping, no rack-and-stack.
 :::
 ::: {.column width="50%"}
 
-**Example: HTTP request entering a data center**
+**Example: you open YouTube in your browser**
 
 \vspace{0.2cm}
 
-1. SDN controller sees incoming traffic
-2. Forwards it to a **VNF firewall** (NFV) for inspection
-3. Firewall approves; SDN routes it to the **VNF load balancer**
-4. Load balancer distributes to backend servers
+1. Your request arrives at the data center
+2. **SDN** routes it to a **firewall VNF**: is this traffic safe?
+3. Firewall approves; **SDN** routes it to a **load balancer VNF**
+4. Load balancer picks a free server; video starts playing
 
 \vspace{0.2cm}
 
-- SDN **steers** traffic (forwarding rules)
-- NFV **processes** traffic (filter, balance, inspect)
+- SDN **decides the path**; NFV **does the work** at each stop
 
 :::
 ::::::::::::::
