@@ -57,7 +57,7 @@ header-includes:
 \node[eng] (a1) at (-4.5, 3.0) {Admin};
 \node[dev] (d1) at (-6.2, 1.8) {Switch 1};
 \node[dev] (d2) at (-4.5, 1.8) {Router 1};
-\node[dev] (d3) at (-2.8, 1.8) {FW 1};
+\node[dev] (d3) at (-2.8, 1.8) {LB 1};
 \draw[->, thick, red!60] (a1) -- node[left, font=\tiny] {SSH} (d1);
 \draw[->, thick, red!60] (a1) -- (d2);
 \draw[->, thick, red!60] (a1) -- node[right, font=\tiny] {SSH} (d3);
@@ -71,9 +71,17 @@ header-includes:
 \node[font=\small\bfseries] at (4.0, 4.0) {Cloud-scale network};
 \node[eng] (a2) at (4.0, 3.2) {Admin};
 
-% Many devices arranged in a grid
+% Top row: named devices
+\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (1.5, 2.1) {Switch 1};
+\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (2.5, 2.1) {Router 1};
+\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (3.5, 2.1) {Firewall 1};
+\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (4.5, 2.1) {LB 1};
+\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (5.5, 2.1) {Switch 2};
+\node[dev, minimum width=0.8cm, minimum height=0.35cm, font=\tiny] at (6.5, 2.1) {Router 2};
+
+% Remaining rows: unnamed (convey scale)
 \foreach \x in {1.5, 2.5, 3.5, 4.5, 5.5, 6.5} {
-    \foreach \y in {2.1, 1.3, 0.5} {
+    \foreach \y in {1.3, 0.5} {
         \node[dev, minimum width=0.8cm, minimum height=0.35cm] at (\x, \y) {};
     }
 }
@@ -98,6 +106,12 @@ header-includes:
 \footnotesize At cloud scale, manual configuration breaks completely. There has to be a better way.
 
 ## The Control Plane Problem
+
+\begin{block}{Control plane}
+The logic inside a network device that decides \textbf{where to send traffic}: computing routes, building forwarding tables, reacting to failures.
+\end{block}
+
+\vspace{0.2cm}
 
 - In traditional networks, **every device** runs its own control plane
 \vspace{0.2cm}
