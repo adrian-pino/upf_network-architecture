@@ -97,28 +97,6 @@ header-includes:
 \vfill
 \footnotesize At cloud scale, manual configuration breaks completely. There has to be a better way.
 
-## The Control Plane Problem
-
-\begin{block}{Control plane}
-The logic inside a network device that decides \textbf{where to send traffic}: computing routes, building forwarding tables, reacting to failures.
-\end{block}
-
-\vspace{0.2cm}
-
-- In traditional networks, **every device** runs its own control plane
-\vspace{0.2cm}
-- Each router independently computes routes (OSPF, BGP from Block 3)
-\vspace{0.2cm}
-- No **centralized view** of the entire network
-\vspace{0.2cm}
-- Difficult to implement **network-wide policies**
-\vspace{0.2cm}
-- Limited **programmability**: cannot easily add new features
-
-\vfill
-
-The control plane is **distributed** by design. What if we **centralized** it?
-
 ## Discussion: The Cost of Manual Networks
 
 \begin{center}
@@ -132,51 +110,13 @@ The control plane is **distributed** by design. What if we **centralized** it?
 
 # Software-Defined Networking (SDN)
 
-## SDN: Separating Decisions from Forwarding
+## SDN: The Centralized Brain
 
-\begin{center}
-\begin{tikzpicture}[
-    plane/.style={draw, thick, rounded corners, minimum width=3.8cm, minimum height=0.75cm, font=\small, align=center},
-    box/.style={draw, thick, rounded corners, minimum width=2.2cm, minimum height=0.6cm, font=\scriptsize, align=center},
-    >=Stealth
-]
+\begin{block}{Control plane}
+The logic inside a network device that decides \textbf{where to send traffic}: computing routes, building forwarding tables, reacting to failures. In traditional networks, every device runs its own — SDN extracts it into one central place.
+\end{block}
 
-% --- Traditional router (left) ---
-\node[font=\small\bfseries] at (-4.5, 3.8) {Traditional Router};
-\draw[draw=gray, thick, rounded corners, fill=gray!10] (-6.2, -0.3) rectangle (-2.8, 3.4);
-
-\node[box, fill=blue!20, minimum width=2.8cm] at (-4.5, 2.7) {Control Plane};
-\node[font=\tiny, text=gray] at (-4.5, 2.2) {"Where should this packet go?"};
-\node[font=\tiny, text=gray] at (-4.5, 0.7) {"Forward it out port 3"};
-\node[font=\tiny, text=red!70] at (-4.5, 0.1) {Both stuck inside every device};
-
-% --- Arrow in the middle ---
-\draw[->, very thick, red!70] (-2.4, 1.8) -- (-1.0, 1.8) node[midway, above, font=\tiny, text=red!70] {SDN extracts};
-\node[font=\tiny, text=red!70] at (-1.7, 1.45) {The brain};
-
-% --- SDN architecture (right) ---
-\node[font=\small\bfseries] at (2.8, 3.8) {SDN};
-
-% Apps annotation above controller
-\node[draw, dashed, rounded corners, fill=orange!10, minimum width=3.8cm, minimum height=0.55cm, font=\tiny, align=center] (app) at (2.8, 3.2) {Your apps \& scripts (via REST API)};
-\draw[->, thin, gray] (app.south) -- (2.8, 2.65);
-
-\node[plane, fill=blue!20] (ctrl) at (2.8, 2.2) {SDN Controller\\{\tiny centralized brain — global view}};
-\node[plane, fill=green!15] (data) at (2.8, 0.9) {Data Plane (Switches)\\{\tiny just forward — no decisions}};
-
-\draw[->, thick] (ctrl) -- node[right, font=\tiny] {flow rules} (data);
-
-\node[font=\tiny, text=blue!70] at (2.8, 0.1) {One controller programs \textit{all} switches};
-
-\end{tikzpicture}
-\end{center}
-
-\vfill
-\begin{center}
-\tiny $^1$ McKeown et al., "OpenFlow: Enabling Innovation in Campus Networks," \textit{ACM SIGCOMM CCR}, 2008.
-\end{center}
-
-## SDN Controllers
+\vspace{0.1cm}
 
 :::::::::::::: {.columns}
 ::: {.column width="44%"}
@@ -215,9 +155,6 @@ The control plane is **distributed** by design. What if we **centralized** it?
 
 ## How Does the Controller Talk to Switches?
 
-:::::::::::::: {.columns}
-::: {.column width="44%"}
-
 The controller needs a **common language** to program any switch, regardless of vendor. That language is called the **southbound protocol**.
 
 \vspace{0.2cm}
@@ -229,52 +166,9 @@ The controller needs a **common language** to program any switch, regardless of 
 \vspace{0.2cm}
 - **Modern alternatives**: gNMI, NETCONF/YANG, vendor APIs (Cisco ACI, VMware NSX)
 
-\vspace{0.2cm}
+\vspace{0.3cm}
 \footnotesize
 \textit{Think of it as a universal remote control: one controller, any switch brand.}
-
-:::
-::: {.column width="56%"}
-
-\begin{center}
-\begin{tikzpicture}[
-    box/.style={draw, thick, rounded corners, font=\scriptsize, align=center},
-    sw/.style={draw, thick, rounded corners, fill=gray!20, minimum width=1.4cm, minimum height=0.55cm, font=\tiny, align=center},
-    >=Stealth
-]
-
-% Controller
-\node[box, fill=blue!20, minimum width=3.2cm, minimum height=1.0cm] (ctrl) at (0, 3.5) {SDN Controller\\{\tiny global view of the network}};
-
-% Flow rule message
-\node[draw, dashed, fill=yellow!15, rounded corners, font=\tiny, align=left, inner sep=4pt] (rule) at (0, 2.1) {
-  \textbf{Flow rule:}\\
-  if dst=10.0.0.2\\
-  $\rightarrow$ forward out port 3
-};
-
-\draw[->, thick, blue!70] (ctrl.south) -- (rule.north);
-
-% Switch bus
-\draw[thick] (-2.4, 0.8) -- (2.4, 0.8);
-\draw[->, thick, blue!70] (rule.south) -- (0, 0.82);
-
-% Switches
-\node[sw] (s1) at (-2.0, 0.2) {Switch 1};
-\node[sw] (s2) at (0,    0.2) {Switch 2};
-\node[sw] (s3) at (2.0,  0.2) {Switch 3};
-
-\draw[thick] (-2.0, 0.8) -- (s1.north);
-\draw[thick] (0,    0.8) -- (s2.north);
-\draw[thick] (2.0,  0.8) -- (s3.north);
-
-\node[font=\tiny, text=gray] at (0, -0.35) {All switches speak the same protocol};
-
-\end{tikzpicture}
-\end{center}
-
-:::
-::::::::::::::
 
 \vfill
 \begin{center}
